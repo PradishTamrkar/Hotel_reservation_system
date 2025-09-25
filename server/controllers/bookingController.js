@@ -3,8 +3,6 @@ const sequelize = require("../config/db");
 const Booking = require("../models/booking")
 const BookingDetails = require("../models/bookingDetails")
 const BookingHistory = require("../models/bookingHistory");
-const booking = require("../models/booking");
-
 
 //Joins
 const sqlBooking =`
@@ -31,7 +29,7 @@ FROM booking b
 JOIN customer c ON b.customer_id = c.customer_id
 JOIN booking_details bd ON b.booking_id = bd.booking_id
 JOIN room r ON bd.room_no = r.room_no
-JOIN promos_and_offers p ON bd.offer_id = p.offer_id
+LEFT JOIN promos_and_offers p ON bd.offer_id = p.offer_id
 GROUP BY b.booking_id, b.check_in_date, b.check_out_date, b.total_amount, c.customer_id, c.first_name, c.middle_name, c.last_name, c.email 
 ` 
 //Booking Creation
@@ -183,6 +181,8 @@ const deleteBooking = async (req,res) => {
         const booking = await Booking.findByPk(req.params.id)
         if(!booking)
             return res.status(404).json({message: 'Booking not found'})
+        await BookingDetails.destroy({ where: { booking_id: req.params.id } });
+        await BookingHistory.destroy({ where: { booking_id: req.params.id } });
         await booking.destroy();
         res.json({message: 'Booking deleted successfully'})
     }catch(err){
