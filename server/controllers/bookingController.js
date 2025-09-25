@@ -1,6 +1,9 @@
 const { QueryTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const Booking = require("../models/booking")
+const BookingDetails = require("../models/bookingDetails")
+const BookingHistory = require("../models/bookingHistory");
+const booking = require("../models/booking");
 
 
 //Joins
@@ -36,6 +39,7 @@ const createBooking = async (req,res) => {
     try{
         const {customer_id, rooms, check_in_date, check_out_date} = req.body
         let total_amount = 0;
+        let roomDetails = [];
         //night calculation
         const nights = Math.ceil(
         (new Date(check_out_date)- new Date(check_in_date))/(1000*60*60*24)
@@ -65,10 +69,16 @@ const createBooking = async (req,res) => {
             }
             total_amount = total_amount + roomPrice * nights
             console.log({ roomPrice, nights, total_amount });
+
+            //to keep track of details
+            roomDetails.push({
+                room_no: room.room_no,
+                offer_id:room.offer_id || null,
+                price_per_night: roomPrice
+            })
         }
 
-
-
+        //create booking
         const booking = await Booking.create(
             {
                 customer_id,
@@ -78,6 +88,45 @@ const createBooking = async (req,res) => {
                 booking_date: new Date(),
             },
         )
+
+
+        //create bookingdetails
+        for(const detail of roomDetails){
+            await BookingDetails.create({
+                booking_id:booking.booking_id,
+                room_no:detail.room_no,
+                offer_id:detail.offer_id
+            })
+        }
+        //     await sequelize.query(
+        //         `INSERT INTO booking_details (booking_id, room_no, offer_id)
+        //         VALUES(:booking_id, :room_no, :offer_id)`,
+        //         {
+        //             replacements: {
+        //                 booking_id: booking.booking_id,
+        //                 room_no: detail.room_no,
+        //                 offer_id: detail.offer_id || null,
+        //             },
+        //             type: QueryTypes.INSERT
+        //         }
+        //     )
+        //}
+
+        await BookingHistory.create({
+            customer_id,
+            booking_id: booking.booking_id
+        })
+        // await sequelize.query(
+        //     `INSERT INTO booking_history(customer_id, booking_id)
+        //     VALUES(:customer_id, :booking_id)`,
+        //     {
+        //         replacements: {
+        //             customer_id,
+        //             booking_id:booking.booking_id
+        //         },
+        //         type: QueryTypes.INSERT
+        //     }
+        // )
         res.status(201).json(booking)
     }catch(err){
         res.status(500).json({error: err.message});
@@ -106,7 +155,7 @@ const getBookingByID = async(req,res) => {
             type: QueryTypes.SELECT
             }
         )
-        if(booking || booking.length === 0) 
+        if(!booking || booking.length === 0) 
             return res.status(404).json({message: 'Booking not found'})
         res.json(booking[0])
     }catch(err){
@@ -114,7 +163,7 @@ const getBookingByID = async(req,res) => {
     }
 }  
 
-//Update Customer Info
+//Update booking Info
 const updateBooking = async(req,res) => {
     try{
         const booking = await Booking.findByPk(req.params.id)
@@ -122,7 +171,7 @@ const updateBooking = async(req,res) => {
             return res.status(404).json({message: 'Booking not found'})
 
         await booking.update(req.body)
-        res.json(customer)
+        res.json(booking)
     }catch(err){
         res.status(500).json({error: err.message})
     }
