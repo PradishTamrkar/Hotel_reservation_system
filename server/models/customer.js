@@ -1,0 +1,58 @@
+const {DataTypes} = require('sequelize')
+const bcrypt = require('bcrypt')
+const sequelize = require('../config/db')
+const booking = require('./booking')
+// const CustomerTestimony = require('./customerTestimony')
+const booking_history = require('./bookingHistory')
+
+const customer = sequelize.define(
+    'customer', 
+    {
+        customer_id: {
+            type: DataTypes.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        first_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        middle_name :{
+            type:DataTypes.STRING
+        },
+        last_name:{
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false,
+            validate:{
+                isEmail:true
+            }
+        },
+        guest_check_out: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true
+        },
+        password: {
+                type:DataTypes.STRING,
+        },
+        gender:{
+            type: DataTypes.ENUM("Male", "Female", "Others"),
+            allowNull:false
+        },
+        phone_no: {
+            type: DataTypes.STRING
+        },
+        address: {
+            type: DataTypes.TEXT
+        }
+    },
+    {
+        freezeTableName: true
+    },  
+)
+
+module.exports = customer
