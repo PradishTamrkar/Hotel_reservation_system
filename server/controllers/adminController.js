@@ -10,7 +10,6 @@ const createAdmin = async(req,res) => {
     }
 }
 
-
 //Get all Admin
 const getAdmin = async (req,res) => {
     try{

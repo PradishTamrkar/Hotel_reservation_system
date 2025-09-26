@@ -7,6 +7,7 @@ SELECT
     r.room_no,
     r.room_type,
     r.price_per_night,
+    r.room_status,
     ra.room_amenity_id,
     ra.room_amenity_name,
     bd.booking_details_id,
@@ -17,10 +18,10 @@ SELECT
     c.customer_id,
     c.first_name || ' ' || c.middle_name || ' ' || c.last_name AS customer_name 
 FROM room r
-LEFT JOIN "room_amenity" ra ON r.room_no = ra.room_no
-LEFT JOIN "booking_details" bd ON r.room_no = bd.room_no
-LEFT JOIN "booking" b ON bd.booking_id = b.booking_id
-LEFT JOIN "customer" c ON b.customer_id = c.customer_id 
+LEFT JOIN room_amenity ra ON r.room_no = ra.room_no
+LEFT JOIN booking_details bd ON r.room_no = bd.room_no
+LEFT JOIN booking b ON bd.booking_id = b.booking_id
+LEFT JOIN customer c ON b.customer_id = c.customer_id  
 `
 //Room creation
 const createRoom = async(req,res) => {

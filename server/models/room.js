@@ -27,8 +27,8 @@ const room = sequelize.define(
             allowNull:true
         },
         room_status: {
-            type: DataTypes.ENUM('available','not_available')
-            // defaultValue: 'available'
+            type: DataTypes.ENUM('0','1'),
+            defaultValue: '1'
         }
     },
     {

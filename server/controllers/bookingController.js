@@ -3,6 +3,7 @@ const sequelize = require("../config/db");
 const Booking = require("../models/booking")
 const BookingDetails = require("../models/bookingDetails")
 const BookingHistory = require("../models/bookingHistory");
+const room = require("../models/room");
 
 //Joins
 const sqlBooking =`
@@ -30,8 +31,11 @@ JOIN customer c ON b.customer_id = c.customer_id
 JOIN booking_details bd ON b.booking_id = bd.booking_id
 JOIN room r ON bd.room_no = r.room_no
 LEFT JOIN promos_and_offers p ON bd.offer_id = p.offer_id
-GROUP BY b.booking_id, b.check_in_date, b.check_out_date, b.total_amount, c.customer_id, c.first_name, c.middle_name, c.last_name, c.email 
 ` 
+
+const sqlBookingGroupBy = `
+ GROUP BY b.booking_id, b.check_in_date, b.check_out_date, b.total_amount, c.customer_id, c.first_name, c.middle_name, c.last_name, c.email
+`
 //Booking Creation
 const createBooking = async (req,res) => {
     try{
@@ -95,6 +99,11 @@ const createBooking = async (req,res) => {
                 room_no:detail.room_no,
                 offer_id:detail.offer_id
             })
+
+            await room.update(
+                {room_status: "0"},
+                {where: {room_no: detail.room_no}}
+            )
         }
         //     await sequelize.query(
         //         `INSERT INTO booking_details (booking_id, room_no, offer_id)
@@ -134,22 +143,25 @@ const createBooking = async (req,res) => {
 //GET ALL booking
 const getAllBooking = async (req,res) => {
     try{
-        const [booking] = await sequelize.query(sqlBooking);
+        const booking = await sequelize.query(`${sqlBooking} ${sqlBookingGroupBy}`);
         res.json(booking)
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }
 
-//GET single Customer
+//GET single booking
 const getBookingByID = async(req,res) => {
     try{
-        const [booking] = await sequelize.query(
-            sqlBooking + `
+        const {id} = req.params
+        const booking = await sequelize.query(
+            `
+            ${sqlBooking}
             WHERE b.booking_id = :id
+            ${sqlBookingGroupBy}
             `,
             {
-            replacements:{id},
+            replacements:{ id },
             type: QueryTypes.SELECT
             }
         )
@@ -189,9 +201,40 @@ const deleteBooking = async (req,res) => {
         res.status(500).json({error: err.message})
     }
 }
-
+const searchBookingByCDetail = async (req,res) => {
+    try{
+        const {search} = req.query; //for admin to pass search
+        if(!search) 
+            return res.status(400).json({message: "Query is required"})
+    
+    const booking = await sequelize.query(
+        `${sqlBooking}
+        WHERE c.first_name ILIKE :search 
+        OR c.middle_name ILIKE :search
+        OR c.last_name ILIKE :search
+        OR c.phone_no ILIKE :search
+        OR c.email ILIKE :search
+        ${sqlBookingGroupBy}
+        `,
+        {
+            replacements: {
+                search: `%${search}%`
+            },
+            type:QueryTypes.SELECT
+        }
+    )
+    if(!booking || booking.length === 0){
+        return res.status(404).json({message: "No bookings Found"})
+    }
+    res.json(booking)
+    }
+    catch(err){
+        res.status(500).json*{error: err.message}
+    }   
+}
 exports.createBooking = createBooking
 exports.getAllBooking = getAllBooking
+exports.searchBookingByCDetail = searchBookingByCDetail
 exports.getBookingByID = getBookingByID
 exports.updateBooking = updateBooking
 exports.deleteBooking = deleteBooking
