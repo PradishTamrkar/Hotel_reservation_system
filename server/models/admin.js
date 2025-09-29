@@ -16,14 +16,18 @@ const admin = sequelize.define(
         },
         admin_email: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique:true,
+            validate: {
+                isEmail: true
+            }
         },
-        password: {
+        admin_password: {
             type: DataTypes.STRING,
             allowNull:false,
         },
-        contact_nO: {
-            type: DataTypes.INTEGER,
+        contact_no: {
+            type: DataTypes.STRING,
             allowNull:false
         }
     },

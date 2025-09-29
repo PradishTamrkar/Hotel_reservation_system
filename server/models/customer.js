@@ -32,12 +32,17 @@ const customer = sequelize.define(
                 isEmail:true
             }
         },
+        customer_username: {
+            type: DataTypes.STRING,
+            allowNull:false
+        },
         guest_check_out: {
             type: DataTypes.BOOLEAN,
             defaultValue: true
         },
-        password: {
+        customer_password: {
                 type:DataTypes.STRING,
+                allowNull:true
         },
         gender:{
             type: DataTypes.ENUM("Male", "Female", "Others"),

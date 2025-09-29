@@ -1,12 +1,34 @@
 const Admin = require('../models/admin')
-
-//admin creation
+const { generateToken } = require('../service/auth')
+const {hashedPass, compPass} = require('../service/passwordService')
+//admin creation or registration
 const createAdmin = async(req,res) => {
     try{
-        const admin = await Admin.create(req.body)
-        res.status(201).json(admin)
+        const { admin_username, admin_password } = req.body
+        const hashedPassword = await hashedPass(admin_password)
+        const admin = new Admin({admin_username, admin_password:hashedPassword})
+        await admin.save();
+        res.status(201).json({message:'Admin resgitration successfull'})
     }catch(err){
         res.status(500).json({error: err.message});
+    }
+}
+
+//admin login
+const adminLogin = async(req,res) => {
+    try{
+        const {admin_username, admin_password } = req.body
+        const admin = await Admin.findOne({where:{admin_username}})
+        if(!admin)
+            return res.status(401).json({message: 'Not Admin. Access Denied'})
+        const adminPassCheck = await compPass(admin_password, admin.admin_password)
+        if(!adminPassCheck)
+            return res.status(401).json('Password not matched')
+        const token = generateToken({id: admin.admin_id, role: 'admin'})
+
+        res.json({message:'Login Successful', token})
+    }catch(err){
+        res.status(500).json({error:err.message})
     }
 }
 
@@ -36,7 +58,7 @@ const getAdminByID = async(req,res) => {
 //Update Admin
 const updateAdmin = async(req,res) => {
     try{
-        const admin = await Admin.findAll()
+        const admin = await Admin.findByPk(req.params.id)
         if(!admin) 
             return res.status(404).json({message: 'Admin not found'})
         await admin.update(req.body)
@@ -49,7 +71,7 @@ const updateAdmin = async(req,res) => {
 //Delete Room
 const deleteAdmin = async (req,res) => {
     try{
-        const admin = await Admin.findOne()
+        const admin = await Admin.findByPk(req.params.id)
         if(!admin)
             return res.status(404).json({message: 'Admin not found'})
         await admin.destroy();
@@ -60,6 +82,7 @@ const deleteAdmin = async (req,res) => {
 }
 
 exports.createAdmin = createAdmin
+exports.adminLogin = adminLogin
 exports.getAdmin = getAdmin
 exports.getAdminByID = getAdminByID
 exports.updateAdmin = updateAdmin
