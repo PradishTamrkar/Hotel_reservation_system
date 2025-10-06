@@ -4,9 +4,14 @@ const {hashedPass, compPass} = require('../service/passwordService')
 //admin creation or registration
 const createAdmin = async(req,res) => {
     try{
-        const { admin_username, admin_password } = req.body
+        const { admin_username, admin_email, admin_password, contact_no  } = req.body
         const hashedPassword = await hashedPass(admin_password)
-        const admin = new Admin({admin_username, admin_password:hashedPassword})
+        const admin = await Admin.create({
+            admin_username, 
+            admin_email,
+            admin_password:hashedPassword,
+            contact_no
+        })
         await admin.save();
         res.status(201).json({message:'Admin resgitration successfull'})
     }catch(err){

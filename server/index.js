@@ -1,4 +1,4 @@
-// require('dotenv').config()
+require('dotenv').config()
 const express = require('express')
 const sequelize = require('./config/db')
 const customerRoutes = require('./routes/customerRoutes')
@@ -37,7 +37,7 @@ app.use('/api/bookingHistory', bookingHistoryRoutes)
 ;(async () => {
   try {
     await sequelize.authenticate()
-    await sequelize.sync({ force: true, alter:true })
+    await sequelize.sync({ alter:true })
     console.log('database synchronized')
   } catch (err) {
     console.error('Synchronization failed: ', err)
