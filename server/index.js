@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({path:'./.env'})
 const express = require('express')
 const sequelize = require('./config/db')
 const customerRoutes = require('./routes/customerRoutes')

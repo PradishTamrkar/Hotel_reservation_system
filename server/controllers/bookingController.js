@@ -14,7 +14,7 @@ SELECT
     b.check_out_date, 
     b.total_amount, 
     c.customer_id, 
-    c.first_name || ' ' || c.middle_name || ' ' || c.last_name AS customer_name, 
+    c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name, 
     c.email AS customer_email,
     json_agg(
         json_build_object(
@@ -58,7 +58,14 @@ async function isRoomAvailable(room_no,check_in_date,check_out_date){
 //Booking Creation
 const createBooking = async (req,res) => {
     try{
-        const {customer_id, rooms, check_in_date, check_out_date} = req.body
+        const {customer_id, guest_name, guest_email, guest_phone, rooms, check_in_date, check_out_date} = req.body
+
+        //if not a customer then them treat as guest
+        if(!customer_id){
+            if(!guest_name || !guest_email || !guest_phone){
+                return res.status(400).json({message:'Guest information must be provided if not booking as a registered customer'})
+            }
+        }
         let total_amount = 0;
         let roomDetails = [];
         //night calculation
@@ -107,15 +114,17 @@ const createBooking = async (req,res) => {
         }
 
         //create booking
-        const booking = await Booking.create(
-            {
-                customer_id,
-                check_in_date,
-                check_out_date,
-                total_amount: total_amount,
-                booking_date: new Date(),
-            },
-        )
+        const bookingData = {
+            customer_id: customer_id || null,
+            guest_name: guest_name || null,
+            guest_email: guest_email || null,
+            guest_phone: guest_phone || null,
+            check_in_date,
+            check_out_date,
+            total_amount: total_amount,
+            booking_date: new Date()
+        }
+        const booking = await Booking.create(bookingData)
 
 
         //create bookingdetails

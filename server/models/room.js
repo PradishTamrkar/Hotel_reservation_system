@@ -6,7 +6,7 @@ const room = sequelize.define(
     'room', 
     {
         room_no:{
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             primaryKey: true,
             autoIncrement: true
         },
@@ -26,6 +26,10 @@ const room = sequelize.define(
             type: DataTypes.BLOB,
             allowNull:true
         },
+        // room_description:{
+        //     type:DataTypes.TEXT,
+        //     allowNull:true
+        // },
         room_status: {
             type: DataTypes.ENUM('0','1'),
             defaultValue: '1'

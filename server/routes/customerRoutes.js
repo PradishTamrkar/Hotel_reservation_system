@@ -6,9 +6,9 @@ const router = express.Router()
 
 router.post('/register',customerController.createCustomer)
 router.post('/login',customerController.customerLogin)
-router.get('/',verifyToken, customerOrGuest, customerController.getAllCustomer)
-router.get('/:id',verifyToken, customerOrGuest, customerController.getCustomersByID)
-router.put('/:id',verifyToken, customerOrGuest, customerController.updateCustomer)
-router.delete('/:id',verifyToken, customerOrGuest , customerController.deleteCustomer)
+router.get('/',customerController.getAllCustomer)
+router.get('/:id',customerController.getCustomersByID)
+router.put('/:id',verifyToken, customerController.updateCustomer)
+router.delete('/:id',verifyToken, customerController.deleteCustomer)
 
 module.exports=router

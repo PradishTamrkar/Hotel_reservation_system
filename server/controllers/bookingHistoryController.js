@@ -15,20 +15,20 @@ SELECT
 FROM booking_history h
 JOIN booking b ON h.booking_id = b.booking_id
 JOIN customer c ON h.customer_id = c.customer_id
-WHERE customer_id= :customer_id
+WHERE h.customer_id= :customer_id
 `
 //GET ALL booking history for a customer
 const getAllBookingsByCustomer = async (req,res) => {
     try{
         const { customer_id} = req.params
-        const [pastBookings] = await sequelize.query(
+        const pastBookings = await sequelize.query(
             sqlBookingHistory,
             {
                 replacements: {customer_id: customer_id},
                 type:QueryTypes.SELECT,
             },
         );
-        if(pastBookings.length === 0)
+        if(!pastBookings || pastBookings.length === 0)
             return res.status(404).json({message: "No Booking Found"})
         res.json(pastBookings)
     }catch(err){

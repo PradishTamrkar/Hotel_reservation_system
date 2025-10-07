@@ -1,27 +1,28 @@
+const { DataTypes, QueryTypes } = require('sequelize')
 const sequelize = require('../config/db')
 const Room = require('../models/room')
 
 //Room JOINS
-const sqlRoom = `
+const sqlRoom =`
 SELECT 
     r.room_no,
     r.room_type,
     r.price_per_night,
+    r.capacity,
     r.room_status,
-    ra.room_amenity_id,
-    ra.room_amenity_name,
-    bd.booking_details_id,
-    b.booking_id,
-    b.booking_date, 
-    b.check_in_date, 
-    b.check_out_date, 
-    c.customer_id,
-    c.first_name || ' ' || c.middle_name || ' ' || c.last_name AS customer_name 
+    r.room_images,
+    json_agg(
+        json_build_object(
+            'room_amenity_id', ra.room_amenity_id,
+            'room_amenity_name', ra.room_amenity_name    
+        )
+    ) FILTER (WHERE ra.room_amenity_id IS NOT NULL) AS r_amenities
 FROM room r
 LEFT JOIN room_amenity ra ON r.room_no = ra.room_no
-LEFT JOIN booking_details bd ON r.room_no = bd.room_no
-LEFT JOIN booking b ON bd.booking_id = b.booking_id
-LEFT JOIN customer c ON b.customer_id = c.customer_id  
+`
+
+const sqlRoomGroupBy = `
+GROUP BY r.room_no, r.room_type, r.price_per_night, r.capacity, r.room_status, r.room_images
 `
 //Room creation
 const createRoom = async(req,res) => {
@@ -36,8 +37,27 @@ const createRoom = async(req,res) => {
 //Get ALL Rooms
 const getAllRooms = async (req,res) => {
     try{
-        const [room] = await sequelize.query(sqlRoom)
-        res.json(room)
+        const pageNumber = parseInt(req.query.pageNumber) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const offset = (pageNumber -1 ) * limit 
+        const room = await sequelize.query(
+            `
+            ${sqlRoom}
+            ${sqlRoomGroupBy}
+            ORDER BY r.room_no
+            LIMIT :limit OFFSET :offset
+            `,
+            {
+                replacements:{limit,offset},
+                type:QueryTypes.SELECT
+            }
+        )
+        res.json({
+            pageNumber,
+            limit,
+            totalRoom: room.length,
+            room
+        })
     }catch(err){
         res.status(500).json({error: err.message});
     }
@@ -47,8 +67,11 @@ const getAllRooms = async (req,res) => {
 const getRoomByID = async (req,res) => {
     try{
         const room = await sequelize.query(
-            sqlRoom+ `WHERE r.room_no = :id`
-            //replacements
+            `
+            ${sqlRoom} 
+            WHERE r.room_no = :id 
+            ${sqlRoomGroupBy}
+            `
         )
         if(!room) 
             return res.status(404).json({message: 'Room not found'})

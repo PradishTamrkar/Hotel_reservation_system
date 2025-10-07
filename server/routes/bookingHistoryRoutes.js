@@ -3,6 +3,6 @@ const bookingHistoryController = require('../controllers/bookingHistoryControlle
 
 const router = express.Router()
 
-router.get('/:customerID',bookingHistoryController.getAllBookingsByCustomer)
+router.get('/:customer_id',bookingHistoryController.getAllBookingsByCustomer)
 
 module.exports=router

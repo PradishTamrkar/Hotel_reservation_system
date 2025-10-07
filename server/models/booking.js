@@ -12,11 +12,23 @@ const booking = sequelize.define(
         },
         customer_id: {
             type:DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
             references: {
                 model: "customer",
                 key: "customer_id"
             }
+        },
+        guest_name:{
+            type: DataTypes.STRING,
+            allowNull:true
+        },
+        guest_email:{
+            type:DataTypes.STRING,
+            allowNull:true
+        },
+        guest_phone:{
+            type:DataTypes.STRING,
+            allowNull:true
         },
         booking_date: {
             type: DataTypes.DATE,

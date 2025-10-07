@@ -8,27 +8,17 @@ const {hashedPass, compPass} = require('../service/passwordService')
 const sqlCustomer = `
 SELECT
     c.customer_id, 
-    c.first_name || ' ' || c.middle_name || ' ' || c.last_name AS customer_name, 
+    c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name, 
     c.email AS customerEmail,
     c.phone_no,
-    b.booking_id, 
-    b.booking_date, 
-    b.check_in_date, 
-    b.check_out_date, 
-    b.total_amount,
-    bd.booking_details_id,
-    r.room_no,
-    r.room_type,
-    r.price_per_night
 FROM customer c
-LEFT JOIN booking b ON c.customer_id = b.customer_id
-LEFT JOIN booking_details bd on b.booking_id = bd.booking_id
-LEFT JOIN room r ON bd.room_no = r.room_no
 `
 //Customer Creation/registration
 const createCustomer = async (req,res) => {
     try{
         const {first_name, middle_name, last_name, email, customer_username, customer_password, gender, phone_no, address} = req.body
+        if(!first_name || !last_name || !email || !customer_username || !customer_password)
+            return res.status(400).json({message: "missing required fields"})
         const hashedPasswordCus = await hashedPass(customer_password)
         const customer = await Customer.create({ first_name, middle_name, last_name, email, customer_username, customer_password: hashedPasswordCus, gender, phone_no, address});
         res.status(201).json({message:'Customer resgitration successfull'})
