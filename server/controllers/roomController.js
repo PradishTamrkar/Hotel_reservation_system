@@ -5,11 +5,8 @@ const Room = require('../models/room')
 //Room JOINS
 const sqlRoom =`
 SELECT 
-    r.room_no,
     r.room_type,
     r.price_per_night,
-    r.capacity,
-    r.room_status,
     r.room_images,
     json_agg(
         json_build_object(
