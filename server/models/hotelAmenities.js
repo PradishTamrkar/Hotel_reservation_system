@@ -14,11 +14,11 @@ const hotel_amenity = sequelize.define(
             allowNull:false
         },
         hotel_amenity_description: {
-            type: DataTypes.TEXT,
+            type: DataTypes.STRING,
             allowNull: true
         },
         hotel_amenity_image: {
-            type: DataTypes.BLOB,
+            type: DataTypes.STRING,
             allowNull: true
         }
     },

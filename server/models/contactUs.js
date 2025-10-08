@@ -9,11 +9,15 @@ const contact_us = sequelize.define(
             primaryKey:true,
             autoIncrement:true
         },
-        related_suject: {
-            type: DataTypes.TEXT,
-            allowNull: true
+        c_name:{
+            type: DataTypes.STRING,
+            allowNull:false
         },
-        message: {
+        c_email:{
+            type:DataTypes.STRING,
+            allowNull:false
+        },
+        message:{
             type: DataTypes.TEXT,
             allowNull:true
         }

@@ -6,16 +6,28 @@ const BookingHistory = require("../models/bookingHistory");
 const Room = require("../models/room");
 
 //Joins
-const sqlBooking =`
+const sqlAllBooking =`
 SELECT 
-    b.booking_id, 
+    b.booking_id,
     b.booking_date, 
     b.check_in_date, 
     b.check_out_date, 
-    b.total_amount, 
-    c.customer_id, 
-    c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name, 
-    c.email AS customer_email,
+    b.total_amount,  
+    c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name,
+    c.email
+FROM booking b 
+JOIN customer c ON b.customer_id = c.customer_id
+` 
+
+const sqlBookingByID = `
+SELECT
+    b.booking_id,
+    b.booking_date, 
+    b.check_in_date, 
+    b.check_out_date, 
+    b.total_amount,  
+    c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name,
+    c.email,
     json_agg(
         json_build_object(
             'booking_details_id',bd.booking_details_id,
@@ -25,13 +37,13 @@ SELECT
             'offer_id',p.offer_id,
             'offer_name',p.offer_name,
             'offered_discount',p.offered_discount
-        )) AS details
-FROM booking b 
-JOIN customer c ON b.customer_id = c.customer_id
-JOIN booking_details bd ON b.booking_id = bd.booking_id
-JOIN room r ON bd.room_no = r.room_no
-LEFT JOIN promos_and_offers p ON bd.offer_id = p.offer_id
-` 
+    )) AS details
+    FROM booking b
+    JOIN customer c ON b.customer_id = c.customer_id
+    JOIN booking_details bd ON b.booking_id = bd.booking_id
+    JOIN room r ON bd.room_no = r.room_no
+    LEFT JOIN promos_and_offers p ON bd.offer_id = p.offer_id
+`
 
 const sqlBookingGroupBy = `
  GROUP BY b.booking_id, b.check_in_date, b.check_out_date, b.total_amount, c.customer_id, c.first_name, c.middle_name, c.last_name, c.email
@@ -153,8 +165,17 @@ const createBooking = async (req,res) => {
 //GET ALL booking
 const getAllBooking = async (req,res) => {
     try{
-        const booking = await sequelize.query(`${sqlBooking} ${sqlBookingGroupBy}`,{
-            type:QueryTypes.SELECT
+        const pageNumber = parseInt(req.query.pageNumber) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const offset = (pageNumber -1 ) * limit 
+        const booking = await sequelize.query(`
+            ${sqlAllBooking}
+            ORDER BY b.booking_id
+            LIMIT :limit OFFSET :offset
+            `,
+            {
+                replacements:{limit,offset},
+                type:QueryTypes.SELECT
         });
         res.json(booking)
     }catch(err){
@@ -168,7 +189,7 @@ const getBookingByID = async(req,res) => {
         const {id} = req.params
         const booking = await sequelize.query(
             `
-            ${sqlBooking}
+            ${sqlBookingByID}
             WHERE b.booking_id = :id
             ${sqlBookingGroupBy}
             `,

@@ -13,6 +13,10 @@ const promos_and_offers = sequelize.define(
             type: DataTypes.STRING,
             allowNull:false
         },
+        offer_image:{
+            type:DataTypes.STRING,
+            allowNull:true
+        },
         offer_description: {
             type: DataTypes.TEXT,
             allowNull: true

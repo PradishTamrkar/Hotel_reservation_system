@@ -25,12 +25,21 @@ const customer_testimony = sequelize.define(
                 key: "customer_id"
             }
         },
-        customer_name: {
+        first_name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+        },
+        middle_name: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        last_name: {
+            type: DataTypes.STRING,
+            allowNull: false,   
         },
         rating:{
-            type: DataTypes.DECIMAL
+            type: DataTypes.FLOAT,
+            allowNull:false
         }
     }
 )

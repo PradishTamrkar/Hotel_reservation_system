@@ -26,10 +26,10 @@ const room = sequelize.define(
             type: DataTypes.BLOB,
             allowNull:true
         },
-        // room_description:{
-        //     type:DataTypes.TEXT,
-        //     allowNull:true
-        // },
+        room_description:{
+            type:DataTypes.TEXT,
+            allowNull:true
+        },
         room_status: {
             type: DataTypes.ENUM('0','1'),
             defaultValue: '1'

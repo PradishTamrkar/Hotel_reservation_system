@@ -10,7 +10,7 @@ SELECT
     c.customer_id, 
     c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name, 
     c.email AS customerEmail,
-    c.phone_no,
+    c.phone_no
 FROM customer c
 `
 //Customer Creation/registration
@@ -48,7 +48,20 @@ const customerLogin = async(req,res) => {
 //GET ALL Customers
 const getAllCustomer = async (req,res) => {
     try{
-        const [customer] = await sequelize.query(sqlCustomer);
+        const pageNumber = parseInt(req.query.pageNumber) || 1
+        const limit = parseInt(req.query.limit) || 10
+        const offset = (pageNumber -1 ) * limit 
+        const [customer] = await sequelize.query(
+            `
+            ${sqlCustomer}
+                ORDER BY c.customer_id
+                LIMIT :limit OFFSET :offset
+                `,
+                {
+                    replacements:{limit,offset},
+                    type:QueryTypes.SELECT
+                }
+            )
         res.json(customer)
     }catch(err){
         res.status(500).json({error: err.message})
