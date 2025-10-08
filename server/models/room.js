@@ -23,7 +23,7 @@ const room = sequelize.define(
             allowNull:false
         },
         room_images: {
-            type: DataTypes.BLOB,
+            type: DataTypes.STRING,
             allowNull:true
         },
         room_description:{
@@ -31,8 +31,8 @@ const room = sequelize.define(
             allowNull:true
         },
         room_status: {
-            type: DataTypes.ENUM('0','1'),
-            defaultValue: '1'
+            type: DataTypes.ENUM('Not-Available','Available'),
+            defaultValue: 'Available'
         }
     },
     {

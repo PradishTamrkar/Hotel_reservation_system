@@ -6,6 +6,7 @@
 
     const sqlAllRoom = `
     SELECT
+        r.room_no,
         r.room_type,
         r.price_per_night,
         r.room_images,
@@ -14,6 +15,7 @@
     `
     const sqlRoomByID =`
     SELECT 
+        r.room_no,
         r.room_type,
         r.price_per_night,
         r.room_images,
@@ -29,7 +31,7 @@
     `
 
     const sqlRoomGroupBy = `
-    GROUP BY r.room_no, r.room_type, r.price_per_night, r.capacity, r.room_status, r.room_images
+    GROUP BY r.room_no, r.room_type, r.price_per_night, r.room_status, r.room_images, r.room_description
     `
     //Room creation
     const createRoom = async(req,res) => {

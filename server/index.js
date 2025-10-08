@@ -1,5 +1,6 @@
 require('dotenv').config({path:'./.env'})
 const express = require('express')
+const cors = require('cors')
 const sequelize = require('./config/db')
 const customerRoutes = require('./routes/customerRoutes')
 const roomRoutes = require('./routes/roomRoutes')
@@ -18,7 +19,8 @@ const bookingHistoryRoutes = require('./routes/bookingHistoryRoutes')
 
 const app = express()           
 
-app.use(express.json())        
+app.use(express.json())  
+app.use(cors())      
 app.use('/api/customers', customerRoutes) 
 app.use('/api/rooms', roomRoutes) 
 app.use('/api/admin', adminRoutes)
@@ -33,6 +35,7 @@ app.use('/api/property', propertyInfoRoutes)
 app.use('/api/hotelAmenities', hotelAmenityRoutes)
 app.use('/api/bookingDetails', bookingDetailsRoutes)
 app.use('/api/bookingHistory', bookingHistoryRoutes)
+
 
 ;(async () => {
   try {

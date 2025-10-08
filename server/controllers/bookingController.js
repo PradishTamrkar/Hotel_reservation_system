@@ -31,7 +31,6 @@ SELECT
     json_agg(
         json_build_object(
             'booking_details_id',bd.booking_details_id,
-            'room_no',r.room_no, 
             'room_type',r.room_type,
             'price_per_night',r.price_per_night,
             'offer_id',p.offer_id,
@@ -248,7 +247,7 @@ const deleteBooking = async (req,res) => {
         await BookingHistory.destroy({ where: { booking_id: req.params.id } });
         
         for(const r of bookedRooms){
-            await Room.update({room_status: '1'},{where: {room_no: r.room_no}})
+            await Room.update({room_status: 'Available'},{where: {room_no: r.room_no}})
         }
         await booking.destroy();
         res.json({message: 'Booking deleted successfully'})
