@@ -3,6 +3,7 @@ const sequelize = require('../config/db');
 const room = require('./room');
 const promos_and_offers = require('./promosAndOffers');
 const booking = require('./booking');
+const room_catagory = require('./roomCatagory');
 
 const booking_details = sequelize.define(
     'booking_details',
@@ -20,12 +21,12 @@ const booking_details = sequelize.define(
                 key: "booking_id"
             }
         },
-        room_no: {
+        room_id: {
             type: DataTypes.INTEGER,
-            allowNull:false,
+            allowNull:true,
             references: {
                 model: "room",
-                key:"room_no"
+                key:"room_id"
             }
         },
         offer_id:{
@@ -38,6 +39,7 @@ const booking_details = sequelize.define(
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     }
 )

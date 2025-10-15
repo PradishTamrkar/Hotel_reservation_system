@@ -27,6 +27,7 @@ const promos_and_offers = sequelize.define(
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     }
 )

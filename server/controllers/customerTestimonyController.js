@@ -8,6 +8,7 @@ const sqlTestimony = `
         t.comment,
         t.rating,
         c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name
+        
     FROM customer_testimonies t
     JOIN customer c ON t.customer_id = c.customer_id
 `

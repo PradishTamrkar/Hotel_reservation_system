@@ -41,6 +41,9 @@ const customer_testimony = sequelize.define(
             type: DataTypes.FLOAT,
             allowNull:false
         }
+    },
+    {
+        timestamps:false
     }
 )
 

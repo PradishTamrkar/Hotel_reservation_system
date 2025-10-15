@@ -9,24 +9,21 @@ const property_info = sequelize.define(
             primaryKey:true,
             autoIncrement:true
         },
-        opening_time: {
-            type: DataTypes.TIME,
-            allowNull:false
+        property_info_title:{
+            type: DataTypes.STRING,
+            allowNull:false,
         },
-        closing_time: {
-            type: DataTypes.TIME,
-            allowNull: false
+        property_info_description:{
+            type:DataTypes.TEXT,
+            allowNull:true
         },
-        parking_info: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        },
-        pet_policy_info: {
-            type: DataTypes.TEXT,
-            allowNull:false
+        property_info_image:{
+            type:DataTypes.STRING,
+            allowNull:true
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     }
 )

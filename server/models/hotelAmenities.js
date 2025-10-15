@@ -23,6 +23,7 @@ const hotel_amenity = sequelize.define(
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     }
 )

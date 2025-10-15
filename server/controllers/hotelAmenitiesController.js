@@ -3,8 +3,24 @@ const HotelAmenity = require("../models/hotelAmenities")
 //Hotel Amenity Creation
 const createHotelAmenity = async (req,res) => {
     try{
-        const hotelAmenity = await HotelAmenity.create(req.body)
-        res.status(201).json(hotelAmenity)
+
+        console.log("Body:", req.body)
+        console.log("File:", req.file)
+
+        const body = req.body || {};
+        const { hotel_amenity_name,hotel_amenity_description } = body
+         if (!hotel_amenity_name || !hotel_amenity_description ) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        const hotel_amenity_image = req.file ? req.file.filename : null
+
+        const newHotelAmenity = await HotelAmenity.create({
+            hotel_amenity_name,
+            hotel_amenity_description,
+            hotel_amenity_image
+        })
+        res.status(201).json({message:"Hotel Amenity created successfully", hotelAmenity: newHotelAmenity})
     }catch(err){
         res.status(500).json({error: err.message});
     }
@@ -35,11 +51,21 @@ const getHotelAmenityByID = async(req,res) => {
 //Update Hotel Amenity Info
 const updateHotelAmenity= async(req,res) => {
     try{
+
+        const body = req.body || {};
+        const { hotel_amenity_name,hotel_amenity_description } = body
+
         const hotelAmenity = await HotelAmenity.findByPk(req.params.id)
         if(!hotelAmenity)
             return res.status(404).json({message: 'Hotel Amenity not found'})
 
-        await hotelAmenity.update(req.body)
+        const hotel_amenity_image = req.file ? req.file.filename : hotelAmenity.hotel_amenity_image
+
+        await hotelAmenity.update({
+            hotel_amenity_name,
+            hotel_amenity_description,
+            hotel_amenity_image
+        })
         res.json(hotelAmenity)
     }catch(err){
         res.status(500).json({error: err.message})

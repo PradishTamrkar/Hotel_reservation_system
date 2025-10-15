@@ -4,40 +4,38 @@
 
     //Room JOINS
 
-    const sqlAllRoom = `
+    const sqlRoom = `
     SELECT
+        r.room_id,
         r.room_no,
-        r.room_type,
-        r.price_per_night,
-        r.room_images,
-        r.room_description
+        r.room_status
     FROM room r
-    `
-    const sqlRoomByID =`
-    SELECT 
-        r.room_no,
-        r.room_type,
-        r.price_per_night,
-        r.room_images,
-        r.room_description,
-        json_agg(
-            json_build_object(
-                'room_amenity_id', ra.room_amenity_id,
-                'room_amenity_name', ra.room_amenity_name    
-            )
-        ) FILTER (WHERE ra.room_amenity_id IS NOT NULL) AS r_amenities
-    FROM room r
-    LEFT JOIN room_amenity ra ON r.room_no = ra.room_no
-    `
-
-    const sqlRoomGroupBy = `
-    GROUP BY r.room_no, r.room_type, r.price_per_night, r.room_status, r.room_images, r.room_description
     `
     //Room creation
     const createRoom = async(req,res) => {
         try{
-            const room = await Room.create(req.body)
-            res.status(201).json(room)
+             console.log("Body:", req.body)
+            console.log("File:", req.file)
+
+            const body = req.body || {};
+            const { room_catagory_id,room_no,room_description,capacity } = body
+
+        if (!room_no || !room_description || !capacity ) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+        const room_images = req.file ? req.file.filename : null
+            const newRoom = await Room.create({
+                room_catagory_id,
+                room_no,
+                room_description,
+                capacity,
+                room_images
+            })
+            const roomWithURL={
+                ...newRoom.toJSON(),
+                room_images:getFileUrl(newRoom.room_images)
+            }
+            res.status(201).json({message:'Room created successfully',room: roomWithURL})
         }catch(err){
             res.status(500).json({error: err.message});
         }
@@ -51,8 +49,8 @@
             const offset = (pageNumber -1 ) * limit 
             const room = await sequelize.query(
                 `
-                ${sqlAllRoom}
-                ORDER BY r.room_no
+                ${sqlRoom}
+                ORDER BY r.room_id
                 LIMIT :limit OFFSET :offset
                 `,
                 {
@@ -77,9 +75,8 @@
             const { id } = req.params
             const room = await sequelize.query(
                 `
-                ${sqlRoomByID} 
-                WHERE r.room_no = :id 
-                ${sqlRoomGroupBy}
+                ${sqlRoom} 
+                WHERE r.room_id = :id 
                 `,
                 { 
                     replacements: { id }, 
@@ -97,10 +94,22 @@
     //Update Room
     const updateRoom = async(req,res) => {
         try{
+            console.log("Body:", req.body)
+            console.log("File:", req.file)
+
+            const body = req.body || {};
+            const { room_catagory_id,room_no,room_description,capacity  } = body
             const room = await Room.findByPk(req.params.id)
             if(!room) 
                 return res.status(404).json({message: 'Room not found'})
-            await room.update(req.body)
+            const room_images = req.file? req.file.filename : room.room_images
+            await room.update({
+                room_catagory_id,
+                room_no,
+                room_description,
+                capacity,
+                room_images                
+            })
             res.json(room)
         }catch(err){
             res.status(500).json({error: err.message});

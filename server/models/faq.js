@@ -19,6 +19,7 @@ const FAQ = sequelize.define(
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     }
 )

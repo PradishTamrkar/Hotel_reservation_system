@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt')
 const sequelize = require('../config/db')
 const booking = require('./booking')
 // const CustomerTestimony = require('./customerTestimony')
-const booking_history = require('./bookingHistory')
 
 const customer = sequelize.define(
     'customer', 
@@ -34,7 +33,8 @@ const customer = sequelize.define(
         },
         customer_username: {
             type: DataTypes.STRING,
-            allowNull:false
+            allowNull:true,
+            unique:true
         },
         guest_check_out: {
             type: DataTypes.BOOLEAN,
@@ -53,9 +53,18 @@ const customer = sequelize.define(
         },
         address: {
             type: DataTypes.TEXT
+        },
+        nationality:{
+            type: DataTypes.STRING,
+            allowNull:false
+        },
+        citizenship_id:{
+            type: DataTypes.STRING,
+            allowNull:false
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     },  
 )

@@ -1,10 +1,10 @@
 const express = require('express')
 const bookingController = require('../controllers/bookingController')
-const { verifyToken, customerOrGuest, adminOnly } =require('../service/auth')
+const { verifyToken, adminOnly, allowCustomerOrGuest } =require('../service/auth')
 
 const router = express.Router()
 
-router.post('/',verifyToken,customerOrGuest,bookingController.createBooking)
+router.post('/',verifyToken, allowCustomerOrGuest,bookingController.createBooking)
 router.get('/',verifyToken,adminOnly,bookingController.getAllBooking)
 router.get("/search",verifyToken,adminOnly,bookingController.searchBookingByCDetail)
 router.get('/:id',verifyToken,bookingController.getBookingByID)

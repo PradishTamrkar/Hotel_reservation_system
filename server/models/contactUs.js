@@ -23,6 +23,7 @@ const contact_us = sequelize.define(
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     }
 )

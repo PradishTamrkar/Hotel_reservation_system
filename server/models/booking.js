@@ -18,18 +18,6 @@ const booking = sequelize.define(
                 key: "customer_id"
             }
         },
-        guest_name:{
-            type: DataTypes.STRING,
-            allowNull:true
-        },
-        guest_email:{
-            type:DataTypes.STRING,
-            allowNull:true
-        },
-        guest_phone:{
-            type:DataTypes.STRING,
-            allowNull:true
-        },
         booking_date: {
             type: DataTypes.DATE,
             allowNull: false
@@ -43,11 +31,12 @@ const booking = sequelize.define(
             allowNull: false
         },
         total_amount: {
-            type: DataTypes.NUMERIC(20,5),
+            type: DataTypes.NUMERIC(20,2),
             allowNull: false
         }
     },
     {
+        timestamps:false,
         freezeTableName: true
     }
 )
