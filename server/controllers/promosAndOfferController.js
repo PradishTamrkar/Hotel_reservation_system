@@ -1,6 +1,8 @@
 const promos_and_offers = require("../models/promosAndOffers");
 const PromosAndOffer = require("../models/promosAndOffers");
+const getFileURL = require("../service/getFileURL");
 const { updateCustomer } = require("./customerController");
+const getFileUrl = require("../service/getFileURL");
 
 //offer Creation
 const createOffer = async (req,res) => {
@@ -23,7 +25,12 @@ const createOffer = async (req,res) => {
             offered_discount,
             offer_image
         })
-        res.status(201).json({message:'Offer created successfully',offer: newOffer})
+
+        const offerWithUrl = {
+            ...newOffer.toJSON(),
+            offer_image: getFileURL(newOffer.offer_image)
+        }
+        res.status(201).json({message:'Offer created successfully',offer: offerWithUrl})
     }catch(err){
         res.status(500).json({error: err.message});
     }
@@ -33,7 +40,11 @@ const createOffer = async (req,res) => {
 const getAllOffers = async (req,res) => {
     try{
         const offer = await PromosAndOffer.findAll();
-        res.json(offer)
+        const offerWithUrl = offer.map(o => ({
+            ...o.toJSON(),
+            offer_image: getFileURL(o.offer_image)
+        }))
+        res.json(offerWithUrl)
     }catch(err){
         res.status(500).json({error: err.message})
     }
@@ -45,7 +56,12 @@ const getOfferByID = async(req,res) => {
         const offer = await PromosAndOffer.findByPk(req.params.id)
         if(!offer) 
             return res.status(404).json({message: 'Offer not found'})
-        res.json(offer)
+
+        const offerWithUrl = {
+            ...offer.toJSON(),
+            offer_image: getFileURL(offer.offer_image)
+        }
+        res.json(offerWithUrl)
     }catch(err){
         res.status(500).json({error: err.message})
     }
@@ -73,7 +89,12 @@ const updateOffer = async(req,res) => {
             offered_discount,
             offer_image
         })
-        res.json(offer)
+
+        const offerWithUrl = {
+            ...offer.toJSON(),
+            offer_image: getFileURL(offer.offer_image)
+        }
+        res.json({ message: "Offer updated successfully", offer: offerWithUrl })
     }catch(err){
         res.status(500).json({error: err.message})
     }

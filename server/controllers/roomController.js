@@ -1,6 +1,7 @@
     const { DataTypes, QueryTypes } = require('sequelize')
     const sequelize = require('../config/db')
     const Room = require('../models/room')
+    const getFileURL = require('../service/getFileURL')
 
     //Room JOINS
 
@@ -58,11 +59,16 @@
                     type:QueryTypes.SELECT
                 }
             )
+
+            const updatedRooms = room.map(room => ({
+                ...room,
+                room_images: getFileURL(room.room_images)
+            }))
             res.json({
                 pageNumber,
                 limit,
-                totalRoom: room.length,
-                room
+                totalRoom: updatedRooms.length,
+                room: updatedRooms
             })
         }catch(err){
             res.status(500).json({error: err.message});
@@ -85,7 +91,12 @@
             )
             if(!room) 
                 return res.status(404).json({message: 'Room not found'})
-            res.json(room)
+            const roomWithUrl = room.map(r => ({
+                 ...r,
+                room_images: getFileUrl(r.room_images)
+            }));
+            res.json(roomWithUrl);
+            
         }catch(err){
             res.status(500).json({error: err.message});
         }
@@ -110,7 +121,15 @@
                 capacity,
                 room_images                
             })
-            res.json(room)
+        const roomWithUrl = {
+            ...room.toJSON(),
+            room_images: getFileUrl(room.room_images)
+        };
+
+        res.json({
+            message: 'Room updated successfully',
+            room: roomWithUrl
+        });
         }catch(err){
             res.status(500).json({error: err.message});
         }

@@ -1,4 +1,5 @@
 const HotelAmenity = require("../models/hotelAmenities")
+const getFileUrl = require("../service/getFileURL");
 
 //Hotel Amenity Creation
 const createHotelAmenity = async (req,res) => {
@@ -20,7 +21,12 @@ const createHotelAmenity = async (req,res) => {
             hotel_amenity_description,
             hotel_amenity_image
         })
-        res.status(201).json({message:"Hotel Amenity created successfully", hotelAmenity: newHotelAmenity})
+
+        const hAmenityWithUrl = {
+            ...newHotelAmenity.toJSON(),
+            hotel_amenity_image: getFileUrl(newHotelAmenity.hotel_amenity_image)
+        }
+        res.status(201).json({message:"Hotel Amenity created successfully", hotelAmenity: hAmenityWithUrl})
     }catch(err){
         res.status(500).json({error: err.message});
     }
@@ -30,7 +36,11 @@ const createHotelAmenity = async (req,res) => {
 const getAllHotelAmenity= async (req,res) => {
     try{
         const hotelAmenity = await HotelAmenity.findAll();
-        res.json(hotelAmenity)
+        const hAmenityWithUrl = hotelAmenity.map(h =>({
+            ...h.toJSON(),
+            hotel_amenity_image: getFileUrl(hAmenityWithUrl.hotel_amenity_image)
+        }))
+        res.json(hAmenityWithUrl)
     }catch(err){
         res.status(500).json({error: err.message})
     }
@@ -42,7 +52,11 @@ const getHotelAmenityByID = async(req,res) => {
         const hotelAmenity = await HotelAmenity.findByPk(req.params.id)
         if(!hotelAmenity) 
             return res.status(404).json({message: 'Hotel Amenity not found'})
-        res.json(hotelAmenity)
+        const hAmenityWithUrl = {
+            ...hotelAmenity.toJSON(),
+            hotel_amenity_image: getFileUrl(hotelAmenity.hotel_amenity_image)
+        }
+        res.json(hAmenityWithUrl)
     }catch(err){
         res.status(500).json({error: err.message})
     }
@@ -66,7 +80,12 @@ const updateHotelAmenity= async(req,res) => {
             hotel_amenity_description,
             hotel_amenity_image
         })
-        res.json(hotelAmenity)
+
+        const hAmenityWithUrl = {
+            ...hotelAmenity.toJSON(),
+            hotel_amenity_image: getFileUrl(hotelAmenity.hotel_amenity_image)
+        }
+        res.json({message: "Hotel Amenity updated successfully",hotelAmenity: hAmenityWithUrl})
     }catch(err){
         res.status(500).json({error: err.message})
     }

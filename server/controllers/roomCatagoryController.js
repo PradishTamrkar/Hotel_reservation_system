@@ -141,7 +141,12 @@ const room = require('../models/room');
             type: QueryTypes.SELECT
             }
         )
-        return res.json({ room_catagory_id: catId, rooms})
+        const updatedRooms = rooms.map(room => ({
+            ...room,
+            room_images: getFileUrl(room.room_images)
+        })
+        )
+        return res.json({ room_catagory_id: catId, count: updatedRooms.length, rooms: updatedRooms})
         }catch(err){
             console.error('getRoomByCatagory error:', err)
             return res.status(500).json({error:err.message})
