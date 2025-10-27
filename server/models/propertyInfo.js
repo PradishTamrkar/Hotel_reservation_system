@@ -28,3 +28,4 @@ const property_info = sequelize.define(
     }
 )
 module.exports =  property_info
+//poilicy

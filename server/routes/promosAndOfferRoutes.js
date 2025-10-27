@@ -1,14 +1,14 @@
 const express = require('express')
 const promosAndOfferController = require('../controllers/promosAndOfferController')
-const { verifyToken, adminOnly } = require('../service/auth')
-const uploads = require('../service/uploads')
+const { verifyToken, adminOnly } = require('../middlewares/auth')
+const uploads = require('../middlewares/uploads')
 
 const router = express.Router()
 
-router.post('/',verifyToken,adminOnly,uploads.single('offer_image'),promosAndOfferController.createOffer)
-router.get('/',promosAndOfferController.getAllOffers)
-router.get('/:id',promosAndOfferController.getOfferByID)
-router.put('/:id',verifyToken,adminOnly,uploads.single('offer_image'),promosAndOfferController.updateOffer)
-router.delete('/:id',verifyToken,adminOnly,promosAndOfferController.deleteOffer)
+router.post('/',verifyToken,adminOnly,uploads.single('offer_image'),promosAndOfferController.handleCreateOffer)
+router.get('/',promosAndOfferController.handleGetAllOffers)
+router.get('/:id',promosAndOfferController.handleGetOfferByID)
+router.put('/:id',verifyToken,adminOnly,uploads.single('offer_image'),promosAndOfferController.handleUpdateOffer)
+router.delete('/:id',verifyToken,adminOnly,promosAndOfferController.handleDeleteOffer)
 
 module.exports=router

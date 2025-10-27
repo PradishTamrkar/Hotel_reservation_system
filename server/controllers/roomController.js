@@ -1,155 +1,60 @@
-    const { DataTypes, QueryTypes } = require('sequelize')
-    const sequelize = require('../config/db')
-    const Room = require('../models/room')
-    const getFileURL = require('../service/getFileURL')
-
-    //Room JOINS
-
-    const sqlRoom = `
-    SELECT
-        r.room_id,
-        r.room_no,
-        r.room_status
-    FROM room r
-    `
-    //Room creation
-    const createRoom = async(req,res) => {
-        try{
-             console.log("Body:", req.body)
-            console.log("File:", req.file)
-
-            const body = req.body || {};
-            const { room_catagory_id,room_no,room_description,capacity } = body
-
-        if (!room_no || !room_description || !capacity ) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
-        const room_images = req.file ? req.file.filename : null
-            const newRoom = await Room.create({
-                room_catagory_id,
-                room_no,
-                room_description,
-                capacity,
-                room_images
-            })
-            const roomWithURL={
-                ...newRoom.toJSON(),
-                room_images:getFileUrl(newRoom.room_images)
-            }
-            res.status(201).json({message:'Room created successfully',room: roomWithURL})
-        }catch(err){
-            res.status(500).json({error: err.message});
-        }
+const { createRoom, getAllRooms, getRoomByID, updateRoom, deleteRoom} = require('../service/roomService')
+    
+//Room creation
+const handleCreateRoom = async(req,res) => {
+    try{
+        const room = await createRoom(req.body, req.file)
+        res.status(201).json({message: "Room created successfully", room})
+    }catch(err){
+        res.status(500).json({error: err.message});
     }
+}
 
-    //Get ALL Rooms
-    const getAllRooms = async (req,res) => {
-        try{
-            const pageNumber = parseInt(req.query.pageNumber) || 1
-            const limit = parseInt(req.query.limit) || 10
-            const offset = (pageNumber -1 ) * limit 
-            const room = await sequelize.query(
-                `
-                ${sqlRoom}
-                ORDER BY r.room_id
-                LIMIT :limit OFFSET :offset
-                `,
-                {
-                    replacements:{limit,offset},
-                    type:QueryTypes.SELECT
-                }
-            )
-
-            const updatedRooms = room.map(room => ({
-                ...room,
-                room_images: getFileURL(room.room_images)
-            }))
-            res.json({
-                pageNumber,
-                limit,
-                totalRoom: updatedRooms.length,
-                room: updatedRooms
-            })
-        }catch(err){
-            res.status(500).json({error: err.message});
-        }
+//Get ALL Rooms
+const handleGetAllRooms = async (req,res) => {
+    try{
+        const result = await getAllRooms(req.query.pageNumber, req.query.limit)
+        res.json(result)
+    }catch(err){
+        res.status(500).json({error: err.message});
     }
+}
 
-    //Get Single Room
-    const getRoomByID = async (req,res) => {
-        try{
-            const { id } = req.params
-            const room = await sequelize.query(
-                `
-                ${sqlRoom} 
-                WHERE r.room_id = :id 
-                `,
-                { 
-                    replacements: { id }, 
-                    type: QueryTypes.SELECT 
-                }
-            )
-            if(!room) 
-                return res.status(404).json({message: 'Room not found'})
-            const roomWithUrl = room.map(r => ({
-                 ...r,
-                room_images: getFileUrl(r.room_images)
-            }));
-            res.json(roomWithUrl);
-            
-        }catch(err){
-            res.status(500).json({error: err.message});
-        }
+//get single room
+const handleGetRoomByID = async (req,res) => {
+    try{
+        const room = await getRoomByID(req.params.id)
+        res.json(room)
+    }catch(err){
+        res.status(500).json({error: err.message});
     }
+}
 
-    //Update Room
-    const updateRoom = async(req,res) => {
-        try{
-            console.log("Body:", req.body)
-            console.log("File:", req.file)
-
-            const body = req.body || {};
-            const { room_catagory_id,room_no,room_description,capacity  } = body
-            const room = await Room.findByPk(req.params.id)
-            if(!room) 
-                return res.status(404).json({message: 'Room not found'})
-            const room_images = req.file? req.file.filename : room.room_images
-            await room.update({
-                room_catagory_id,
-                room_no,
-                room_description,
-                capacity,
-                room_images                
-            })
-        const roomWithUrl = {
-            ...room.toJSON(),
-            room_images: getFileUrl(room.room_images)
-        };
-
-        res.json({
-            message: 'Room updated successfully',
-            room: roomWithUrl
-        });
-        }catch(err){
-            res.status(500).json({error: err.message});
-        }
+//update Room
+const handleUpdateRoom = async (req,res) => {
+    try{
+        const room = await updateRoom(req.params.id, req.body, req.file)
+        res.json({message: "Room updated successfully", room});    
+    }catch(err){
+        res.status(500).json({error: err.message});
     }
+}
 
-    //Delete Room
-    const deleteRoom = async (req,res) => {
-        try{
-            const room = await Room.findByPk(req.params.id)
-            if(!room)
-                return res.status(404).json({message: 'Room not found'})
-            await room.destroy();
-            res.json({message: 'Room deleted successfully'})
-        }catch(err){
-            res.status(500).json({error: err.message})
-        }
+
+//Delete Room
+const handleDeleteRoom = async (req,res) => {
+    try{
+        const result = await deleteRoom(req.params.id)
+        res.json({message: 'Room deleted successfully'})
+    }catch(err){
+        res.status(500).json({error: err.message})
     }
+}
 
-    exports.createRoom = createRoom
-    exports.getAllRooms = getAllRooms
-    exports.getRoomByID = getRoomByID
-    exports.updateRoom = updateRoom
-    exports.deleteRoom = deleteRoom
+module.exports = {
+    handleCreateRoom,
+    handleGetAllRooms,
+    handleGetRoomByID,
+    handleUpdateRoom,
+    handleDeleteRoom
+}

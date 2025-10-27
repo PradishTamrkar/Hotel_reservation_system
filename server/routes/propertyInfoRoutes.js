@@ -1,7 +1,7 @@
 const express = require('express')
 const propertyInfoController = require('../controllers/propertyInfoController')
-const {verifyToken, adminOnly} = require('../service/auth')
-const uploads = require('../service/uploads')
+const {verifyToken, adminOnly} = require('../middlewares/auth')
+const uploads = require('../middlewares/uploads')
 
 const router = express.Router()
 

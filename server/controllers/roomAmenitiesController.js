@@ -1,9 +1,9 @@
-const RoomAmenity = require("../models/roomAmenities")
+const {createRAmenity, getAllRAmenity, getRAmenityByID, updateRAmenity, deleteRAmenity} = require('../service/roomAmenitiesService')
 
 //Amenity Creation
-const createRAmenity = async (req,res) => {
+const handleCreateRAmenity = async (req,res) => {
     try{
-        const rAmenity = await RoomAmenity.create(req.body)
+        const rAmenity = await createRAmenity()
         res.status(201).json(rAmenity)
     }catch(err){
         res.status(500).json({error: err.message});
@@ -11,9 +11,9 @@ const createRAmenity = async (req,res) => {
 }
 
 //GET ALL Amenity
-const getAllRAmenity = async (req,res) => {
+const handleGetAllRAmenity = async (req,res) => {
     try{
-        const rAmenity = await RoomAmenity.findAll();
+        const rAmenity = await getAllRAmenity();
         res.json(rAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -21,11 +21,9 @@ const getAllRAmenity = async (req,res) => {
 }
 
 //GET single Customer
-const getRAmenityByID = async(req,res) => {
+const handleGetRAmenityByID = async(req,res) => {
     try{
-        const rAmenity = await RoomAmenity.findByPk(req.params.id)
-        if(!rAmenity) 
-            return res.status(404).json({message: 'Room Amenity not found'})
+        const rAmenity = await getRAmenityByID(req.params.id)
         res.json(rAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -33,13 +31,9 @@ const getRAmenityByID = async(req,res) => {
 }  
 
 //Update Customer Info
-const updateRAmenity = async(req,res) => {
+const handleUpdateRAmenity = async(req,res) => {
     try{
-        const rAmenity = await RoomAmenity.findByPk(req.params.id)
-        if(!rAmenity)
-            return res.status(404).json({message: 'Room Amenity not found'})
-
-        await rAmenity.update(req.body)
+        const rAmenity = await updateRAmenity(req.params.id)
         res.json(rAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -47,20 +41,19 @@ const updateRAmenity = async(req,res) => {
 }
 
 //Delete Customer
-const deleteRAmenity = async (req,res) => {
+const handleDeleteRAmenity = async (req,res) => {
     try{
-        const rAmenity = await RoomAmenity.findByPk(req.params.id)
-        if(!rAmenity)
-            return res.status(404).json({message: 'Room Amenity not found'})
-        await rAmenity.destroy();
+        const rAmenity = await deleteRAmenity(req.params.id)
         res.json({message: 'Room Amenity deleted successfully'})
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }
 
-exports.createRAmenity = createRAmenity
-exports.getAllRAmenity = getAllRAmenity
-exports.getRAmenityByID = getRAmenityByID
-exports.updateRAmenity = updateRAmenity
-exports.deleteRAmenity = deleteRAmenity
+module.exports = {
+    handleCreateRAmenity,
+    handleGetAllRAmenity,
+    handleGetRAmenityByID,
+    handleUpdateRAmenity,
+    handleDeleteRAmenity
+}

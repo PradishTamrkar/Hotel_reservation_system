@@ -1,13 +1,13 @@
 const express = require('express')
 const faqController = require('../controllers/faqController')
-const { verifyToken, adminOnly } = require('../service/auth')
+const { verifyToken, adminOnly } = require('../middlewares/auth')
 
 const router = express.Router()
 
-router.post('/',verifyToken,adminOnly,faqController.createFAQ)
-router.get('/',faqController.getAllFAQ)
-router.get('/:id',faqController.getFAQByID)
-router.put('/:id',verifyToken,adminOnly,faqController.updateFAQ)
-router.delete('/:id',verifyToken,adminOnly,faqController.deleteFAQ)
+router.post('/',verifyToken,adminOnly,faqController.handleCreateFAQ)
+router.get('/',faqController.handleGetAllFAQ)
+router.get('/:id',faqController.handleGetFAQByID)
+router.put('/:id',verifyToken,adminOnly,faqController.handleUpdateFAQ)
+router.delete('/:id',verifyToken,adminOnly,faqController.handleDeleteFAQ)
 
 module.exports=router

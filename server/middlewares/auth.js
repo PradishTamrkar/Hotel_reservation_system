@@ -50,7 +50,7 @@ const adminOnly = (req,res,next) => {
     return res.status(403).json({error: "unauthorized"})
 }
 
-//for customer and guest access only
+//for customer only
 const customerOnly = (req,res,next) => {
     console.log('Customer check:', req.user);
     if(req.user && req.user.role === "customer") {
@@ -59,13 +59,13 @@ const customerOnly = (req,res,next) => {
     return res.status(403).json({error: "unauthorized"})
 }
 
-const guestOnly = (req,res,next) => {
-    console.log('Guest check:', req.user);
-    if(req.user.role === "guest") {
-        return next()
-    }
-    return res.status(403).json({error: "unauthorized"})
-}
+// const guestOnly = (req,res,next) => {
+//     console.log('Guest check:', req.user);
+//     if(req.user.role === "guest") {
+//         return next()
+//     }
+//     return res.status(403).json({error: "unauthorized"})
+// }
 
 const allowCustomerOrGuest = (req, res, next) => {
     console.log('Customer/Guest check:', req.user);
@@ -79,7 +79,7 @@ exports.generateToken = generateToken
 exports.verifyToken = verifyToken
 exports.adminOnly = adminOnly
 exports.customerOnly = customerOnly
-exports.guestOnly = guestOnly
+// exports.guestOnly = guestOnly
 exports.allowCustomerOrGuest = allowCustomerOrGuest
 exports.sendAuthCookie = sendAuthCookie
 

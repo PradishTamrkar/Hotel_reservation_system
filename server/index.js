@@ -52,4 +52,4 @@ app.use('/api/amenityBridge',amenityBridgeRoutes)
 })()
 
 const PORT = process.env.PORT || 3002
-app.listen(PORT, () => console.log(`The Server is running on port ${PORT}`))
+app.listen(PORT, "0.0.0.0",() => console.log(`The Server is running on port ${PORT}`))

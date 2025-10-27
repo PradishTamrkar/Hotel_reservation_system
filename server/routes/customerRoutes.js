@@ -1,14 +1,14 @@
 const express = require('express')
-const { verifyToken, customerOrGuest } = require('../service/auth')
+const { verifyToken, customerOnly } = require('../middlewares/auth')
 const customerController = require('../controllers/customerController')
 
 const router = express.Router()
 
-router.post('/register',customerController.createCustomer)
-router.post('/login',customerController.customerLogin)
-router.get('/',customerController.getAllCustomer)
-router.get('/:id',customerController.getCustomersByID)
-router.put('/:id',verifyToken, customerController.updateCustomer)
-router.delete('/:id',verifyToken, customerController.deleteCustomer)
+router.post('/register',customerController.handleCreateCustomer)
+router.post('/login',customerController.handleCustomerLogin)
+router.get('/',customerController.handleGetAllCustomers)
+router.get('/:id',customerController.handleGetCustomerByID)
+router.put('/:id',verifyToken, customerController.handleUpdateCustomer)
+router.delete('/:id',verifyToken, customerController.handleDeleteCustomer)
 
 module.exports=router

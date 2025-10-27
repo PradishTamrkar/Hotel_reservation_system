@@ -3,10 +3,7 @@ const bookingDetailsController = require('../controllers/bookingDetailsControlle
 
 const router = express.Router()
 
-router.post('/',bookingDetailsController.createBookingDetails)
-router.get('/',bookingDetailsController.getAllBookingDetails)
-router.get('/:id',bookingDetailsController.getBookingDetailsByID)
-router.put('/:id',bookingDetailsController.updateBookingDetails)
-router.delete('/:id',bookingDetailsController.deleteBookingDetails)
+router.get('/',bookingDetailsController.handleGetAllBookingDetails)
+router.get('/:booking_id',bookingDetailsController.handleGetBookingDetailsByBookingID)
 
 module.exports=router

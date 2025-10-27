@@ -1,13 +1,13 @@
 const express = require('express')
 const amenityBridgeController = require('../controllers/amenityBridgeController')
-const { verifyToken, adminOnly } = require('../service/auth')
+const { verifyToken, adminOnly } = require('../middlewares/auth')
 
 const router = express.Router()
 
-router.post('/',verifyToken,adminOnly,amenityBridgeController.createAmenityBridge)
-router.get('/',amenityBridgeController.getAllAmenityBridge)
-router.get('/:id',amenityBridgeController.getAmenitiesByCategory)
-router.put('/:id',verifyToken,adminOnly,amenityBridgeController.updateAmenityBridge)
-router.delete('/:id',verifyToken,adminOnly,amenityBridgeController.deleteAmenityBridge)
+router.post('/',verifyToken,adminOnly,amenityBridgeController.handleCreateAmenityBridge)
+router.get('/',amenityBridgeController.hanldeGetAllAmenityBridge)
+router.get('/:id',amenityBridgeController.handleGetAmenitiesByCategory)
+router.put('/:id',verifyToken,adminOnly,amenityBridgeController.handleUpdateAmenityBridge)
+router.delete('/:id',verifyToken,adminOnly,amenityBridgeController.hanldDeleteAmenityBridge)
 
 module.exports=router

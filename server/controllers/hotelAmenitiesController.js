@@ -1,111 +1,61 @@
-const HotelAmenity = require("../models/hotelAmenities")
-const getFileUrl = require("../service/getFileURL");
+const { Model } = require("sequelize");
+const {createHotelAmenity, getAllHotelAmenity, getHotelAmenityByID, updateHotelAmenity, deleteHotelAmenity} = require("../service/hotelAmenityService")
 
 //Hotel Amenity Creation
-const createHotelAmenity = async (req,res) => {
+const handleCreateHotelAmenity = async (req,res) => {
     try{
-
-        console.log("Body:", req.body)
-        console.log("File:", req.file)
-
-        const body = req.body || {};
-        const { hotel_amenity_name,hotel_amenity_description } = body
-         if (!hotel_amenity_name || !hotel_amenity_description ) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
-
-        const hotel_amenity_image = req.file ? req.file.filename : null
-
-        const newHotelAmenity = await HotelAmenity.create({
-            hotel_amenity_name,
-            hotel_amenity_description,
-            hotel_amenity_image
-        })
-
-        const hAmenityWithUrl = {
-            ...newHotelAmenity.toJSON(),
-            hotel_amenity_image: getFileUrl(newHotelAmenity.hotel_amenity_image)
-        }
-        res.status(201).json({message:"Hotel Amenity created successfully", hotelAmenity: hAmenityWithUrl})
+        const hotelAmenity = await createHotelAmenity(req.body)
+        res.status(201).json({message:"Hotel Amenity created successfully", hotelAmenity})
     }catch(err){
         res.status(500).json({error: err.message});
     }
 }
 
 //GET ALL Hotel Amenity
-const getAllHotelAmenity= async (req,res) => {
+const handleGetAllHotelAmenity= async (req,res) => {
     try{
-        const hotelAmenity = await HotelAmenity.findAll();
-        const hAmenityWithUrl = hotelAmenity.map(h =>({
-            ...h.toJSON(),
-            hotel_amenity_image: getFileUrl(hAmenityWithUrl.hotel_amenity_image)
-        }))
-        res.json(hAmenityWithUrl)
+        const hotelAmenity = await getAllHotelAmenity();
+        res.json(hotelAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }
 
 //GET single Hotel Amenity
-const getHotelAmenityByID = async(req,res) => {
+const handleGetHotelAmenityByID = async(req,res) => {
     try{
-        const hotelAmenity = await HotelAmenity.findByPk(req.params.id)
-        if(!hotelAmenity) 
-            return res.status(404).json({message: 'Hotel Amenity not found'})
-        const hAmenityWithUrl = {
-            ...hotelAmenity.toJSON(),
-            hotel_amenity_image: getFileUrl(hotelAmenity.hotel_amenity_image)
-        }
-        res.json(hAmenityWithUrl)
+        const hotelAmenity = await this.getHotelAmenitysByID(req.params.id)
+        res.json(hotelAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }  
 
 //Update Hotel Amenity Info
-const updateHotelAmenity= async(req,res) => {
+const handleUpdateHotelAmenity= async(req,res) => {
     try{
 
-        const body = req.body || {};
-        const { hotel_amenity_name,hotel_amenity_description } = body
-
-        const hotelAmenity = await HotelAmenity.findByPk(req.params.id)
-        if(!hotelAmenity)
-            return res.status(404).json({message: 'Hotel Amenity not found'})
-
-        const hotel_amenity_image = req.file ? req.file.filename : hotelAmenity.hotel_amenity_image
-
-        await hotelAmenity.update({
-            hotel_amenity_name,
-            hotel_amenity_description,
-            hotel_amenity_image
-        })
-
-        const hAmenityWithUrl = {
-            ...hotelAmenity.toJSON(),
-            hotel_amenity_image: getFileUrl(hotelAmenity.hotel_amenity_image)
-        }
-        res.json({message: "Hotel Amenity updated successfully",hotelAmenity: hAmenityWithUrl})
+        const hotelAmenity = await updateHotelAmenity(req.params.id)
+        res.json({message: "Hotel Amenity updated successfully",hotelAmenity})
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }
 
 //Delete Hotel Amenity
-const deleteHotelAmenity = async (req,res) => {
+const handleDeleteHotelAmenity = async (req,res) => {
     try{
-        const hotelAmenity = await HotelAmenity.findByPk(req.params.id)
-        if(!hotelAmenity)
-            return res.status(404).json({message: 'Hotel Amenity not found'})
-        await hotelAmenity.destroy();
+        const hotelAmenity = await deleteHotelAmenity(req.params.id)
         res.json({message: 'Hotel Amenity deleted successfully'})
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }
 
-exports.createHotelAmenity = createHotelAmenity
-exports.getAllHotelAmenity= getAllHotelAmenity
-exports.getHotelAmenitysByID = getHotelAmenityByID
-exports.updateHotelAmenity = updateHotelAmenity
-exports.deleteHotelAmenity= deleteHotelAmenity
+module.exports = {
+    handleCreateHotelAmenity,
+    handleGetAllHotelAmenity,
+    handleGetHotelAmenityByID,
+    handleUpdateHotelAmenity,
+    handleDeleteHotelAmenity
+}

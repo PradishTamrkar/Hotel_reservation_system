@@ -1,9 +1,9 @@
-const FAQ = require("../models/faq")
+const { createFAQ, getAllFAQ, getFAQByID, updateFAQ, deleteFAQ} = require('../service/faqServices')
 
 //Customer FAQ
-const createFAQ = async (req,res) => {
+const handleCreateFAQ = async (req,res) => {
     try{
-        const faq = await FAQ.create(req.body)
+        const faq = await createFAQ(req.body)
         res.status(201).json(faq)
     }catch(err){
         res.status(500).json({error: err.message});
@@ -11,9 +11,9 @@ const createFAQ = async (req,res) => {
 }
 
 //GET ALL FAQ
-const getAllFAQ = async (req,res) => {
+const handleGetAllFAQ = async (req,res) => {
     try{
-        const faq = await FAQ.findAll();
+        const faq = await getAllFAQ();
         res.json(faq)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -21,11 +21,9 @@ const getAllFAQ = async (req,res) => {
 }
 
 //GET single FAQ
-const getFAQByID = async(req,res) => {
+const handleGetFAQByID = async(req,res) => {
     try{
-        const faq = await FAQ.findByPk(req.params.id)
-        if(!faq) 
-            return res.status(404).json({message: 'FAQ not found'})
+        const faq = await getFAQByID(req.params.id)
         res.json(faq)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -33,13 +31,9 @@ const getFAQByID = async(req,res) => {
 }  
 
 //Update FAQ Info
-const updateFAQ = async(req,res) => {
+const handleUpdateFAQ = async(req,res) => {
     try{
-        const faq = await FAQ.findByPk(req.params.id)
-        if(!faq)
-            return res.status(404).json({message: 'FAQ not found'})
-
-        await faq.update(req.body)
+        const faq = await updateFAQ(req.params.id,req.body)
         res.json(faq)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -47,20 +41,19 @@ const updateFAQ = async(req,res) => {
 }
 
 //Delete FAQ
-const deleteFAQ = async (req,res) => {
+const handleDeleteFAQ = async (req,res) => {
     try{
-        const faq = await FAQ.findByPk(req.params.id)
-        if(!faq)
-            return res.status(404).json({message: 'FAQ not found'})
-        await faq.destroy();
+        const faq = await deleteFAQ(req.params.id)
         res.json({message: 'FAQ deleted successfully'})
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }
 
-exports.createFAQ = createFAQ
-exports.getAllFAQ = getAllFAQ
-exports.getFAQByID = getFAQByID
-exports.updateFAQ = updateFAQ
-exports.deleteFAQ = deleteFAQ
+module.exports = {
+    handleCreateFAQ,
+    handleGetAllFAQ,
+    handleGetFAQByID,
+    handleUpdateFAQ,
+    handleDeleteFAQ
+}

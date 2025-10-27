@@ -1,115 +1,65 @@
-const { QueryError, QueryTypes } = require("sequelize")
-const sequelize = require("../config/db")
-const CustomerTestimony = require("../models/customerTestimony")
+const {
+  createCustomerTestimony,
+  getAllTestimonies,
+  getTestimonyByID,
+  updateTestimony,
+  deleteTestimony,
+} = require("../service/customerTestimonyService");
 
-//Testimony JOINS
-const sqlTestimony = `
-    SELECT
-        t.comment,
-        t.rating,
-        c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name
-        
-    FROM customer_testimonies t
-    JOIN customer c ON t.customer_id = c.customer_id
-`
-//Testimony Creation
-const createCustomerTestimony = async (req,res) => {
-    try{
-        const { comment,rating } =req.body
-        const customer_id = req.user.id
+// CREATE TESTIMONY
+const handleCreateCustomerTestimony = async (req, res) => {
+  try {
+    const testimony = await createCustomerTestimony(req.body, req.user);
+    res.status(201).json(testimony);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-        if(!comment)
-            return res.status(400).json({message: "Comment is required"})
+// GET ALL TESTIMONIES
+const handleGetAllCustomerTestimonies = async (req, res) => {
+  try {
+    const testimonies = await getAllTestimonies();
+    res.json(testimonies);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-        if(!req.user || !req.user.role === "customer")
-            return res.status(401).json({message: "Only registered customer can post testimonies"})
-        
-        const [customer] = await sequelize.query(
-            `
-            SELECT
-                first_name,
-                middle_name,
-                last_name
-            FROM customer 
-            WHERE customer_id= :id
-            `,{
-                replacements:{id: req.user.id},
-                type:QueryTypes.SELECT
-            }
-        )
+// GET TESTIMONY BY ID
+const handleGetCustomerTestimonyByID = async (req, res) => {
+  try {
+    const testimony = await getTestimonyByID(req.params.id);
+    res.json(testimony);
+  } catch (err) {
+    res.status(404).json({ error: err.message });
+  }
+};
 
-        if(!customer){
-            return res.status(404).json({message: "Customer not found"})
-        }
+// UPDATE TESTIMONY
+const handleUpdateCustomerTestimony = async (req, res) => {
+  try {
+    const testimony = await updateTestimony(req.params.id, req.body);
+    res.json(testimony);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-        const customerTestimony = await CustomerTestimony.create({
-            comment,
-            rating,
-            customer_id,
-            first_name: customer.first_name,
-            middle_name: customer.middle_name,
-            last_name: customer.last_name
-        }
-        )
-        res.status(201).json(customerTestimony)
-    }catch(err){
-        res.status(500).json({error: err.message});
-    }
-}
+// DELETE TESTIMONY
+const handleDeleteCustomerTestimony = async (req, res) => {
+  try {
+    const message = await deleteTestimony(req.params.id);
+    res.json({ message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-//GET ALL Customers Testimony
-const getAllCustomersTestimony = async (req,res) => {
-    try{
-        const [customerTestimony] = await sequelize.query(sqlTestimony);
-        res.json(customerTestimony)
-    }catch(err){
-        res.status(500).json({error: err.message})
-    }
-}
-
-//GET single Customer Testimony
-const getCustomerTestimonyByID = async(req,res) => {
-    try{
-        const [customerTestimony] = await sequelize.query(
-            sqlTestimony + `WHERE t.testimony_id = :id`
-        )
-        if(!customerTestimony) 
-            return res.status(404).json({message: 'Customer Testimony not found'})
-        res.json(customerTestimony)
-    }catch(err){
-        res.status(500).json({error: err.message})
-    }
-}  
-
-//Update Customer Testimony Info
-const updateCustomerTestimony = async(req,res) => {
-    try{
-        const customerTestimony = await CustomerTestimony.findByPk(req.params.id)
-        if(!customerTestimony)
-            return res.status(404).json({message: 'Customer Testimony not found'})
-
-        await customerTestimony.update(req.body)
-        res.json(customerTestimony)
-    }catch(err){
-        res.status(500).json({error: err.message})
-    }
-}
-
-//Delete Customer Testimony
-const deleteCustomerTestimony = async (req,res) => {
-    try{
-        const customerTestimony = await CustomerTestimony.findByPk(req.params.id)
-        if(!customerTestimony)
-            return res.status(404).json({message: 'Customer Testimony not found'})
-        await customerTestimony.destroy();
-        res.json({message: 'Customer Testimony deleted successfully'})
-    }catch(err){
-        res.status(500).json({error: err.message})
-    }
-}
-
-exports.createCustomerTestimony = createCustomerTestimony
-exports.getAllCustomersTestimony = getAllCustomersTestimony
-exports.getCustomerTestimonyByID = getCustomerTestimonyByID
-exports.updateCustomerTestimony = updateCustomerTestimony
-exports.deleteCustomerTestimony = deleteCustomerTestimony
+module.exports = {
+  handleCreateCustomerTestimony,
+  handleGetAllCustomerTestimonies,
+  handleGetCustomerTestimonyByID,
+  handleUpdateCustomerTestimony,
+  handleDeleteCustomerTestimony,
+};

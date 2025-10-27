@@ -1,11 +1,11 @@
 const express = require('express')
 const contactUsController = require('../controllers/contactUsController')
-const {verifyToken,adminOnly}=require('../service/auth')
+const {verifyToken,adminOnly}=require('../middlewares/auth')
 const router = express.Router()
 
-router.post('/',contactUsController.createMessage)
-router.get('/',verifyToken,adminOnly,contactUsController.getAllMessage)
-router.get('/:id',verifyToken,adminOnly,contactUsController.getMessageByID)
-router.delete('/:id',contactUsController.deleteMessage)
+router.post('/',contactUsController.handleCreateMessage)
+router.get('/',verifyToken,adminOnly,contactUsController.handleGetAllMessages)
+router.get('/:id',verifyToken,adminOnly,contactUsController.handleGetMessageByID)
+router.delete('/:id',contactUsController.handleDeleteMessage)
 
 module.exports=router
