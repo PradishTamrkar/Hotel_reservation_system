@@ -65,6 +65,9 @@ const getTestimonyByID = async (id) => {
 const updateTestimony = async (id, data) => {
   const testimony = await CustomerTestimony.findByPk(id);
   if (!testimony) throw new Error("Customer Testimony not found");
+  if (user.role !== "admin" && user.id !== testimony.customer_id) {
+    throw new Error("Unauthorized: You can only update your own testimonies");
+  }
   await testimony.update(data);
   return testimony;
 };

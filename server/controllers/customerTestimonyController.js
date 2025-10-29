@@ -39,7 +39,7 @@ const handleGetCustomerTestimonyByID = async (req, res) => {
 // UPDATE TESTIMONY
 const handleUpdateCustomerTestimony = async (req, res) => {
   try {
-    const testimony = await updateTestimony(req.params.id, req.body);
+    const testimony = await updateTestimony(req.params.id, req.body,req.user);
     res.json(testimony);
   } catch (err) {
     res.status(500).json({ error: err.message });

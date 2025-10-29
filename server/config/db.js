@@ -41,8 +41,4 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, String(DB_PASSWORD), {
   logging: false
 });
 
-sequelize.authenticate()
-  .then(() => console.log('Database connected successfully'))
-  .catch(err => console.error('Database connection failed:', err));
-
 module.exports = sequelize;

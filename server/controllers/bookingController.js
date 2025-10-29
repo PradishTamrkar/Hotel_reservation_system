@@ -60,7 +60,7 @@ const handleDeleteBooking = async (req,res) => {
     }
 }
 
-const handleSearchBookingByCDetail = async (search) => {
+const handleSearchBookingByCDetail = async (req,res) => {
     try{
         const {search}= req.query
         const booking = await searchBookingByCDetail(search)

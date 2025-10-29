@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.post('/register',adminController.handleCreateAdmin)
 router.post('/login',adminController.handleAdminLogin)
-router.get('/',verifyToken, adminOnly, adminController.handleGetAdminByID)
+router.get('/',verifyToken, adminOnly, adminController.handleGetAllAdmins)
 router.get('/:id',verifyToken, adminOnly, adminController.handleGetAdminByID)
 router.put('/:id',verifyToken, adminOnly, adminController.handleUpdateAdmin)
 router.delete('/:id',verifyToken, adminOnly, adminController.handleDeleteAdmin)
