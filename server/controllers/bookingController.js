@@ -3,7 +3,7 @@ const {createBooking, getAllBooking, getBookingByID , getBookingByCustomerId, up
 //Booking Creation
 const handleCreateBooking = async (req,res) => {
     try{
-        const booking = await createBooking(req.body)
+        const booking = await createBooking(req.body, req.user)
         res.status(201).json(booking)
     }catch(err){
         res.status(500).json({error: err.message});

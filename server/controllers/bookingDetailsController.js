@@ -3,7 +3,7 @@ const {getAllBookingDetails, getBookingDetailsByBookingID } = require("../servic
 //GET ALL Booking Details
 const handleGetAllBookingDetails = async (req,res) => {
     try{
-        const bookingDetails = getAllBookingDetails();
+        const bookingDetails = await getAllBookingDetails();
         res.json(bookingDetails)
     }catch(err){
         res.status(500).json({error: err.message})

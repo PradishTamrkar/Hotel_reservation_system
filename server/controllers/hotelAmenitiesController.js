@@ -24,7 +24,7 @@ const handleGetAllHotelAmenity= async (req,res) => {
 //GET single Hotel Amenity
 const handleGetHotelAmenityByID = async(req,res) => {
     try{
-        const hotelAmenity = await this.getHotelAmenitysByID(req.params.id)
+        const hotelAmenity = await getHotelAmenitysByID(req.params.id)
         res.json(hotelAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -35,7 +35,7 @@ const handleGetHotelAmenityByID = async(req,res) => {
 const handleUpdateHotelAmenity= async(req,res) => {
     try{
 
-        const hotelAmenity = await updateHotelAmenity(req.params.id)
+        const hotelAmenity = await updateHotelAmenity(req.params.id,req.body,req.file)
         res.json({message: "Hotel Amenity updated successfully",hotelAmenity})
     }catch(err){
         res.status(500).json({error: err.message})

@@ -3,7 +3,7 @@ const {createOffer,getAllOffers,getOfferByID,updateOffer,deleteOffer} = require(
 //offer Creation
 const handleCreateOffer = async (req,res) => {
     try{
-        const offer = await createOffer()
+        const offer = await createOffer(req.body,req.file)
         res.status(201).json({offer})
     }catch(err){
         res.status(500).json({error: err.message});
@@ -34,7 +34,7 @@ const handleGetOfferByID = async(req,res) => {
 const handleUpdateOffer = async(req,res) => {
     try{
 
-        const offer = updateOffer(req.params.id)
+        const offer = updateOffer(req.params.id,req.body,req.file)
         res.json({ message: "Offer updated successfully", offer })
     }catch(err){
         res.status(500).json({error: err.message})

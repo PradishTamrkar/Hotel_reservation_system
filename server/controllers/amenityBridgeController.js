@@ -26,7 +26,7 @@ const handleGetAmenitiesByCategory = async (req, res) => {
   try {
     const amenityBridge = await getAmenitiesByCategory(req.params.id)
 
-    res.json(amenities);
+    res.json(amenityBridge);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

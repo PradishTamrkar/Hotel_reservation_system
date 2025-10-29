@@ -3,7 +3,7 @@ const {createRAmenity, getAllRAmenity, getRAmenityByID, updateRAmenity, deleteRA
 //Amenity Creation
 const handleCreateRAmenity = async (req,res) => {
     try{
-        const rAmenity = await createRAmenity()
+        const rAmenity = await createRAmenity(req.body)
         res.status(201).json(rAmenity)
     }catch(err){
         res.status(500).json({error: err.message});
@@ -33,7 +33,7 @@ const handleGetRAmenityByID = async(req,res) => {
 //Update Customer Info
 const handleUpdateRAmenity = async(req,res) => {
     try{
-        const rAmenity = await updateRAmenity(req.params.id)
+        const rAmenity = await updateRAmenity(req.params.id,req.body)
         res.json(rAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
