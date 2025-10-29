@@ -17,6 +17,7 @@ FROM room_catagory rc
 const sqlRoomByCat = 
 `
 SELECT
+    r.room_id,
     r.room_no,
     r.room_status,
     r.room_images,

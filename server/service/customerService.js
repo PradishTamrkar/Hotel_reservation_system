@@ -82,7 +82,7 @@ const loginCustomer = async (data, res) => {
   const passMatch = await compPass(customer_password, customer.customer_password);
   if (!passMatch) throw new Error("Password not matched");
 
-  const token = generateToken({ id: customer.customer_id, role: "customer" });
+  const token = generateToken({ id: customer.customer_id, role: "customer", customer_username: customer.customer_username });
   sendAuthCookie(res, token);
 
   return { message: "Login Successful", token };

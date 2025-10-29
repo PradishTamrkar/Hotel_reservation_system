@@ -74,13 +74,14 @@ const createBooking = async (data,user = null) => {
     }
 
     //if not a customer then them treat as guest
-        if(!customerIdToUse){
-            if(!first_name || !last_name || !email || !phone_no || !gender || !address || !nationality || !citizenship_id){
-                throw new Error('Guest information must be provided')
-            }
-            let guest = await Customer.findOne({
-                where: { email, phone_no }
-            })
+    else if(!customerIdToUse){
+        if(!first_name || !last_name || !email || !phone_no || !gender || !address || !nationality || !citizenship_id){
+            throw new Error('Guest information must be provided')
+        }
+       
+        let guest = await Customer.findOne({
+            where: { email, phone_no }
+        })
 
         if(!guest){
             guest = await Customer.create({
