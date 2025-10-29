@@ -1,4 +1,4 @@
-const { Model } = require("sequelize");
+
 const {createHotelAmenity, getAllHotelAmenity, getHotelAmenityByID, updateHotelAmenity, deleteHotelAmenity} = require("../service/hotelAmenityService")
 
 //Hotel Amenity Creation

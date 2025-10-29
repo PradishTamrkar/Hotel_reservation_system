@@ -1,4 +1,4 @@
-const {createBooking, getAllBooking, getBookingByID , getBookingByCustomerId, updateBooking, deleteBooking} = require("../service/bookingService")
+const {createBooking, getAllBooking, getBookingByID , getBookingByCustomerId, updateBooking, deleteBooking, searchBookingByCDetail} = require("../service/bookingService")
 
 //Booking Creation
 const handleCreateBooking = async (req,res) => {
@@ -60,45 +60,21 @@ const handleDeleteBooking = async (req,res) => {
     }
 }
 
-// const searchBookingByCDetail = async (req,res) => {
-//     try{
-//         const {search} = req.query; //for admin to pass search
-//         if(!search) 
-//             return res.status(400).json({message: "Query is required"})
-    
-//     const booking = await sequelize.query(
-//         `${sqlBookingByID}
-//         WHERE c.first_name ILIKE :search 
-//         OR c.middle_name ILIKE :search
-//         OR c.last_name ILIKE :search
-//         OR c.phone_no ILIKE :search
-//         OR c.email ILIKE :search
-//         ${sqlBookingGroupBy}
-//         `,
-//         {
-//             replacements: {
-//                 search: `%${search}%`
-//             },
-//             type:QueryTypes.SELECT
-//         }
-//     )
-//     if(!booking || booking.length === 0){
-//         return res.status(404).json({message: "No bookings Found"})
-//     }
-//     res.json(booking)
-//     }
-//     catch(err){
-//         res.status(500).json({error: err.message})
-//     }   
-// }
-
+const handleSearchBookingByCDetail = async (search) => {
+    try{
+        const {search}= req.query
+        const booking = await searchBookingByCDetail(search)
+        res.json(booking)
+    }catch(err){
+        res.status(500).json({error: err.message})
+    }
+}
 module.exports = {
     handleCreateBooking,
     handleGetAllBooking,
     handleGetBookingByID,
     handleGetMyBookings,
     hanldeUpdateBooking,
-    handleDeleteBooking
+    handleDeleteBooking,
+    handleSearchBookingByCDetail
 }
-
-// exports.searchBookingByCDetail = searchBookingByCDetail

@@ -1,9 +1,10 @@
-require('dotenv').config()
+const { env, db: sequelize } = require('./config/config');
 const express = require('express')
 const path = require('path')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
-const sequelize = require('./config/db')
+
+
 const customerRoutes = require('./routes/customerRoutes')
 const roomRoutes = require('./routes/roomRoutes')
 const adminRoutes = require('./routes/adminRoutes')

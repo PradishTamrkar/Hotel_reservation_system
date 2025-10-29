@@ -1,5 +1,5 @@
 const { DataTypes, QueryTypes } = require('sequelize')
-const sequelize = require('../config/db')
+const { db: sequelize } = require("../config/config");
 const RoomCatagory = require('../models/roomCatagory')
 const getFileUrl = require('./getFileURL');
 const room = require('../models/room');

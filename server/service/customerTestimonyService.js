@@ -1,5 +1,5 @@
 const { QueryTypes } = require("sequelize");
-const sequelize = require("../config/db");
+const { db: sequelize } = require("../config/config");
 const CustomerTestimony = require("../models/customerTestimony");
 
 const sqlTestimony = `

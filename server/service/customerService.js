@@ -1,5 +1,5 @@
 const { QueryTypes } = require("sequelize");
-const sequelize = require("../config/db");
+const { db: sequelize } = require("../config/config");
 const Customer = require("../models/customer");
 const { generateToken, sendAuthCookie } = require("../middlewares/auth");
 const { hashedPass, compPass } = require("../service/passwordService");

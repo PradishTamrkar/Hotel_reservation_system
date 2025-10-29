@@ -2,6 +2,7 @@ const Admin = require("../models/admin");
 const { generateToken } = require("../middlewares/auth");
 const { hashedPass, compPass } = require("../service/passwordService");
 
+
 // create admin
 const createAdmin = async (data) => {
     const { admin_username, admin_email, admin_password, contact_no } = data;

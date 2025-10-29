@@ -1,5 +1,4 @@
 const {createOffer,getAllOffers,getOfferByID,updateOffer,deleteOffer} = require("../service/promosAndOfferService");
-const { handleGetFAQByID } = require("./faqController");
 
 //offer Creation
 const handleCreateOffer = async (req,res) => {

@@ -1,5 +1,5 @@
-const { QueryTypes } = require("sequelize")
-const sequelize = require("../config/db")
+const { db: sequelize } = require("../config/config");
+const { QueryTypes } = require("sequelize");
 const Booking =require("../models/booking")
 const BookingDetails = require("../models/bookingDetails")
 const Room = require("../models/room")
@@ -48,7 +48,7 @@ const sqlBookingGroupBy = `
 `
 
 //create booking
-const createBooking = async (data) => {
+const createBooking = async (data,user = null) => {
     const {
             customer_id, 
             first_name,
@@ -65,10 +65,16 @@ const createBooking = async (data) => {
             check_out_date
     } = data
 
+    
     let customerIdToUse = customer_id
 
+    // If a logged-in user is making the booking, use their ID
+    if (user && user.role === "customer") {
+        customerIdToUse = user.id;
+    }
+
     //if not a customer then them treat as guest
-        if(!customer_id){
+        if(!customerIdToUse){
             if(!first_name || !last_name || !email || !phone_no || !gender || !address || !nationality || !citizenship_id){
                 throw new Error('Guest information must be provided')
             }
@@ -225,7 +231,7 @@ const getBookingByCustomerId = async (customer_id) => {
                 json_build_object(
                     'room_no', r.room_no,
                     'room_catagory_name', rc.room_catagory_name,
-                    'price_per_night', rc.price_per_night,
+                    'price_per_night', rc.price_per_night
                 )
             ) AS room_details
         FROM booking b
@@ -250,32 +256,32 @@ const updateBooking =async (booking_id, body, user) => {
         throw new Error("Booking Not Found")
 
     //only the admin or the cusotmer that booked can perform updation
-     if(req.user.role !== "admin" && req.user.id !== booking.customer_id)
+     if(user.role !== "admin" && user.id !== booking.customer_id)
         throw new Error("Unauthorized:Access Denied")
      
      //preventing update after check-in
     if(new Date(booking.check_in_date)<= new Date())
         throw new Error("Cannot modify past bookings")
 
-    await booking.update(req.body)
+    await booking.update(body)
     return booking;
 }
 
-const deleteBooking = async (req,res) => {
-    const booking = await Booking.findByPk(req.params.id)
+const deleteBooking = async (booking_id,user) => {
+    const booking = await Booking.findByPk(booking_id)
     const bookedRooms = await BookingDetails.findAll({where: { booking_id }})
     if(!booking)
         throw new Error('Booking not found')
         
     //only admin or customer that booked can perform deletion
-    if(req.user.role !== "admin" && req.user.id !== booking.customer_id)
+    if(user.role !== "admin" && user.id !== booking.customer_id)
         throw new Error("Unauthorized:Access Denied")
 
         //preventing cancellation after check-in
     if(new Date(booking.check_in_date)<= new Date())
         throw new Error("Cannot delete past bookings")
         
-    await BookingDetails.destroy({ where: { booking_id } });
+    await BookingDetails.destroy({ where: { booking_id:booking_id } });
         
     for(const r of bookedRooms){
         await Room.update({room_status: 'Available'},{where: {room_id: r.room_id}})
@@ -284,11 +290,39 @@ const deleteBooking = async (req,res) => {
     return {message: 'Booking deleted successfully'}
 }
 
+const searchBookingByCDetail = async (search) => {
+    if(!search) 
+        return res.status(400).json({message: "Search Query is required"})
+
+    const booking = await sequelize.query(
+        `${sqlBookingByID}
+        WHERE c.first_name ILIKE :search 
+        OR c.middle_name ILIKE :search
+        OR c.last_name ILIKE :search
+        OR c.phone_no ILIKE :search
+        OR c.email ILIKE :search
+        ${sqlBookingGroupBy}
+        `,
+        {
+            replacements: {
+                search: `%${search}%`
+            },
+            type:QueryTypes.SELECT
+        }
+    )
+    if(!booking || booking.length === 0){
+        return res.status(404).json({message: "No bookings Found"})
+    }
+    return (booking)
+}
+
+
 module.exports = { 
     createBooking,
     getAllBooking,
     getBookingByID,
     getBookingByCustomerId,
     updateBooking,
-    deleteBooking
+    deleteBooking,
+    searchBookingByCDetail
 }

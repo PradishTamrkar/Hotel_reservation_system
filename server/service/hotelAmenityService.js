@@ -27,7 +27,7 @@ const getAllHotelAmenity= async () => {
     const hotelAmenity = await HotelAmenity.findAll();
     const hAmenityWithUrl = hotelAmenity.map(h =>({
         ...h.toJSON(),
-        hotel_amenity_image: getFileUrl(hAmenityWithUrl.hotel_amenity_image)
+        hotel_amenity_image: getFileUrl(h.hotel_amenity_image)
     }))
     return(hAmenityWithUrl)
 }

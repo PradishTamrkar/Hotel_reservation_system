@@ -1,5 +1,5 @@
 const { QueryError, QueryTypes } = require("sequelize")
-const sequelize = require("../config/db")
+const { db: sequelize } = require("../config/config");
 const BookingDetails = require("../models/bookingDetails")
 
 //booking details JOIN
