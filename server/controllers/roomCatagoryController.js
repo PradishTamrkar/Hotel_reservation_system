@@ -15,7 +15,7 @@ const handleCreateRoomCategory = async(req,res) => {
     const handleGetAllRoomCategory = async (req,res) => {
         try{
             const result = await getAllRoomCategory()
-            res.json({result})
+            res.json(result)
         }catch(err){
             res.status(500).json({error: err.message});
         }

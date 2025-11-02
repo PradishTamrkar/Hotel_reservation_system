@@ -1,7 +1,7 @@
 const { DataTypes, QueryTypes } = require('sequelize')
 const { db: sequelize } = require("../config/config");
 const Room = require('../models/room')
-const getFileURL = require('./getFileURL')
+const getFileURL = require('./getFileURL')  // ✅ Correct import
 
 //Room JOINS
 const sqlRoom = `
@@ -33,7 +33,7 @@ const createRoom = async(data,file) => {
     })
     return {
         ...newRoom.toJSON(),
-        room_images:getFileUrl(newRoom.room_images)
+        room_images: getFileURL(newRoom.room_images)  // ✅ Changed to getFileURL
     }
 }
 
@@ -54,7 +54,7 @@ const getAllRooms = async (pageNumber =1 ,limit = 10) => {
 
     const updatedRooms = room.map(room => ({
         ...room,
-        room_images: getFileURL(room.room_images)
+        room_images: getFileURL(room.room_images)  // ✅ Already correct
     }))
     return{
         pageNumber,
@@ -81,7 +81,7 @@ const getRoomByID = async (id) => {
     const room = rooms[0]
     return {
         ...room,
-        room_images: getFileUrl(room.room_images)
+        room_images: getFileURL(room.room_images)  // ✅ Changed to getFileURL
     };
 }
 
@@ -101,7 +101,7 @@ const updateRoom = async(id,data,file) => {
     })
     return {
         ...room.toJSON(),
-        room_images: getFileUrl(room.room_images)
+        room_images: getFileURL(room.room_images)  // ✅ Changed to getFileURL
     };
 }
 

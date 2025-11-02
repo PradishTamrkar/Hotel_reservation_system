@@ -6,7 +6,7 @@ const {
   deleteTestimony,
 } = require("../service/customerTestimonyService");
 
-// CREATE TESTIMONY
+// create testimony
 const handleCreateCustomerTestimony = async (req, res) => {
   try {
     const testimony = await createCustomerTestimony(req.body, req.user);
@@ -16,7 +16,7 @@ const handleCreateCustomerTestimony = async (req, res) => {
   }
 };
 
-// GET ALL TESTIMONIES
+// get all testimony
 const handleGetAllCustomerTestimonies = async (req, res) => {
   try {
     const testimonies = await getAllTestimonies();
@@ -26,7 +26,7 @@ const handleGetAllCustomerTestimonies = async (req, res) => {
   }
 };
 
-// GET TESTIMONY BY ID
+// get testimony by id
 const handleGetCustomerTestimonyByID = async (req, res) => {
   try {
     const testimony = await getTestimonyByID(req.params.id);
@@ -36,7 +36,7 @@ const handleGetCustomerTestimonyByID = async (req, res) => {
   }
 };
 
-// UPDATE TESTIMONY
+// update testimony
 const handleUpdateCustomerTestimony = async (req, res) => {
   try {
     const testimony = await updateTestimony(req.params.id, req.body,req.user);
@@ -46,7 +46,7 @@ const handleUpdateCustomerTestimony = async (req, res) => {
   }
 };
 
-// DELETE TESTIMONY
+// delete testimony
 const handleDeleteCustomerTestimony = async (req, res) => {
   try {
     const message = await deleteTestimony(req.params.id);

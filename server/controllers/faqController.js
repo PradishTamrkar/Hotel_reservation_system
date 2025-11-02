@@ -1,6 +1,6 @@
 const { createFAQ, getAllFAQ, getFAQByID, updateFAQ, deleteFAQ} = require('../service/faqServices')
 
-//Customer FAQ
+//Create FAQ
 const handleCreateFAQ = async (req,res) => {
     try{
         const faq = await createFAQ(req.body)
@@ -10,7 +10,7 @@ const handleCreateFAQ = async (req,res) => {
     }
 }
 
-//GET ALL FAQ
+//get all faq
 const handleGetAllFAQ = async (req,res) => {
     try{
         const faq = await getAllFAQ();

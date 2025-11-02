@@ -1,10 +1,10 @@
 const multer = require("multer");
 const path = require("path");
-
+const sharp = require("sharp")
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads/"); 
+  cb(null, path.join(__dirname, "../uploads"));
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)); // unique file name
@@ -27,4 +27,47 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // max 5MB
 });
 
-module.exports = upload;
+
+const optimizeImage = async (req, res, next) => {
+  if (!req.file) {
+    return next();
+  }
+
+  try {
+    const tempPath = req.file.path;
+    const filename = req.file.filename;
+    const optimizedFilename = `optimized-${filename.replace(path.extname(filename), '.webp')}`;
+    const optimizedPath = path.join(__dirname, "../uploads", optimizedFilename);
+
+    // Create uploads directory if it doesn't exist
+    const uploadsDir = path.join(__dirname, "../uploads");
+    await fs.mkdir(uploadsDir, { recursive: true });
+
+    // Optimize and convert to WebP (best compression)
+    await sharp(tempPath)
+      .resize(1200, 800, {
+        fit: 'inside', // Maintain aspect ratio
+        withoutEnlargement: true, // Don't upscale small images
+      })
+      .webp({ quality: 85 }) // WebP format with 85% quality
+      .toFile(optimizedPath);
+
+    // Delete temporary file
+    await fs.unlink(tempPath);
+
+    // Update req.file with optimized file info
+    req.file.filename = optimizedFilename;
+    req.file.path = optimizedPath;
+
+    next();
+  } catch (error) {
+    console.error("Image optimization error:", error);
+    // If optimization fails, try to continue with original
+    next();
+  }
+};
+
+module.exports = { 
+  upload, 
+  optimizeImage
+}

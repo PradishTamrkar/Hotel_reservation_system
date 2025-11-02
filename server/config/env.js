@@ -1,4 +1,17 @@
-require('dotenv').config();
+// env.js
+const path = require('path');
+const dotenv = require('dotenv');
+
+// Load .env file at the very top
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
+// Throw error if required vars are missing
+const requiredVars = ['DB_USER', 'DB_PASSWORD', 'DB_HOST', 'DB_PORT', 'DB_NAME'];
+requiredVars.forEach((key) => {
+  if (!process.env[key]) {
+    throw new Error(`Missing required environment variable: ${key}`);
+  }
+});
 
 module.exports = {
   NODE_ENV: process.env.NODE_ENV || 'development',

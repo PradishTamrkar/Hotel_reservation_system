@@ -278,8 +278,8 @@ const deleteBooking = async (booking_id,user) => {
     if(user.role !== "admin" && user.id !== booking.customer_id)
         throw new Error("Unauthorized:Access Denied")
 
-        //preventing cancellation after check-in
-    if(new Date(booking.check_in_date)<= new Date())
+    //preventing cancellation after check-in
+    if(new Date(booking.check_in_date)<= new Date() || user.role!=="admin")
         throw new Error("Cannot delete past bookings")
         
     await BookingDetails.destroy({ where: { booking_id:booking_id } });
