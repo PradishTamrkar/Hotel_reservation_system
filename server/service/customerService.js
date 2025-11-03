@@ -7,9 +7,16 @@ const { hashedPass, compPass } = require("../service/passwordService");
 const sqlCustomer = `
 SELECT
   c.customer_id, 
+  c.first_name,
+  c.middle_name,
+  c.last_name,
   c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name, 
-  c.email AS customer_email,
-  c.phone_no
+  c.email,
+  c.phone_no,
+  c.gender,
+  c.address,
+  c.nationality,
+  c.citizenship_id
 FROM customer c
 `;
 
@@ -82,10 +89,30 @@ const loginCustomer = async (data, res) => {
   const passMatch = await compPass(customer_password, customer.customer_password);
   if (!passMatch) throw new Error("Password not matched");
 
-  const token = generateToken({ id: customer.customer_id, role: "customer", customer_username: customer.customer_username });
+  const token = generateToken({ 
+    id: customer.customer_id,
+    role: "customer",
+    customer_username: customer.customer_username,
+    email: customer.email,
+    // first_name: customer.first_name,
+    // middle_name: customer.middle_name,
+    // last_name: customer.last_name,
+    // phone_no: customer.phone_no,
+    // gender: customer.gender,
+    // address: customer.address,
+    // nationality: customer.nationality,
+    // citizenship_id: customer.citizenship_id
+  });
   sendAuthCookie(res, token);
 
-  return { message: "Login Successful", token };
+  return { message: "Login Successful", token, customer:{
+    customer_id:customer.customer_id,
+    customer_username:customer.customer_username,
+    first_name:customer.first_name,
+    middle_name:customer.middle_name,
+    last_name:customer.last_name,
+    email:customer.email
+  } };
 };
 
 // get all customers

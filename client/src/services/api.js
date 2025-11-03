@@ -306,11 +306,10 @@ export const authUtils = {
 
   // Decode token to get user info
   getCurrentUser: () => {
-    const token = getAuthToken();
+    const token = localStorage.getItem('token');
     if (!token) return null;
 
     try {
-      // Simple JWT decode (payload is base64)
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(
@@ -325,6 +324,18 @@ export const authUtils = {
       return null;
     }
   },
+
+  getUserField: (field) => {
+    const user = authUtils.getCurrentUser();
+    return user ? user[field] : null
+  },
+
+  getFullName: () => {
+    const user = authUtils.getCurrentUser()
+    if(!user) return ''
+    const middle = user.middle_name ? `${user.middle_name}` : ' '
+    return `${user.first_name || ''}${middle}${user.last_name || ''}`.trim()
+  }
 };
 
 // ============================================

@@ -30,35 +30,63 @@ export default function BookingPage() {
   const [error, setError] = useState('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [customerData, setCustomerData] = useState(null);
+  const [isAutoFilled, setIsAutoFilled] = useState(false);
 
   // Fetch customer data if logged in
   useEffect(() => {
-    const fetchCustomerData = async () => {
+    const autoFillCustomerData = async () => {
       if (authUtils.isAuthenticated() && !isGuest) {
         try {
+          // Step 1: Try to get data from token first (faster)
           const user = authUtils.getCurrentUser();
-          const data = await customerService.getById(user.id);
-          setCustomerData(data);
+          console.log('User from Token:', user);
           
-          // Auto-fill form with customer data
-          setFormData({
-            first_name: data.first_name || '',
-            middle_name: data.middle_name || '',
-            last_name: data.last_name || '',
-            email: data.email || '',
-            phone_no: data.phone_no || '',
-            gender: data.gender || '',
-            address: data.address || '',
-            nationality: data.nationality || '',
-            citizenship_id: data.citizenship_id || '',
-          });
+          if (user) {
+            // Auto-fill from token data
+            setFormData({
+              first_name: user.first_name || '',
+              middle_name: user.middle_name || '',
+              last_name: user.last_name || '',
+              email: user.email || '',
+              phone_no: user.phone_no || '',
+              gender: user.gender || '',
+              address: user.address || '',
+              nationality: user.nationality || '',
+              citizenship_id: user.citizenship_id || '',
+            });
+            setIsAutoFilled(true);
+            console.log('Auto-filled from token');
+          }
+
+          // Step 2: Fetch from API to get latest data (if token data is incomplete)
+          if (!user.first_name || !user.email) {
+            console.log('Token data incomplete, fetching from API...');
+            const apiData = await customerService.getById(user.id);
+            console.log('Customer Data from API:', apiData);
+            
+            setCustomerData(apiData);
+            setFormData({
+              first_name: apiData.first_name || '',
+              middle_name: apiData.middle_name || '',
+              last_name: apiData.last_name || '',
+              email: apiData.email || '',
+              phone_no: apiData.phone_no || '',
+              gender: apiData.gender || '',
+              address: apiData.address || '',
+              nationality: apiData.nationality || '',
+              citizenship_id: apiData.citizenship_id || '',
+            });
+            setIsAutoFilled(true);
+            console.log('Auto-filled from API');
+          }
         } catch (err) {
-          console.error('Error fetching customer data:', err);
+          console.error('Error auto-filling customer data:', err);
+          // Even if API fails, we may have some data from token
         }
       }
     };
 
-    fetchCustomerData();
+    autoFillCustomerData();
   }, [isGuest]);
 
   // Redirect if no booking data
@@ -162,6 +190,14 @@ export default function BookingPage() {
 
         {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
+
+        {isAutoFilled && (
+          <Alert severity='success' sx={{mb:3}}>
+            Your information has been automatically filled.Please review and update if
+          </Alert>
+          )
+        }
+        
         <Grid container spacing={4}>
           {/* Guest Information Form */}
           <Grid item xs={12} md={8}>
