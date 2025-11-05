@@ -41,47 +41,29 @@ export default function BookingPage() {
           const user = authUtils.getCurrentUser();
           console.log('User from Token:', user);
           
-          if (user) {
-            // Auto-fill from token data
-            setFormData({
-              first_name: user.first_name || '',
-              middle_name: user.middle_name || '',
-              last_name: user.last_name || '',
-              email: user.email || '',
-              phone_no: user.phone_no || '',
-              gender: user.gender || '',
-              address: user.address || '',
-              nationality: user.nationality || '',
-              citizenship_id: user.citizenship_id || '',
-            });
-            setIsAutoFilled(true);
-            console.log('Auto-filled from token');
-          }
+          // Fetch complete data from API
+          console.log('Fetching customer data from API...');
+          const apiData = await customerService.getById(user.id);
+          console.log('Customer Data from API:', apiData);
 
-          // Step 2: Fetch from API to get latest data (if token data is incomplete)
-          if (!user.first_name || !user.email) {
-            console.log('Token data incomplete, fetching from API...');
-            const apiData = await customerService.getById(user.id);
-            console.log('Customer Data from API:', apiData);
+          setCustomerData(apiData)
             
-            setCustomerData(apiData);
-            setFormData({
-              first_name: apiData.first_name || '',
-              middle_name: apiData.middle_name || '',
-              last_name: apiData.last_name || '',
-              email: apiData.email || '',
-              phone_no: apiData.phone_no || '',
-              gender: apiData.gender || '',
-              address: apiData.address || '',
-              nationality: apiData.nationality || '',
-              citizenship_id: apiData.citizenship_id || '',
-            });
-            setIsAutoFilled(true);
-            console.log('Auto-filled from API');
-          }
-        } catch (err) {
+          setFormData({
+            first_name: apiData.first_name || '',
+            middle_name: apiData.middle_name || '',
+            last_name: apiData.last_name || '',
+            email: apiData.customer_email || '',
+            phone_no: apiData.phone_no || '',
+            gender: apiData.gender || '',
+            address: apiData.address || '',
+            nationality: apiData.nationality || '',
+            citizenship_id: apiData.citizenship_id || '',
+          });
+          setIsAutoFilled(true);
+          console.log('Auto-filled from token');
+        }
+        catch (err) {
           console.error('Error auto-filling customer data:', err);
-          // Even if API fails, we may have some data from token
         }
       }
     };
@@ -193,11 +175,11 @@ export default function BookingPage() {
 
         {isAutoFilled && (
           <Alert severity='success' sx={{mb:3}}>
-            Your information has been automatically filled.Please review and update if
+            Your information has been automatically filled.Please review and update if necessary
           </Alert>
           )
         }
-        
+
         <Grid container spacing={4}>
           {/* Guest Information Form */}
           <Grid item xs={12} md={8}>

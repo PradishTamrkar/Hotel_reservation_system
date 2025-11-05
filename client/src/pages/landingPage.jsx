@@ -89,7 +89,7 @@ const HeroSection = ({ onBookNowClick }) => {
               textShadow: '2px 2px 8px rgba(0,0,0,0.8)',
               fontWeight: 700 
             }}>
-              Experience luxury and comfort in the heart of the city
+              Experience luxury and comfort, with truly beautiful sceneary 
             </Typography>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -625,7 +625,7 @@ const AboutSection = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.6)', // Dark overlay
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
           zIndex: 1
         }
       }}
@@ -785,7 +785,7 @@ const ContactSection = () => {
           We'd love to hear from you
         </Typography>
 
-        <Grid container spacing={4}>
+        {/* <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Paper elevation={3} sx={{ p: 4, textAlign: 'center', height: '100%' }}>
               <LocationOn sx={{ fontSize: 50, color: 'primary.main', mb: 2 }} />
@@ -816,7 +816,7 @@ const ContactSection = () => {
               </Typography>
             </Paper>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Container>
     </Box>
   );
@@ -845,18 +845,10 @@ const Footer = () => {
             </Stack>
           </Grid>
           <Grid item xs={12} md={3}>
-            <Typography variant="h6" gutterBottom>Services</Typography>
-            <Stack spacing={1}>
-              <Typography variant="body2" color="grey.400">Room Service</Typography>
-              <Typography variant="body2" color="grey.400">Restaurant</Typography>
-              <Typography variant="body2" color="grey.400">Spa & Wellness</Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={3}>
             <Typography variant="h6" gutterBottom>Contact</Typography>
             <Stack spacing={1}>
               <Typography variant="body2" color="grey.400">Kathmandu, Nepal</Typography>
-              <Typography variant="body2" color="grey.400">+977 1234567890</Typography>
+              <Typography variant="body2" color="grey.400">+977 4546789</Typography>
               <Typography variant="body2" color="grey.400">info@hotelhimalayas.com</Typography>
             </Stack>
           </Grid>

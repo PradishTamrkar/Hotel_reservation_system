@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Container, Paper, Button, Typography, Box, Grid
 } from '@mui/material';
-import { Login, PersonAdd, Person, Hotel } from '@mui/icons-material';
+import { Login, PersonAdd, Person, Hotel, CenterFocusStrong } from '@mui/icons-material';
 
 export default function AuthOptionsPage() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function AuthOptionsPage() {
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #e7e7e7ff 0%, #f3aa21ff 100%)',
         py: 4,
       }}
     >

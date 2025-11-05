@@ -40,9 +40,8 @@ const apiCall = async (endpoint, options = {}) => {
   }
 };
 
-// ============================================
+
 // CUSTOMER SERVICE
-// ============================================
 export const customerService = {
   // Register new customer
   register: async (customerData) => {
@@ -88,9 +87,8 @@ export const customerService = {
   },
 };
 
-// ============================================
+
 // ROOM CATEGORY SERVICE
-// ============================================
 export const roomCategoryService = {
   // Get all room categories
   getAll: async () => {
@@ -113,9 +111,8 @@ export const roomCategoryService = {
   },
 };
 
-// ============================================
 // ROOM SERVICE
-// ============================================
+
 export const roomService = {
   // Get all rooms with pagination
   getAll: async (pageNumber = 1, limit = 10) => {
@@ -128,9 +125,8 @@ export const roomService = {
   },
 };
 
-// ============================================
+
 // BOOKING SERVICE
-// ============================================
 export const bookingService = {
   // Create booking (for both logged-in users and guests)
   create: async (bookingData) => {
@@ -176,9 +172,7 @@ export const bookingService = {
   },
 };
 
-// ============================================
 // HOTEL AMENITIES SERVICE
-// ============================================
 export const hotelAmenityService = {
   // Get all hotel amenities
   getAll: async () => {
@@ -191,9 +185,9 @@ export const hotelAmenityService = {
   },
 };
 
-// ============================================
+
 // ROOM AMENITIES SERVICE
-// ============================================
+
 export const roomAmenityService = {
   // Get all room amenities
   getAll: async () => {
@@ -206,9 +200,7 @@ export const roomAmenityService = {
   },
 };
 
-// ============================================
 // TESTIMONIALS SERVICE
-// ============================================
 export const testimonialService = {
   // Get all testimonials
   getAll: async () => {
@@ -232,9 +224,7 @@ export const testimonialService = {
   },
 };
 
-// ============================================
 // FAQ SERVICE
-// ============================================
 export const faqService = {
   // Get all FAQs
   getAll: async () => {
@@ -247,9 +237,7 @@ export const faqService = {
   },
 };
 
-// ============================================
 // CONTACT US SERVICE
-// ============================================
 export const contactService = {
   // Send contact message
   sendMessage: async (messageData) => {
@@ -260,9 +248,7 @@ export const contactService = {
   },
 };
 
-// ============================================
 // PROMOS AND OFFERS SERVICE
-// ============================================
 export const promoService = {
   // Get all offers
   getAll: async () => {
@@ -275,24 +261,7 @@ export const promoService = {
   },
 };
 
-// ============================================
-// PROPERTY INFO SERVICE
-// ============================================
-export const propertyInfoService = {
-  // Get all property information
-  getAll: async () => {
-    return apiCall('/property');
-  },
-
-  // Get property info by ID
-  getById: async (id) => {
-    return apiCall(`/property/${id}`);
-  },
-};
-
-// ============================================
 // AUTH UTILITIES
-// ============================================
 export const authUtils = {
   // Check if user is authenticated
   isAuthenticated: () => {
@@ -338,9 +307,7 @@ export const authUtils = {
   }
 };
 
-// ============================================
 // VALIDATION UTILITIES
-// ============================================
 export const validationUtils = {
   // Validate email
   isValidEmail: (email) => {
