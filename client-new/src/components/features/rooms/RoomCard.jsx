@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardImage, CardContent, CardTitle, CardDescription } from '@components/common/Card';
 import { Button } from '@components/common/Button';
 import { formatters } from '@services/utils/formatters';
-import { getImageUrl } from '@services/api';
+import { getImageUrl } from '@services/api/api';
 
 export const RoomCard = ({ room }) => {
   const navigate = useNavigate();

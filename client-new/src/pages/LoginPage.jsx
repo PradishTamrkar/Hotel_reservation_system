@@ -4,7 +4,7 @@ import { Hotel, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Button } from '@components/common/Button';
 import { Input } from '@components/common/Input';
-import { customerService } from '@services/api';
+import { customerService } from '@services/api/api.js';
 
 export default function LoginPage() {
   const navigate = useNavigate();

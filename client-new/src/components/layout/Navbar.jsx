@@ -2,7 +2,7 @@ import React,{useState,useEffect, use} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Hotel, Menu, X, User, History, LogOut } from 'lucide-react'
 import authUtils from '../../services/utils/auth'
-import {customerService} from '../../services/api'
+import {customerService} from '../../services/api/api'
 import { Button } from "../common/Button";
 
 export const Navbar = () => {

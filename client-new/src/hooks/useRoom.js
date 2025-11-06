@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { roomCategoryService } from '@services/api';
+import { roomCategoryService } from '@services/api/api';
 
 export const useRooms = () => {
   const [rooms, setRooms] = useState([]);
