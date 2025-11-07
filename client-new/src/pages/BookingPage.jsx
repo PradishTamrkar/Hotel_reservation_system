@@ -4,7 +4,9 @@ import { ArrowLeft, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@components/common/Button';
 import { Input } from '@components/common/Input';
 import { Card } from '@components/common/Card';
-import { bookingService, customerService, authUtils, validationUtils } from '@services/api/api.js';
+import { bookingService, customerService } from '@services/api/api.js';
+import validationUtils from '@services/utils/validation.js'
+import authUtils from '@services/utils/auth.js';
 import toast from 'react-hot-toast';
 
 export default function BookingPage() {
@@ -120,9 +122,6 @@ export default function BookingPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <Button variant="ghost" onClick={() => navigate(-1)} icon={ArrowLeft} className="mb-6">
-          Back
-        </Button>
 
         <h1 className="text-3xl font-bold mb-8">Complete Your Booking</h1>
 

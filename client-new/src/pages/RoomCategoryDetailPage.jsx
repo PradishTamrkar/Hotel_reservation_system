@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@components/common/Button';
-import { roomCategoryService, roomAmenityService, getImageUrl, validationUtils } from '@services/api/api.js';
+import { roomCategoryService, roomAmenityService, getImageUrl } from '@services/api/api.js';
+import validationUtils from '@services/utils/validation.js'
 import toast from 'react-hot-toast';
 
 export default function RoomCategoryDetailPage() {
@@ -54,36 +55,29 @@ export default function RoomCategoryDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/')}
-          icon={ArrowLeft}
-          className="mb-6"
-        >
-          Back to Categories
-        </Button>
+      <div className="max-w-6xl mx-auto px-4">
+        
+        {/* Centered Image Section */}
+        <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-8 mx-auto" style={{ maxWidth: '900px' }}>
+          <img
+            src={getImageUrl(category.room_catagory_images)}
+            alt={category.room_catagory_name}
+            className="w-full h-[600px] object-cover"
+            onError={(e) => {
+              e.target.src = 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800';
+            }}
+          />
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image Section */}
-          <div className="bg-white rounded-xl overflow-hidden shadow-lg h-[500px]">
-            <img
-              src={getImageUrl(category.room_catagory_images)}
-              alt={category.room_catagory_name}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.src = 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800';
-              }}
-            />
-          </div>
-
-          {/* Details Section */}
-          <div className="space-y-6">
-            <div>
+        {/* Content Section Below Image */}
+        <div className="max-w-4xl mx-auto space-y-6">
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            {/* Title and Price */}
+            <div className="mb-6">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 {category.room_catagory_name}
               </h1>
-              <div className="flex items-baseline gap-3 mb-6">
+              <div className="flex items-baseline gap-3">
                 <span className="text-4xl font-bold text-primary-main">
                   {validationUtils.formatCurrency(category.price_per_night)}
                 </span>
@@ -91,7 +85,8 @@ export default function RoomCategoryDetailPage() {
               </div>
             </div>
 
-            <div className="border-t border-gray-200 pt-6">
+            {/* Description */}
+            <div className="border-t border-gray-200 pt-6 mb-6">
               <h2 className="text-xl font-semibold mb-3">Description</h2>
               <p className="text-gray-600 leading-relaxed">
                 {category.room_catagory_description}
@@ -100,7 +95,7 @@ export default function RoomCategoryDetailPage() {
 
             {/* Amenities */}
             {amenities.length > 0 && (
-              <div className="border-t border-gray-200 pt-6">
+              <div className="border-t border-gray-200 pt-6 mb-6">
                 <h2 className="text-xl font-semibold mb-4">Room Amenities</h2>
                 <div className="grid grid-cols-2 gap-3">
                   {amenities.map((amenity) => (
@@ -113,14 +108,17 @@ export default function RoomCategoryDetailPage() {
               </div>
             )}
 
-            <Button
-              className="w-full"
-              size="lg"
-              icon={Calendar}
-              onClick={() => navigate(`/rooms/category/${id}`)}
-            >
-              View Available Rooms & Book Now
-            </Button>
+            {/* Book Now Button */}
+            <div className="border-t border-gray-200 pt-6">
+              <Button
+                className="w-full"
+                size="lg"
+                icon={Calendar}
+                onClick={() => navigate(`/rooms/category/${id}`)}
+              >
+                View Available Rooms & Book Now
+              </Button>
+            </div>
           </div>
         </div>
       </div>

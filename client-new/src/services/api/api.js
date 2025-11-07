@@ -1,5 +1,5 @@
 // src/services/api.js
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://8xj6mh5g-3002.asse.devtunnels.ms/'
 
 // Helper to get auth token
 const getAuthToken = () => localStorage.getItem('token');
@@ -33,9 +33,18 @@ const apiCall = async (endpoint, options = {}) => {
 };
 
 // Get image URL
-export const getImageUrl = (filename) => {
-  if (!filename) return 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800';
-  return `http://localhost:3002/uploads/${filename}`;
+export const getImageUrl = (imagePath) => {
+  if (!imagePath) {
+    return 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800';
+  }
+  
+  // Check if it's already a full URL
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath; // Return as-is since backend already provides full URL
+  }
+  
+  // Otherwise, construct the URL (fallback for relative paths)
+  return `https://8xj6mh5g-3002.asse.devtunnels.ms/uploads/${imagePath}`;
 };
 
 // Customer Service
@@ -138,62 +147,3 @@ export const testimonialService = {
   },
 };
 
-// Auth Utils
-export const authUtils = {
-  isAuthenticated: () => !!getAuthToken(),
-
-  getCurrentUser: () => {
-    const token = getAuthToken();
-    if (!token) return null;
-
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split('')
-          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      );
-      return JSON.parse(jsonPayload);
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return null;
-    }
-  },
-};
-
-// Validation Utils
-export const validationUtils = {
-  isValidEmail: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
-
-  isValidDateRange: (checkIn, checkOut) => {
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return checkInDate >= today && checkOutDate > checkInDate;
-  },
-
-  calculateNights: (checkIn, checkOut) => {
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
-    const diffTime = Math.abs(checkOutDate - checkInDate);
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  },
-
-  formatCurrency: (amount) => {
-    return `Rs ${parseFloat(amount).toLocaleString('en-NP', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  },
-
-  formatDate: (date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  },
-};

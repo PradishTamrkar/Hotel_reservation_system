@@ -1,6 +1,8 @@
 const multer = require("multer");
 const path = require("path");
-const sharp = require("sharp")
+const sharp = require("sharp");
+const fs = require("fs").promises;
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -43,13 +45,13 @@ const optimizeImage = async (req, res, next) => {
     const uploadsDir = path.join(__dirname, "../uploads");
     await fs.mkdir(uploadsDir, { recursive: true });
 
-    // Optimize and convert to WebP (best compression)
+    // Optimize and convert to WebP
     await sharp(tempPath)
       .resize(1200, 800, {
-        fit: 'inside', // Maintain aspect ratio
-        withoutEnlargement: true, // Don't upscale small images
+        fit: 'inside',
+        withoutEnlargement: true,
       })
-      .webp({ quality: 85 }) // WebP format with 85% quality
+      .webp({ quality: 85 })
       .toFile(optimizedPath);
 
     // Delete temporary file
@@ -62,7 +64,6 @@ const optimizeImage = async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Image optimization error:", error);
-    // If optimization fails, try to continue with original
     next();
   }
 };
@@ -70,4 +71,4 @@ const optimizeImage = async (req, res, next) => {
 module.exports = { 
   upload, 
   optimizeImage
-}
+};

@@ -1,18 +1,23 @@
+const {
+  createHotelAmenity, 
+  getAllHotelAmenity, 
+  getHotelAmenityByID,  // ✅ Correct import (no 'S')
+  updateHotelAmenity, 
+  deleteHotelAmenity
+} = require("../service/hotelAmenityService")
 
-const {createHotelAmenity, getAllHotelAmenity, getHotelAmenityByID, updateHotelAmenity, deleteHotelAmenity} = require("../service/hotelAmenityService")
-
-//Hotel Amenity Creation
+// Hotel Amenity Creation
 const handleCreateHotelAmenity = async (req,res) => {
     try{
-        const hotelAmenity = await createHotelAmenity(req.body)
+        const hotelAmenity = await createHotelAmenity(req.body, req.file)  // ✅ Add req.file
         res.status(201).json({message:"Hotel Amenity created successfully", hotelAmenity})
     }catch(err){
         res.status(500).json({error: err.message});
     }
 }
 
-//GET ALL Hotel Amenity
-const handleGetAllHotelAmenity= async (req,res) => {
+// GET ALL Hotel Amenity
+const handleGetAllHotelAmenity = async (req,res) => {
     try{
         const hotelAmenity = await getAllHotelAmenity();
         res.json(hotelAmenity)
@@ -21,28 +26,27 @@ const handleGetAllHotelAmenity= async (req,res) => {
     }
 }
 
-//GET single Hotel Amenity
+// GET single Hotel Amenity
 const handleGetHotelAmenityByID = async(req,res) => {
     try{
-        const hotelAmenity = await getHotelAmenitysByID(req.params.id)
+        const hotelAmenity = await getHotelAmenityByID(req.params.id)  // ✅ Fixed - removed 'S'
         res.json(hotelAmenity)
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }  
 
-//Update Hotel Amenity Info
-const handleUpdateHotelAmenity= async(req,res) => {
+// Update Hotel Amenity Info
+const handleUpdateHotelAmenity = async(req,res) => {
     try{
-
-        const hotelAmenity = await updateHotelAmenity(req.params.id,req.body,req.file)
-        res.json({message: "Hotel Amenity updated successfully",hotelAmenity})
+        const hotelAmenity = await updateHotelAmenity(req.params.id, req.body, req.file)
+        res.json({message: "Hotel Amenity updated successfully", hotelAmenity})
     }catch(err){
         res.status(500).json({error: err.message})
     }
 }
 
-//Delete Hotel Amenity
+// Delete Hotel Amenity
 const handleDeleteHotelAmenity = async (req,res) => {
     try{
         const hotelAmenity = await deleteHotelAmenity(req.params.id)

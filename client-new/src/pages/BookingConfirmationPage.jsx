@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, Home, Receipt, Calendar, Hotel as HotelIcon } from 'lucide-react';
 import { Button } from '@components/common/Button';
 import { Card } from '@components/common/Card';
-import { validationUtils } from '@services/api/api.js';
+import validationUtils from '@services/utils/validation.js';
 
 export default function BookingConfirmationPage() {
   const navigate = useNavigate();

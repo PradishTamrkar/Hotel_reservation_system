@@ -4,7 +4,8 @@ import { Hotel, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Button } from '@components/common/Button';
 import { Input } from '@components/common/Input';
-import { customerService, validationUtils } from '@services/api/api.js';
+import { customerService } from '@services/api/api.js';
+import validationUtils from '@services/utils/validation.js';
 
 export default function SignupPage() {
   const navigate = useNavigate();

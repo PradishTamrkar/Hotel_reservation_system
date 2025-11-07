@@ -7,7 +7,7 @@ export const AboutSection = () => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed opacity-20"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920)',
+          backgroundImage: 'url(https://image-tc.galaxy.tf/wijpeg-6rc902e9t312jljywldrat8xl/york-pool-dusk-ok.jpg?width=1920)',
         }}
       />
       
