@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { LogIn, UserPlus, User, Hotel } from 'lucide-react';
-import { Button } from '@components/common/Button';
-import { Card } from '@components/common/Card';
+import { Button } from '@common/Button';
+import { Card } from '@common/Card';
 
 export default function AuthOptionsPage() {
   const navigate = useNavigate();

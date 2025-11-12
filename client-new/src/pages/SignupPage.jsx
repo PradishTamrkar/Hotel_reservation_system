@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Hotel, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { Button } from '@components/common/Button';
-import { Input } from '@components/common/Input';
+import { Button } from '@common/Button';
+import { Input } from '@common/Input';
 import { customerService } from '@services/api/api.js';
 import validationUtils from '@services/utils/validation.js';
 

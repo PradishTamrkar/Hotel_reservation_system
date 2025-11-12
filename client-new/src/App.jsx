@@ -1,10 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import LandingPage from '@pages/LandingPage';
+import LandingPage from '@features/landing/LandingPage';
 import LoginPage from '@pages/LoginPage';
 import SignupPage from '@pages/SignupPage';
-import RoomCategoryDetailPage from '@pages/RoomCategoryDetailPage';
-import RoomSelectionPage from '@pages/RoomSelectionPage';
+import RoomCategoryDetailPage from '@features/roomCategoryDetail/RoomCategoryDetailPage';
+import RoomSelectionPage from '@features/roomSelection/RoomSelectionPage';
 import BookingPage from '@pages/BookingPage';
 import BookingConfirmationPage from '@pages/BookingConfirmationPage';
 // import BookingHistoryPage from '@pages/BookingHistoryPage';

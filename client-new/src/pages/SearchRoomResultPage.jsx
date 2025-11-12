@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Calendar, Loader2, Tag, Sparkles } from 'lucide-react';
-import { Button } from '@components/common/Button';
-import { Card } from '@components/common/Card';
+import { Button } from '@common/Button';
+import { Card } from '@common/Card';
 import { roomService, getImageUrl } from '@services/api/api.js';
 import validationUtils from '@services/utils/validation.js';
 import toast from 'react-hot-toast';

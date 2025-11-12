@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, CheckCircle, Loader2 } from 'lucide-react';
-import { Button } from '@components/common/Button';
-import { Input } from '@components/common/Input';
-import { Card } from '@components/common/Card';
+import { Button } from '@common/Button';
+import { Input } from '@common/Input';
+import { Card } from '@common/Card';
 import { bookingService, customerService } from '@services/api/api.js';
 import validationUtils from '@services/utils/validation.js'
 import authUtils from '@services/utils/auth.js';

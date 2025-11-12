@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, Home, Receipt, Calendar, Hotel as HotelIcon } from 'lucide-react';
-import { Button } from '@components/common/Button';
-import { Card } from '@components/common/Card';
+import { Button } from '@common/Button';
+import { Card } from '@common/Card';
 import validationUtils from '@services/utils/validation.js';
 
 export default function BookingConfirmationPage() {
