@@ -77,16 +77,24 @@ export const Navbar = () => {
                     <a href="#rooms" className="hover:text-primary transition-colors">
                         Room Categories
                     </a>
+                    <a href="#exclusivedeals" className="hover:text-primary transition-colors">
+                        Exclusive Deals
+                    </a>
                 <a href="#amenities" className="hover:text-primary transition-colors">
                     Amenities
                 </a>
                 <a href="#about" className="hover:text-primary transition-colors">
                     About
                 </a>
+                <a href="#faq" className="hover:text-primary transition-colors">
+                    FAQs
+                </a>
                 <a href="#contact" className="hover:text-primary transition-colors">
                     Contact
                 </a>
                 </div>
+
+
 
             {/* Auth Buttons */}
                 <div className="flex items-center space-x-4">
@@ -163,6 +171,9 @@ export const Navbar = () => {
                 <div className="md:hidden py-4 bg-white text-gray-900">
                 <a href="#rooms" className="block py-2 hover:text-primary">
                 Room Categories
+                </a>
+                <a href="#exclusivedeals" className="block py-2 hover:text-primary">
+                Exclusive Deals
                 </a>
                 <a href="#amenities" className="block py-2 hover:text-primary">
                 Amenities

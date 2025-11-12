@@ -100,6 +100,10 @@ export const roomCategoryService = {
   getRoomsByCategory: async (categoryId) => {
     return apiCall(`/roomCatagory/${categoryId}/rooms`);
   },
+
+  getExclusiveDeals: async () => {
+    return apiCall('/roomCatagory/offers');
+  },
 };
 
 // Booking Service
@@ -147,3 +151,64 @@ export const testimonialService = {
   },
 };
 
+//Room Service
+export const roomService ={
+  getAvailableByDate: async(checkInDate,checkOutDate) => {
+    return apiCall(`/rooms/available?check_in_date=${checkInDate}&check_out_date=${checkOutDate}`)
+  }
+};
+
+//Faq Service
+export const faqService ={
+  getAll: async() => {
+    return apiCall('/faq')
+  },
+
+  getById: async() => {
+    return apiCall(`/faq/${id}`)
+  },
+  
+  create: async() => {
+    return apiCall('/faq',{
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  update: async() => {
+    return apiCall(`/faq/${id}`,{
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  },
+
+  delete: async() => {
+    return apiCall(`/faq/${id}`,{
+      method: 'DELETE'
+    });
+  },
+};
+
+//Contact Us Service
+export const contactService = {
+  create: async() => {
+    return apiCall('/contactUs',{
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+
+  getAll: async() => {
+    return apiCall('/contactUs')
+  },
+
+  getById: async() => {
+    return apiCall(`/contactUs/${id}`)
+  },
+
+  delete: async() => {
+    return apiCall(`/contactUs/${id}`, {
+      method:'DELETE'
+    });
+  },
+};

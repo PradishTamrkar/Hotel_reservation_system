@@ -34,7 +34,7 @@ const handleGetOfferByID = async(req,res) => {
 const handleUpdateOffer = async(req,res) => {
     try{
 
-        const offer = updateOffer(req.params.id,req.body,req.file)
+        const offer = await updateOffer(req.params.id,req.body,req.file)
         res.json({ message: "Offer updated successfully", offer })
     }catch(err){
         res.status(500).json({error: err.message})

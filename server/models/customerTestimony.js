@@ -13,10 +13,6 @@ const customer_testimony = sequelize.define(
             type: DataTypes.TEXT,
             allowNull:false
         },
-        rating:{
-            type:DataTypes.NUMBER,
-            allowNull:true
-        },
         customer_id:{
             type:DataTypes.INTEGER,
             allowNull:true,

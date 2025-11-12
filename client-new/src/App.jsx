@@ -9,6 +9,7 @@ import BookingPage from '@pages/BookingPage';
 import BookingConfirmationPage from '@pages/BookingConfirmationPage';
 // import BookingHistoryPage from '@pages/BookingHistoryPage';
 import AuthOptionsPage from '@pages/AuthOptionsPage';
+import SearchRoomsPage from './pages/SearchRoomResultPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/auth-options" element={<AuthOptionsPage />} />
       
       {/* Room Routes */}
+      <Route path="/search-rooms" element={<SearchRoomsPage />} /> 
       <Route path="/roomCatagory/:id" element={<RoomCategoryDetailPage />} />
       <Route path="/rooms/category/:categoryId" element={<RoomSelectionPage />} />
       

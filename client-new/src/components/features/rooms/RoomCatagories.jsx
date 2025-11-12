@@ -55,7 +55,6 @@ export const RoomCategories = ({ searchDates }) => {
           Choose from our selection of comfortable and luxurious rooms
         </p>
 
-        {/* Fixed: Single scrollbar with proper styling */}
         <div className="overflow-x-auto overflow-y-hidden pb-4 -mx-4 px-4">
           <div className="flex gap-6 w-max">
             {categories.map((category) => (

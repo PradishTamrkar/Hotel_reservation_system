@@ -1,5 +1,15 @@
 const FAQ = require("../models/faq")
 
+
+const sqlFiveFaq = 
+`
+SELECT 
+    faq_id,
+    faq_questions,
+    faq_answers,
+FROM faq f
+`
+
 //Customer FAQ
 const createFAQ = async (data) => {
     const faq = await FAQ.create(data)
@@ -12,6 +22,10 @@ const getAllFAQ = async () => {
     return faq
 }
 
+// //Get % FAQs
+// const getFiveFaq = async () => {
+//     const faq
+// }
 //GET single FAQ
 const getFAQByID = async(id) => {
 

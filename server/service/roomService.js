@@ -16,24 +16,58 @@ SELECT
 FROM room r
 `
 
-//create room
-const createRoom = async(data,file) => {
-    const { room_catagory_id,room_no,room_description,capacity } = data
+const sqlAvailableRoomByDate = `
+SELECT DISTINCT
+    r.room_id,
+    r.room_no,
+    r.room_status,
+    r.room_images,
+    r.room_description,
+    r.capacity,
+    r.room_catagory_id,
+    rc.room_catagory_name,
+    rc.room_catagory_description,
+    rc.room_catagory_images,
+    rc.price_per_night,
+    rc.offer_id,
+    p.offer_name,
+    p.offer_description,
+    p.offered_discount
+FROM room r
+JOIN room_catagory rc ON r.room_catagory_id = rc.room_catagory_id
+LEFT JOIN promos_and_offers p ON rc.offer_id = p.offer_id
+WHERE r.room_status = 'Available'
+AND r.room_id NOT IN (
+SELECT bd.room_id 
+FROM booking_details bd
+JOIN booking b ON bd.booking_id = b.booking_id
+WHERE (
+        (b.check_in_date <= :check_out_date AND b.check_out_date >= :check_in_date)
+    )
+)
+ORDER BY rc.room_catagory_name, r.room_no
+`
+//room creation
+const createRoom = async(data, file) => {
+    const { room_catagory_id, room_no, room_description, capacity } = data
 
-    if (!room_no || !room_description || !capacity )
+    if (!room_catagory_id || !room_no || !room_description || !capacity)
         throw new Error("All fields are required");
 
+    // ✅ Ensure capacity is a string (or convert to number if model is INTEGER)
     const room_images = file ? file.filename : null
+    
     const newRoom = await Room.create({
-        room_catagory_id,
-        room_no,
+        room_catagory_id: parseInt(room_catagory_id), // ✅ Ensure it's a number
+        room_no: String(room_no), // ✅ Ensure it's a string
         room_description,
-        capacity,
+        capacity: String(capacity), // ✅ Keep as string if model uses STRING
         room_images
     })
+    
     return {
         ...newRoom.toJSON(),
-        room_images: getFileURL(newRoom.room_images)  // ✅ Changed to getFileURL
+        room_images: getFileURL(newRoom.room_images)
     }
 }
 
@@ -84,6 +118,58 @@ const getRoomByID = async (id) => {
         room_images: getFileURL(room.room_images)  // ✅ Changed to getFileURL
     };
 }
+
+const getAvailableRoomsByDate = async (check_in_date, check_out_date) => {
+    // Get all rooms that are NOT booked during the specified date range
+    const availableRooms = await sequelize.query(
+        `
+        ${sqlAvailableRoomByDate}
+        `,
+        {
+            replacements: { check_in_date, check_out_date },
+            type: QueryTypes.SELECT
+        }
+    );
+
+    // Group rooms by category
+    const groupedByCategory = availableRooms.reduce((acc, room) => {
+        const categoryId = room.room_catagory_id;
+        
+        if (!acc[categoryId]) {
+            acc[categoryId] = {
+                room_catagory_id: categoryId,
+                room_catagory_name: room.room_catagory_name,
+                room_catagory_description: room.room_catagory_description,
+                room_catagory_images: getFileURL(room.room_catagory_images),
+                price_per_night: room.price_per_night,
+                offer_id: room.offer_id,
+                offer_name: room.offer_name,
+                offer_description: room.offer_description,
+                offered_discount: room.offered_discount,
+                available_rooms: []
+            };
+        }
+        
+        acc[categoryId].available_rooms.push({
+            room_id: room.room_id,
+            room_no: room.room_no,
+            room_status: room.room_status,
+            room_images: getFileURL(room.room_images),
+            room_description: room.room_description,
+            capacity: room.capacity
+        });
+        
+        return acc;
+    }, {});
+
+    return {
+        check_in_date,
+        check_out_date,
+        categories: Object.values(groupedByCategory),
+        total_categories: Object.keys(groupedByCategory).length,
+        total_available_rooms: availableRooms.length
+    };
+};
 
 //update room
 const updateRoom = async(id,data,file) => {
@@ -137,5 +223,6 @@ module.exports = {
     getRoomByID,
     updateRoom,
     deleteRoom,
-    isRoomAvailable
+    isRoomAvailable,
+    getAvailableRoomsByDate,
 }

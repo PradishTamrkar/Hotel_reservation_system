@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Button } from "@components/common/Button";
 import { Input } from "@components/common/Input";
 import toast from "react-hot-toast";
 
 export const HeroSection = ({ onSearch }) => {
+  const navigate = useNavigate()
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
 
@@ -13,7 +15,23 @@ export const HeroSection = ({ onSearch }) => {
       toast.error('Please select the check-in and check-out dates');
       return;
     }
-    onSearch(checkIn, checkOut);
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (checkInDate < today) {
+      toast.error('Check-in date cannot be in the past');
+      return;
+    }
+
+    if (checkOutDate <= checkInDate) {
+      toast.error('Check-out date must be after check-in date');
+      return;
+    }
+
+    // Navigate to search results page with date parameters
+    navigate(`/search-rooms?check_in=${checkIn}&check_out=${checkOut}`);
   };
 
   return (

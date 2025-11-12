@@ -14,6 +14,24 @@ SELECT
     rc.price_per_night
 FROM room_catagory rc
 `
+
+const sqlRoomCatByID =
+`
+SELECT
+    rc.room_catagory_id,
+    rc.room_catagory_name,
+    rc.room_catagory_description,
+    rc.room_catagory_images,
+    rc.price_per_night,
+    rc.offer_id,
+    p.offer_name,
+    p.offer_description,
+    p.offered_discount
+FROM room_catagory rc
+LEFT JOIN promos_and_offers p ON rc.offer_id = p.offer_id
+WHERE rc.room_catagory_id = :id
+`
+
 const sqlRoomByCat = 
 `
 SELECT
@@ -29,6 +47,7 @@ FROM room r
 const sqlCatByExclusiveDeals = 
 `
 SELECT
+    rc.room_catagory_id,
     rc.room_catagory_name,
     rc.room_catagory_description,
     rc.room_catagory_images,
@@ -84,14 +103,13 @@ const getAllRoomCategory = async () => {
 const getRoomCategoryByID = async (id) => {
     const roomCategory = await sequelize.query(
         `
-        ${sqlRoomCategory} 
-        WHERE rc.room_catagory_id = :id
+        ${sqlRoomCatByID} 
         `,
         { 
             replacements: { id }, 
             type: QueryTypes.SELECT 
         })
-    if(!roomCategory) 
+    if(!roomCategory || roomCategory.length === 0) 
         throw new Error('Room Category not found')
 
     const roomCategoryWithUrl = roomCategory.map(cat => ({

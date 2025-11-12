@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, CheckCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Calendar, CheckCircle, Loader2, Tag, Sparkles } from 'lucide-react';
 import { Button } from '@components/common/Button';
 import { roomCategoryService, roomAmenityService, getImageUrl } from '@services/api/api.js';
 import validationUtils from '@services/utils/validation.js'
@@ -18,6 +18,7 @@ export default function RoomCategoryDetailPage() {
       try {
         setLoading(true);
         const categoryData = await roomCategoryService.getById(id);
+        console.log('Category Data:', categoryData);
         setCategory(categoryData[0]);
         
         const amenitiesData = await roomAmenityService.getByCategory(id);
@@ -53,12 +54,28 @@ export default function RoomCategoryDetailPage() {
     );
   }
 
+  // Calculate discounted price if offer exists
+  const hasOffer = category.offer_id && category.offered_discount;
+  const originalPrice = parseFloat(category.price_per_night);
+  const discountedPrice = hasOffer 
+    ? originalPrice * (1 - category.offered_discount / 100) 
+    : originalPrice;
+  const savings = hasOffer ? originalPrice - discountedPrice : 0;
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4">
         
         {/* Centered Image Section */}
-        <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-8 mx-auto" style={{ maxWidth: '900px' }}>
+        <div className="bg-white rounded-xl overflow-hidden shadow-lg mb-8 mx-auto relative" style={{ maxWidth: '900px' }}>
+          {/* Special Offer Badge */}
+          {hasOffer && (
+            <div className="absolute top-6 right-6 z-10 bg-red-600 text-white px-6 py-3 rounded-full font-bold text-xl shadow-lg flex items-center gap-2">
+              <Tag className="w-6 h-6" />
+              {category.offered_discount}% OFF
+            </div>
+          )}
+          
           <img
             src={getImageUrl(category.room_catagory_images)}
             alt={category.room_catagory_name}
@@ -72,16 +89,50 @@ export default function RoomCategoryDetailPage() {
         {/* Content Section Below Image */}
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="bg-white rounded-xl shadow-lg p-8">
+            {/* Special Offer Banner */}
+            {hasOffer && category.offer_name && (
+              <div className="mb-6 bg-gradient-to-r from-orange-50 to-red-50 border-l-4 border-orange-500 p-4 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-5 h-5 text-orange-600" />
+                  <h3 className="text-lg font-bold text-orange-900">{category.offer_name}</h3>
+                </div>
+                {category.offer_description && (
+                  <p className="text-orange-700 text-sm">{category.offer_description}</p>
+                )}
+              </div>
+            )}
+
             {/* Title and Price */}
             <div className="mb-6">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">
                 {category.room_catagory_name}
               </h1>
-              <div className="flex items-baseline gap-3">
-                <span className="text-4xl font-bold text-primary-main">
-                  {validationUtils.formatCurrency(category.price_per_night)}
-                </span>
-                <span className="text-gray-500">per night</span>
+              
+              {/* Price Display with Discount */}
+              <div className="flex items-baseline gap-3 flex-wrap">
+                {hasOffer ? (
+                  <>
+                    <span className="text-2xl text-gray-400 line-through">
+                      {validationUtils.formatCurrency(originalPrice)}
+                    </span>
+                    <span className="text-4xl font-bold text-green-600">
+                      {validationUtils.formatCurrency(discountedPrice)}
+                    </span>
+                    <span className="text-gray-500">per night</span>
+                    <div className="w-full mt-2">
+                      <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                        You save {validationUtils.formatCurrency(savings)} per night!
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-4xl font-bold text-primary-main">
+                      {validationUtils.formatCurrency(originalPrice)}
+                    </span>
+                    <span className="text-gray-500">per night</span>
+                  </>
+                )}
               </div>
             </div>
 
