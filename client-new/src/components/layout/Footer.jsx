@@ -16,9 +16,12 @@ export const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#rooms" className="text-gray-400 hover:text-white">Rooms</a></li>
+              <li><a href="#rooms" className="text-gray-400 hover:text-white">Room Categories</a></li>
+              <li><a href="#exclusivedeals" className="text-gray-400 hover:text-white">Exclusive Deals</a></li>
               <li><a href="#amenities" className="text-gray-400 hover:text-white">Amenities</a></li>
               <li><a href="#about" className="text-gray-400 hover:text-white">About</a></li>
+              <li><a href="#faq" className="text-gray-400 hover:text-white">FAQs</a></li>
+              <li><a href="#contact" className="text-gray-400 hover:text-white">Contact</a></li>
             </ul>
           </div>
           <div>

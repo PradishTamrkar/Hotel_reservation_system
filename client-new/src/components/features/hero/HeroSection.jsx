@@ -54,7 +54,7 @@ export const HeroSection = ({ onSearch }) => {
               Welcome to Hotel Himalayas
             </h1>
             <p className="text-xl md:text-2xl mb-12 drop-shadow-lg">
-              Experience luxury and comfort in the heart of the city
+              Experience luxury, comfort & peace, all in one place 
             </p>
           </div>
 
