@@ -22,10 +22,30 @@ const getAllFAQ = async () => {
     return faq
 }
 
-// //Get % FAQs
-// const getFiveFaq = async () => {
-//     const faq
-// }
+//GetFeaturedFAQs;
+const getFeaturedFAQs = async () => {
+    const faq = await FAQ.findAll({
+        where:{is_featured: true},
+        limit: 5,
+        order: [['faq_id', 'DESC']]
+    })
+    return faq
+}
+
+const toggleFeatured =async (id) => {
+    const faq = await FAQ.findByPk(id)
+    if (!faq) throw new Error('FAQ not found');
+    
+    if (!faq.is_featured) {
+        const featuredCount = await FAQ.count({ where: { is_featured: true } });
+        if (featuredCount >= 5) {
+            throw new Error('Maximum 5 FAQs can be featured');
+        }
+    }
+
+    await faq.update({is_featured: !faq.is_featured})
+    return faq;
+}
 //GET single FAQ
 const getFAQByID = async(id) => {
 
@@ -61,5 +81,7 @@ module.exports = {
     getAllFAQ,
     getFAQByID,
     updateFAQ,
-    deleteFAQ
+    deleteFAQ,
+    getFeaturedFAQs,
+    toggleFeatured,
 }

@@ -51,6 +51,31 @@ const getAllTestimonies = async () => {
   return testimonies;
 };
 
+//get featured testimonyes
+const getFeaturedTestimonies = async () => {
+    const testimonies = await sequelize.query(
+        `${sqlTestimony} WHERE t.is_featured = true ORDER BY t.testimony_id DESC LIMIT 5`,
+        { type: QueryTypes.SELECT }
+    );
+    return testimonies;
+}
+
+//toggle testimonies
+const toggleFeatured = async (id) => {
+    const testimony = await CustomerTestimony.findByPk(id);
+    if (!testimony) throw new Error('Testimony not found');
+    
+    if (!testimony.is_featured) {
+        const featuredCount = await CustomerTestimony.count({ where: { is_featured: true } });
+        if (featuredCount >= 5) {
+            throw new Error('Maximum 5 testimonies can be featured');
+        }
+    }
+    
+    await testimony.update({ is_featured: !testimony.is_featured });
+    return testimony;
+}
+
 // get testimony by id
 const getTestimonyByID = async (id) => {
   const testimony = await sequelize.query(`${sqlTestimony} WHERE t.testimony_id = :id`, {
@@ -86,4 +111,6 @@ module.exports = {
   getTestimonyByID,
   updateTestimony,
   deleteTestimony,
+  getFeaturedTestimonies,
+  toggleFeatured
 };

@@ -4,6 +4,8 @@ const {
   getTestimonyByID,
   updateTestimony,
   deleteTestimony,
+  getFeaturedTestimonies,
+  toggleFeatured,
 } = require("../service/customerTestimonyService");
 
 // create testimony
@@ -25,6 +27,26 @@ const handleGetAllCustomerTestimonies = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+//get featured testionies
+const handleGetFeaturedTestimonies = async (req, res) => {
+    try {
+        const testimonies = await getFeaturedTestimonies();
+        res.json(testimonies);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+//toggle featured
+const handleToggleFeaturedTestimony = async (req, res) => {
+    try {
+        const testimony = await toggleFeatured(req.params.id);
+        res.json({ message: 'Featured status updated', testimony });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
 
 // get testimony by id
 const handleGetCustomerTestimonyByID = async (req, res) => {
@@ -62,4 +84,6 @@ module.exports = {
   handleGetCustomerTestimonyByID,
   handleUpdateCustomerTestimony,
   handleDeleteCustomerTestimony,
+  handleGetFeaturedTestimonies,
+  handleToggleFeaturedTestimony
 };

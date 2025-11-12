@@ -16,6 +16,10 @@ const FAQ = sequelize.define(
         faq_answers: {
             type: DataTypes.TEXT,
             allowNull:false
+        },
+        is_featured:{
+            type:DataTypes.BOOLEAN,
+            defaultValue:false
         }
     },
     {

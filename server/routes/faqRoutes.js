@@ -7,6 +7,8 @@ const router = express.Router()
 router.post('/',verifyToken,adminOnly,faqController.handleCreateFAQ)
 router.get('/',faqController.handleGetAllFAQ)
 router.get('/:id',faqController.handleGetFAQByID)
+router.get('/featured', faqController.handleGetFeaturedFAQs)
+router.patch('/:id/toggle-featured', verifyToken, adminOnly, faqController.handleToggleFeaturedFAQ)
 router.put('/:id',verifyToken,adminOnly,faqController.handleUpdateFAQ)
 router.delete('/:id',verifyToken,adminOnly,faqController.handleDeleteFAQ)
 

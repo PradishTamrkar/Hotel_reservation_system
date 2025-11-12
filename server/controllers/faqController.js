@@ -1,4 +1,4 @@
-const { createFAQ, getAllFAQ, getFAQByID, updateFAQ, deleteFAQ} = require('../service/faqServices')
+const { createFAQ, getAllFAQ, getFAQByID, updateFAQ, deleteFAQ, getFeaturedFAQs, toggleFeatured} = require('../service/faqServices')
 
 //Create FAQ
 const handleCreateFAQ = async (req,res) => {
@@ -17,6 +17,26 @@ const handleGetAllFAQ = async (req,res) => {
         res.json(faq)
     }catch(err){
         res.status(500).json({error: err.message})
+    }
+}
+
+//featured faq
+const handleGetFeaturedFAQs = async (req, res) => {
+    try {
+        const faqs = await getFeaturedFAQs();
+        res.json(faqs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+//toggle faqs
+const handleToggleFeaturedFAQ = async (req, res) => {
+    try {
+        const faq = await toggleFeatured(req.params.id);
+        res.json({ message: 'Featured status updated', faq });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 }
 
@@ -55,5 +75,7 @@ module.exports = {
     handleGetAllFAQ,
     handleGetFAQByID,
     handleUpdateFAQ,
-    handleDeleteFAQ
+    handleDeleteFAQ,
+    handleGetFeaturedFAQs,
+    handleToggleFeaturedFAQ
 }

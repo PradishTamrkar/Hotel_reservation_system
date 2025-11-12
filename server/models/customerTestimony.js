@@ -36,6 +36,10 @@ const customer_testimony = sequelize.define(
         rating:{
             type: DataTypes.FLOAT,
             allowNull:false
+        },
+        is_featured: {
+            type: DataTypes.BOOLEAN,
+            defaultValue:false
         }
     },
     {
