@@ -6,9 +6,9 @@ import authUtils from '@services/utils/auth.js';
 import toast from 'react-hot-toast';
 import { AuthModal } from '@common/AuthModel';
 
-import GuestInformationForm from '@features/booking/components/GuestInformationForm';
-import BookingSummarySidebar from '@features/booking/components/BookingSummarySidebar';
-import BookingConfirmDialog from '@features/booking/components/BookingConfirmDialog';
+import GuestInformationForm from '@features/customer/booking/components/GuestInformationForm';
+import BookingSummarySidebar from '@features/customer/booking/components/BookingSummarySidebar';
+import BookingConfirmDialog from '@features/customer/booking/components/BookingConfirmDialog';
 
 export default function BookingPage() {
   const navigate = useNavigate();

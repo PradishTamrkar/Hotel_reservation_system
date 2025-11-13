@@ -7,9 +7,9 @@ import { roomService } from '@services/api/api.js';
 import validationUtils from '@services/utils/validation.js';
 import toast from 'react-hot-toast';
 
-import SearchResultsHeader from '@features/search/components/SearchResultsHeader';
-import SearchResultsSummary from '@features/search/components/SearchResultSummary';
-import CategoryResultCard from '@features/search/components/CategoryResultCard';
+import SearchResultsHeader from '@features/customer/search/components/SearchResultsHeader';
+import SearchResultsSummary from '@features/customer/search/components/SearchResultSummary';
+import CategoryResultCard from '@features/customer/search/components/CategoryResultCard';
 
 export default function SearchRoomResultPage() {
   const navigate = useNavigate();

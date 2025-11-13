@@ -6,12 +6,12 @@ import { roomCategoryService, roomAmenityService } from "@services/api/api.js";
 import toast from "react-hot-toast";
 import validationUtils from "@services/utils/validation.js";
 
-import CategoryHero from "@features/roomCategoryDetail/components/CategoryHero";
+import CategoryHero from "@features/customer/roomCategoryDetail/components/CategoryHero";
 import { OfferBanner }from "@common/OfferBanner";
-import CategoryPricing from "@features/roomCategoryDetail/components/CategoryPricing";
-import CategoryDescription from "@features/roomCategoryDetail/components/CategoryDescription";
-import CategoryAmenities from "@features/roomCategoryDetail/components/CategoryAmenities";
-import CategoryBookNow from "@features/roomCategoryDetail/components/CategoryBookNow";
+import CategoryPricing from "@features/customer/roomCategoryDetail/components/CategoryPricing";
+import CategoryDescription from "@features/customer/roomCategoryDetail/components/CategoryDescription";
+import CategoryAmenities from "@features/customer/roomCategoryDetail/components/CategoryAmenities";
+import CategoryBookNow from "@features/customer/roomCategoryDetail/components/CategoryBookNow";
 
 export default function RoomCategoryDetailPage() {
   const { id } = useParams();

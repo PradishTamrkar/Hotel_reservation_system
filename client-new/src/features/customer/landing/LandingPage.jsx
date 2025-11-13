@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Navbar } from '@layout/Navbar';
-import { HeroSection } from '@features/landing/components/HeroSection';
-import { RoomCategories } from '@features/landing/components/RoomCategories';
-import { ExclusiveDealsSection } from '@features/landing/components/ExclusiveDeals';
-import { AmenitiesSection } from '@features/landing/components/AmenitiesSection';
-import { TestimonialsSection } from '@features/landing/components/TestimonialSection';
-import { AboutSection } from '@features/landing/components/AboutSection';
-import { FAQSection } from '@features/landing/components/FaqSection';
-import { ContactSection } from '@features/landing/components/ContactSection';
+import { HeroSection } from '@features/customer/landing/components/HeroSection';
+import { RoomCategories } from '@features/customer/landing/components/RoomCategories';
+import { ExclusiveDealsSection } from '@features/customer/landing/components/ExclusiveDeals';
+import { AmenitiesSection } from '@features/customer/landing/components/AmenitiesSection';
+import { TestimonialsSection } from '@features/customer/landing/components/TestimonialSection';
+import { AboutSection } from '@features/customer/landing/components/AboutSection';
+import { FAQSection } from '@features/customer/landing/components/FaqSection';
+import { ContactSection } from '@features/customer/landing/components/ContactSection';
 import { Footer } from '@layout/Footer';
 
 export default function LandingPage() {

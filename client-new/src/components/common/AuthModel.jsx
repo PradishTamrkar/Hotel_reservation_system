@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, LogIn, UserPlus } from 'lucide-react';
 import { Button } from '@common/Button';
 import { Input } from '@common/Input';
@@ -7,8 +7,8 @@ import { customerService } from '@services/api/api.js';
 import validationUtils from '@services/utils/validation.js';
 import toast from 'react-hot-toast';
 
-export const AuthModal = ({ isOpen, onClose, onSuccess, bookingData }) => {
-  const [mode, setMode] = useState('options'); // 'options', 'login', 'signup'
+export const AuthModal = ({ isOpen, onClose, onSuccess, bookingData, initialMode = 'options' }) => {
+  const [mode, setMode] = useState(initialMode);
   const [loading, setLoading] = useState(false);
   const [loginData, setLoginData] = useState({
     customer_username: '',
@@ -28,6 +28,13 @@ export const AuthModal = ({ isOpen, onClose, onSuccess, bookingData }) => {
     nationality: '',
     citizenship_id: '',
   });
+
+  // Update mode when initialMode changes
+  useEffect(() => {
+    if (isOpen) {
+      setMode(initialMode);
+    }
+  }, [isOpen, initialMode]);
 
   if (!isOpen) return null;
 
@@ -107,7 +114,12 @@ export const AuthModal = ({ isOpen, onClose, onSuccess, bookingData }) => {
   };
 
   const handleGuestContinue = () => {
-    onSuccess(true); // true indicates guest mode
+    if (bookingData) {
+      onSuccess(true); // true indicates guest mode
+    } else {
+      // If opened from navbar without booking data, just close
+      onClose();
+    }
   };
 
   return (
@@ -126,9 +138,11 @@ export const AuthModal = ({ isOpen, onClose, onSuccess, bookingData }) => {
           {mode === 'options' && (
             <div>
               <h2 className="text-3xl font-bold text-center mb-2">How would you like to proceed?</h2>
-              <p className="text-gray-600 text-center mb-8">Choose your preferred booking method</p>
+              <p className="text-gray-600 text-center mb-8">
+                {bookingData ? 'Choose your preferred booking method' : 'Sign in or create an account'}
+              </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className={`grid grid-cols-1 ${bookingData ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
                 <button
                   onClick={() => setMode('login')}
                   className="p-6 border-2 border-gray-200 rounded-xl hover:border-primary hover:shadow-lg transition-all text-center"
@@ -147,14 +161,16 @@ export const AuthModal = ({ isOpen, onClose, onSuccess, bookingData }) => {
                   <p className="text-gray-600 text-sm">Create a new account</p>
                 </button>
 
-                <button
-                  onClick={handleGuestContinue}
-                  className="p-6 border-2 border-gray-200 rounded-xl hover:border-green-600 hover:shadow-lg transition-all text-center"
-                >
-                  <UserPlus className="w-12 h-12 mx-auto mb-3 text-green-600" />
-                  <h3 className="text-xl font-bold mb-2">Guest</h3>
-                  <p className="text-gray-600 text-sm">Book without an account</p>
-                </button>
+                {bookingData && (
+                  <button
+                    onClick={handleGuestContinue}
+                    className="p-6 border-2 border-gray-200 rounded-xl hover:border-green-600 hover:shadow-lg transition-all text-center"
+                  >
+                    <UserPlus className="w-12 h-12 mx-auto mb-3 text-green-600" />
+                    <h3 className="text-xl font-bold mb-2">Guest</h3>
+                    <p className="text-gray-600 text-sm">Book without an account</p>
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -171,7 +187,7 @@ export const AuthModal = ({ isOpen, onClose, onSuccess, bookingData }) => {
               <h2 className="text-3xl font-bold text-center mb-2">Welcome Back</h2>
               <p className="text-gray-600 text-center mb-8">Sign in to your account</p>
 
-              <form onSubmit={handleLogin} className="space-y-6 max-w-md mx-auto">
+              <form onSubmit={handleLogin} className="space-y-6 max-w-md mx-auto text-gray-600">
                 <Input
                   label="Username"
                   value={loginData.customer_username}

@@ -4,8 +4,8 @@ import { Home, Receipt } from 'lucide-react';
 import { Button } from '@common/Button';
 import { Card } from '@common/Card';
 
-import ConfirmationHeader from '@features/confirmation/components/ConfirmationHeader';
-import ConfirmationDetails from '@features/confirmation/components/ConfirmationDetails';
+import ConfirmationHeader from '@features/customer/confirmation/components/ConfirmationHeader';
+import ConfirmationDetails from '@features/customer/confirmation/components/ConfirmationDetails';
 
 export default function BookingConfirmationPage() {
   const navigate = useNavigate();

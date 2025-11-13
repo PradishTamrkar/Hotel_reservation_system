@@ -8,10 +8,10 @@ import toast from 'react-hot-toast';
 import { AuthModal } from '@common/AuthModel';
 
 // Component imports
-import RoomSelectionHeader from '@features/roomSelection/components/RoomSelectionHeader';
-import DateSelection from '@features/roomSelection/components/DateSelectionCard';
-import RoomList from '@features/roomSelection/components/RoomList';
-import BookingSummary from '@features/roomSelection/components/BookingSummary';
+import RoomSelectionHeader from '@features/customer/roomSelection/components/RoomSelectionHeader';
+import DateSelection from '@features/customer/roomSelection/components/DateSelectionCard';
+import RoomList from '@features/customer/roomSelection/components/RoomList';
+import BookingSummary from '@features/customer/roomSelection/components/BookingSummary';
 
 export default function RoomSelectionPage() {
   const { categoryId } = useParams();

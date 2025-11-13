@@ -1,4 +1,4 @@
-// src/services/api.js
+// src/services/api/api.js
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://8xj6mh5g-3002.asse.devtunnels.ms/'
 
 // Helper to get auth token
@@ -38,12 +38,10 @@ export const getImageUrl = (imagePath) => {
     return 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800';
   }
   
-  // Check if it's already a full URL
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath; // Return as-is since backend already provides full URL
+    return imagePath;
   }
   
-  // Otherwise, construct the URL (fallback for relative paths)
   return `https://8xj6mh5g-3002.asse.devtunnels.ms/uploads/${imagePath}`;
 };
 
@@ -87,8 +85,37 @@ export const customerService = {
   },
 };
 
+// Admin Service
+export const adminService = {
+  login: async (credentials) => {
+    const response = await apiCall('/admin/login', {
+      method: 'POST',
+      body: JSON.stringify(credentials),
+    });
+    
+    if (response.token) {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('userRole', 'admin');
+    }
+    
+    return response;
+  },
+
+  Logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+  },
+};
+
 // Room Category Service
 export const roomCategoryService = {
+  create: async (data) => {
+    return apiCall('/roomCatagory', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  
   getAll: async () => {
     return apiCall('/roomCatagory');
   },
@@ -104,6 +131,19 @@ export const roomCategoryService = {
   getExclusiveDeals: async () => {
     return apiCall('/roomCatagory/offers');
   },
+
+  update: async (id, data) => {
+    return apiCall(`/roomCatagory/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  delete: async (id) => {
+    return apiCall(`/roomCatagory/${id}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
 // Booking Service
@@ -115,6 +155,10 @@ export const bookingService = {
     });
   },
 
+  getAll: async () => {
+    return apiCall('/booking');
+  },
+  
   getMyBookings: async () => {
     return apiCall('/booking/history');
   },
@@ -132,8 +176,32 @@ export const bookingService = {
 
 // Hotel Amenity Service
 export const hotelAmenityService = {
+  create: async (data) => {
+    return apiCall('/hotelAmenities', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
   getAll: async () => {
     return apiCall('/hotelAmenities');
+  },
+
+  getById: async (id) => {
+    return apiCall(`/hotelAmenities/${id}`);
+  },
+
+  update: async (id, data) => {
+    return apiCall(`/hotelAmenities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  delete: async (id) => {
+    return apiCall(`/hotelAmenities/${id}`, {
+      method: 'DELETE',
+    });
   },
 };
 
@@ -142,6 +210,54 @@ export const roomAmenityService = {
   getByCategory: async (categoryId) => {
     return apiCall(`/amenityBridge/${categoryId}`);
   },
+
+  create: async (data) => {
+    return apiCall('/roomAmenities', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  getAll: async () => {
+    return apiCall('/roomAmenities');
+  },
+
+  getById: async (id) => {
+    return apiCall(`/roomAmenities/${id}`);
+  },
+
+  update: async (id, data) => {
+    return apiCall(`/roomAmenities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  delete: async (id) => {
+    return apiCall(`/roomAmenities/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// Amenity Bridge Service (for linking amenities to categories)
+export const amenityBridgeService = {
+  create: async (data) => {
+    return apiCall('/amenityBridge', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  getByCategoryId: async (categoryId) => {
+    return apiCall(`/amenityBridge/${categoryId}`);
+  },
+
+  delete: async (id) => {
+    return apiCall(`/amenityBridge/${id}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
 // Testimonial Service
@@ -149,66 +265,147 @@ export const testimonialService = {
   getAll: async () => {
     return apiCall('/testimony');
   },
-};
 
-//Room Service
-export const roomService ={
-  getAvailableByDate: async(checkInDate,checkOutDate) => {
-    return apiCall(`/rooms/available?check_in_date=${checkInDate}&check_out_date=${checkOutDate}`)
-  }
-};
-
-//Faq Service
-export const faqService ={
-  getAll: async() => {
-    return apiCall('/faq')
+  getById: async (id) => {
+    return apiCall(`/testimony/${id}`);
   },
 
-  getById: async() => {
-    return apiCall(`/faq/${id}`)
+  toggleTestimonyFeatured: async (id) => {
+    return apiCall(`/testimony/${id}/toggle-featured`, {
+      method: 'PATCH',
+    });
   },
-  
-  create: async() => {
-    return apiCall('/faq',{
+
+  delete: async (id) => {
+    return apiCall(`/testimony/${id}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// Room Service
+export const roomService = {
+  create: async (data) => {
+    return apiCall('/rooms', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   },
 
-  update: async() => {
-    return apiCall(`/faq/${id}`,{
+  getAll: async () => {
+    return apiCall('/rooms');
+  },
+
+  getById: async (id) => {
+    return apiCall(`/rooms/${id}`);
+  },
+
+  getAvailableByDate: async (checkInDate, checkOutDate) => {
+    return apiCall(`/rooms/available?check_in_date=${checkInDate}&check_out_date=${checkOutDate}`);
+  },
+
+  update: async (id, data) => {
+    return apiCall(`/rooms/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
   },
 
-  delete: async() => {
-    return apiCall(`/faq/${id}`,{
-      method: 'DELETE'
+  delete: async (id) => {
+    return apiCall(`/rooms/${id}`, {
+      method: 'DELETE',
     });
   },
 };
 
-//Contact Us Service
-export const contactService = {
-  create: async() => {
-    return apiCall('/contactUs',{
+// FAQ Service
+export const faqService = {
+  getAll: async () => {
+    return apiCall('/faq');
+  },
+
+  getById: async (id) => {
+    return apiCall(`/faq/${id}`);
+  },
+  
+  create: async (data) => {
+    return apiCall('/faq', {
       method: 'POST',
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     });
   },
 
-  getAll: async() => {
-    return apiCall('/contactUs')
+  update: async (id, data) => {
+    return apiCall(`/faq/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
   },
 
-  getById: async() => {
-    return apiCall(`/contactUs/${id}`)
+  delete: async (id) => {
+    return apiCall(`/faq/${id}`, {
+      method: 'DELETE',
+    });
   },
 
-  delete: async() => {
+  toggleFAQFeatured: async (id) => {
+    return apiCall(`/faq/${id}/toggle-featured`, {
+      method: 'PATCH',
+    });
+  },
+};
+
+// Contact Us Service
+export const contactService = {
+  create: async (data) => {
+    return apiCall('/contactUs', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  getAll: async () => {
+    return apiCall('/contactUs');
+  },
+
+  getById: async (id) => {
+    return apiCall(`/contactUs/${id}`);
+  },
+
+  delete: async (id) => {
     return apiCall(`/contactUs/${id}`, {
-      method:'DELETE'
+      method: 'DELETE',
+    });
+  },
+};
+
+// Offer Service
+export const offerService = {
+  create: async (data) => {
+    return apiCall('/promosAndOffer', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  getAll: async () => {
+    return apiCall('/promosAndOffer');
+  },
+
+  getById: async (id) => {
+    return apiCall(`/promosAndOffer/${id}`);
+  },
+
+  update: async (id, data) => {
+    return apiCall(`/promosAndOffer/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  },
+
+  delete: async (id) => {
+    return apiCall(`/promosAndOffer/${id}`, {
+      method: 'DELETE',
     });
   },
 };
