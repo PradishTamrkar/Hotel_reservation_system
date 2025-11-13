@@ -5,6 +5,7 @@ import { roomCategoryService } from '@services/api/api.js';
 import validationUtils from '@services/utils/validation.js';
 import authUtils from '@services/utils/auth.js';
 import toast from 'react-hot-toast';
+import { AuthModal } from '@common/AuthModel';
 
 // Component imports
 import RoomSelectionHeader from '@features/roomSelection/components/RoomSelectionHeader';
@@ -23,6 +24,8 @@ export default function RoomSelectionPage() {
   const [checkInDate, setCheckInDate] = useState(location.state?.checkIn || '');
   const [checkOutDate, setCheckOutDate] = useState(location.state?.checkOut || '');
   const [loading, setLoading] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [pendingBookingData, setPendingBookingData] = useState(null);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -104,7 +107,20 @@ export default function RoomSelectionPage() {
     if (authUtils.isAuthenticated()) {
       navigate('/booking', { state: { bookingData } });
     } else {
-      navigate('/auth-options', { state: { bookingData } });
+      // Show auth modal instead of navigating to separate page
+      setPendingBookingData(bookingData);
+      setShowAuthModal(true);
+    }
+  };
+
+  const handleAuthSuccess = (isGuestMode = false) => {
+    setShowAuthModal(false);
+    if (isGuestMode) {
+      // Continue as guest
+      navigate('/booking', { state: { bookingData: pendingBookingData, isGuest: true } });
+    } else {
+      // Logged in, proceed to booking
+      navigate('/booking', { state: { bookingData: pendingBookingData } });
     }
   };
 
@@ -159,6 +175,13 @@ export default function RoomSelectionPage() {
           calculateTotal={calculateTotal}
           calculateTotalSavings={calculateTotalSavings}
           onProceedToBooking={handleProceedToBooking}
+        />
+
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={handleAuthSuccess}
+          bookingData={pendingBookingData}
         />
       </div>
     </div>
