@@ -4,8 +4,11 @@ const CustomerTestimony = require("../models/customerTestimony");
 
 const sqlTestimony = `
 SELECT
+  t.testimony_id,
   t.comment,
   t.rating,
+  t.is_featured,
+  t.customer_id,
   c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name
 FROM customer_testimonies t
 JOIN customer c ON t.customer_id = c.customer_id

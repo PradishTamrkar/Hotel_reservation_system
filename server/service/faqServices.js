@@ -1,12 +1,15 @@
+const { QueryError, QueryTypes } = require("sequelize")
+const sequelize = require("../config/db")
 const FAQ = require("../models/faq")
 
 
-const sqlFiveFaq = 
+const sqlFaq = 
 `
 SELECT 
     faq_id,
     faq_questions,
     faq_answers,
+    is_featured
 FROM faq f
 `
 
@@ -24,12 +27,11 @@ const getAllFAQ = async () => {
 
 //GetFeaturedFAQs;
 const getFeaturedFAQs = async () => {
-    const faq = await FAQ.findAll({
-        where:{is_featured: true},
-        limit: 5,
-        order: [['faq_id', 'DESC']]
-    })
-    return faq
+    const faq = await sequelize.query(
+        `${sqlFaq} WHERE f.is_featured = true ORDER BY f.faq_id DESC LIMIT 5`,
+        { type: QueryTypes.SELECT }
+    );
+    return faq;
 }
 
 const toggleFeatured =async (id) => {

@@ -1,16 +1,42 @@
-// src/services/api/api.js
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://8xj6mh5g-3002.asse.devtunnels.ms/'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://8xj6mh5g-3002.asse.devtunnels.ms/api'
 
 // Helper to get auth token
 const getAuthToken = () => localStorage.getItem('token');
 
-// Main API call function
+// Main API call function for JSON data
 const apiCall = async (endpoint, options = {}) => {
   const token = getAuthToken();
   
   const config = {
     headers: {
       'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Something went wrong');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
+  }
+};
+
+// API call function for FormData
+const apiCallFormData = async (endpoint, options = {}) => {
+  const token = getAuthToken();
+  
+  const config = {
+    headers: {
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
@@ -109,10 +135,10 @@ export const adminService = {
 
 // Room Category Service
 export const roomCategoryService = {
-  create: async (data) => {
-    return apiCall('/roomCatagory', {
+  create: async (formData) => {
+    return apiCallFormData('/roomCatagory', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: formData,
     });
   },
   
@@ -132,10 +158,10 @@ export const roomCategoryService = {
     return apiCall('/roomCatagory/offers');
   },
 
-  update: async (id, data) => {
-    return apiCall(`/roomCatagory/${id}`, {
+  update: async (id, formData) => {
+    return apiCallFormData(`/roomCatagory/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: formData, 
     });
   },
 
@@ -176,10 +202,10 @@ export const bookingService = {
 
 // Hotel Amenity Service
 export const hotelAmenityService = {
-  create: async (data) => {
-    return apiCall('/hotelAmenities', {
+  create: async (formData) => {
+    return apiCallFormData('/hotelAmenities', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: formData,
     });
   },
 
@@ -191,10 +217,10 @@ export const hotelAmenityService = {
     return apiCall(`/hotelAmenities/${id}`);
   },
 
-  update: async (id, data) => {
-    return apiCall(`/hotelAmenities/${id}`, {
+  update: async (id, formData) => {
+    return apiCallFormData(`/hotelAmenities/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: formData, 
     });
   },
 
@@ -240,7 +266,7 @@ export const roomAmenityService = {
   },
 };
 
-// Amenity Bridge Service (for linking amenities to categories)
+// Amenity Bridge Service
 export const amenityBridgeService = {
   create: async (data) => {
     return apiCall('/amenityBridge', {
@@ -266,6 +292,10 @@ export const testimonialService = {
     return apiCall('/testimony');
   },
 
+  getFeaturedTestimonies: async () => {
+    return apiCall('/testimony/featured');
+  },
+
   getById: async (id) => {
     return apiCall(`/testimony/${id}`);
   },
@@ -283,12 +313,12 @@ export const testimonialService = {
   },
 };
 
-// Room Service
+// Room Service 
 export const roomService = {
-  create: async (data) => {
-    return apiCall('/rooms', {
+  create: async (formData) => {
+    return apiCallFormData('/rooms', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: formData,
     });
   },
 
@@ -304,10 +334,10 @@ export const roomService = {
     return apiCall(`/rooms/available?check_in_date=${checkInDate}&check_out_date=${checkOutDate}`);
   },
 
-  update: async (id, data) => {
-    return apiCall(`/rooms/${id}`, {
+  update: async (id, formData) => {
+    return apiCallFormData(`/rooms/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: formData,
     });
   },
 
@@ -322,6 +352,10 @@ export const roomService = {
 export const faqService = {
   getAll: async () => {
     return apiCall('/faq');
+  },
+
+  getFeaturedFAQs: async () => {
+    return apiCall('/faq/featured');
   },
 
   getById: async (id) => {
@@ -355,7 +389,7 @@ export const faqService = {
   },
 };
 
-// Contact Us Service
+// Contact Us Service 
 export const contactService = {
   create: async (data) => {
     return apiCall('/contactUs', {
@@ -381,10 +415,10 @@ export const contactService = {
 
 // Offer Service
 export const offerService = {
-  create: async (data) => {
-    return apiCall('/promosAndOffer', {
+  create: async (formData) => {
+    return apiCallFormData('/promosAndOffer', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: formData,
     });
   },
 
@@ -396,10 +430,10 @@ export const offerService = {
     return apiCall(`/promosAndOffer/${id}`);
   },
 
-  update: async (id, data) => {
-    return apiCall(`/promosAndOffer/${id}`, {
+  update: async (id, formData) => {
+    return apiCallFormData(`/promosAndOffer/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(data),
+      body: formData,
     });
   },
 

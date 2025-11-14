@@ -92,25 +92,32 @@ export default function RoomCategoriesPage() {
         </Button>
       </div>
 
-      {showForm ? (
-        <Card className="p-6 mb-8">
-          <h2 className="text-xl font-bold mb-6">
-            {editingCategory ? 'Edit Category' : 'Create New Category'}
-          </h2>
-          <CategoryForm
-            category={editingCategory}
-            offers={offers}
-            onSuccess={handleFormSuccess}
-            onCancel={handleFormCancel}
-          />
-        </Card>
-      ) : null}
-
-      <CategoryList
-        categories={categories}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
+        <div className={showForm ? 'lg:col-span-2' : 'lg:col-span-3'}>
+            <CategoryList
+                categories={categories}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+        </div>
+        {
+            showForm && (
+                <div className='lg:col-span-1'>
+                    <Card className='p-6 sticky top-6'>
+                        <h2 className='text-xl font-bold mb-6'>
+                            {editingCategory? 'Edit Category' : 'Create New Category'}
+                        </h2>
+                        <CategoryForm
+                            category={editingCategory}
+                            offers={offers}
+                            onSuccess={handleFormSuccess}
+                            onCancel={handleFormCancel}
+                            />
+                    </Card>
+                </div>
+            )
+        }
+      </div>
     </div>
   );
 }

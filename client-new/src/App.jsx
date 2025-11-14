@@ -11,6 +11,11 @@ import AdminLayout from '@features/admin/components/AdminLayout';
 import AdminDashboard from '@features/admin/AdminDashboard';
 import ProtectedAdminRoute from '@features/admin/components/ProtectedAdminRoute';
 import RoomCategoriesPage from '@features/admin/roomCategories/RoomCategoriesPage';
+import RoomsPage from '@features/admin/rooms/RoomPage';
+import OffersPage from '@features/admin/offers/OffersPage';
+import FAQPage from '@features/admin/faq/FAQPage';
+import TestimonialsPage from '@features/admin/testimonials/TestimonialsPage';
+import HotelAmenitiesPage from '@features/admin/hotelAmenities/HotelAmenitiesPage';
 function App() {
   return (
     <Routes>
@@ -35,6 +40,11 @@ function App() {
       } >
         <Route path='dashboard' element={<AdminDashboard />} />
         <Route path='room-categories' element={<RoomCategoriesPage />} />
+        <Route path='rooms' element={<RoomsPage />} />
+        <Route path='offers' element={<OffersPage />} />
+        <Route path='faq' element={<FAQPage />} />
+        <Route path='testimonials' element={<TestimonialsPage />} />
+        <Route path='hotel-amenities' element={<HotelAmenitiesPage />} />
       </Route>
     </Routes>
   );

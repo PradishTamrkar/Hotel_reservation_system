@@ -5,18 +5,24 @@ import { Card, CardContent } from '@common/Card';
 
 export const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const data = await testimonialService.getAll();
+        const data = await testimonialService.getFeaturedTestimonies();
         setTestimonials(data || []);
       } catch (error) {
         console.error('Error:', error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchTestimonials();
   }, []);
+
+  if (loading) return null;
+  if (!testimonials || testimonials.length === 0) return null;
 
   return (
     <section className="py-20 bg-white">

@@ -78,37 +78,6 @@ export default function AdminDashboard() {
           ))}
         </div>
       )}
-
-      <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-          <div className="space-y-2">
-            <button className="w-full text-left px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
-              Add New Room Category
-            </button>
-            <button className="w-full text-left px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
-              Create Promotional Offer
-            </button>
-            <button className="w-full text-left px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
-              View Recent Bookings
-            </button>
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">Recent Activity</h2>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 text-sm">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-gray-600">System running smoothly</span>
-            </div>
-            <div className="flex items-center gap-3 text-sm">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-gray-600">All services operational</span>
-            </div>
-          </div>
-        </Card>
-      </div>
     </div>
   );
 }

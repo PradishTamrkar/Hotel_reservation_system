@@ -1,71 +1,77 @@
-import React,{useState,useEffect} from "react";
-import {Button} from '@common/Button'
-import {Input} from '@common/Input'
-import { roomCategoryService } from '@services/api/api'
-import toast from "react-hot-toast";
+import React, { useState } from 'react';
+import { Button } from '@common/Button';
+import { Input } from '@common/Input';
+import { roomCategoryService } from '@services/api/api';
+import toast from 'react-hot-toast';
 
-export default function CategoryForm({ category, offers, onSuccess, onCancel}) {
-    const [formData,setFormData] = useState({
-        room_catagory_name: category?.room_catagory_name || '',
-        ory_description: category?.room_catagory_description || '',
-        price_per_night: category?.price_per_night || '',
-        room_catagory_images: category?.room_catagory_images || '',
-        offer_id: category?.offer_id || '',
-    });
-    const [loading,setLoading] = useState(false);
+export default function CategoryForm({ category, offers, onSuccess, onCancel }) {
+  const [formData, setFormData] = useState({
+    room_catagory_name: category?.room_catagory_name || '',
+    room_catagory_description: category?.room_catagory_description || '',
+    price_per_night: category?.price_per_night || '',
+    offer_id: category?.offer_id || '',
+  });
+  const [imageFile, setImageFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if(!formData.room_catagory_name || !formData.price_per_night){
-            toast.error('Please fill in all the required fields');
-            return;
-        }
+    if (!formData.room_catagory_name || !formData.price_per_night) {
+      toast.error('Please fill in all the required fields');
+      return;
+    }
 
-        try{
-            setLoading(true);
-            const payload = {
-                ...formData,
-                price_per_night: parseFloat(formData.price_per_night),
-                offer_id: formData.offer_id || null,
-            };
+    try {
+      setLoading(true);
+      
+      // ✅ Create FormData for file upload
+      const formDataToSend = new FormData();
+      formDataToSend.append('room_catagory_name', formData.room_catagory_name);
+      formDataToSend.append('room_catagory_description', formData.room_catagory_description);
+      formDataToSend.append('price_per_night', parseFloat(formData.price_per_night));
+      formDataToSend.append('offer_id', formData.offer_id || '');
+      
+      // ✅ Only append image if a new file was selected
+      if (imageFile) {
+        formDataToSend.append('room_catagory_images', imageFile);
+      }
 
-            if(category){
-                await roomCategoryService.update(category.room_catagory_id, payload);
-                toast.success('Category updated successfully');
-            }else{
-                await roomCategoryService.create(payload);
-                toast.success('Category created successfully');
-            }
+      if (category) {
+        await roomCategoryService.update(category.room_catagory_id, formDataToSend);
+        toast.success('Category updated successfully');
+      } else {
+        await roomCategoryService.create(formDataToSend);
+        toast.success('Category created successfully');
+      }
 
-            onSuccess();
-        }catch(error){
-            toast.error(error.message || 'Operation failed');
-        }finally{
-            setLoading(false);
-        }
-    };
-    return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Input
-          label="Category Name *"
-          value={formData.room_catagory_name}
-          onChange={(e) => setFormData({ ...formData, room_catagory_name: e.target.value })}
-          placeholder="e.g., Deluxe Suite"
-          required
-        />
+      onSuccess();
+    } catch (error) {
+      toast.error(error.message || 'Operation failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        <Input
-          label="Price per Night (Rs) *"
-          type="number"
-          step="0.01"
-          value={formData.price_per_night}
-          onChange={(e) => setFormData({ ...formData, price_per_night: e.target.value })}
-          placeholder="5000.00"
-          required
-        />
-      </div>
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Input
+        label="Category Name *"
+        value={formData.room_catagory_name}
+        onChange={(e) => setFormData({ ...formData, room_catagory_name: e.target.value })}
+        placeholder="e.g., Deluxe Suite"
+        required
+      />
+
+      <Input
+        label="Price per Night (Rs) *"
+        type="number"
+        step="0.01"
+        value={formData.price_per_night}
+        onChange={(e) => setFormData({ ...formData, price_per_night: e.target.value })}
+        placeholder="5000.00"
+        required
+      />
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -80,12 +86,22 @@ export default function CategoryForm({ category, offers, onSuccess, onCancel}) {
         />
       </div>
 
-      <Input
-        label="Image URL"
-        value={formData.room_catagory_images}
-        onChange={(e) => setFormData({ ...formData, room_catagory_images: e.target.value })}
-        placeholder="https://example.com/image.jpg"
-      />
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Category Image
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
+          className="input-field"
+        />
+        {category?.room_catagory_images && !imageFile && (
+          <p className="text-xs text-gray-500 mt-1">
+            Current image will be kept if no new image is selected
+          </p>
+        )}
+      </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
