@@ -29,6 +29,23 @@ export default function HotelAmenitiesList({ hotelAmenities,onEdit,onDelete }) {
                         <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                             {hotelAmenity.hotel_amenity_description || 'No description'}
                         </p>
+
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => onEdit(hotelAmenity)}
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                            >
+                                <Edit2 className="w-4 h-4" />
+                                Edit
+                            </button>
+                            <button
+                                onClick={() => onDelete(hotelAmenity.hotel_amenity_id)}
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </Card>
             ))}

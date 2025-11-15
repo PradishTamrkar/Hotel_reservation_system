@@ -1,4 +1,12 @@
-const { createFAQ, getAllFAQ, getFAQByID, updateFAQ, deleteFAQ, getFeaturedFAQs, toggleFeatured} = require('../service/faqServices')
+const { 
+    createFAQ, 
+    getAllFAQ, 
+    getFAQByID, 
+    updateFAQ, 
+    deleteFAQ, 
+    getFeaturedFAQs, 
+    toggleFeatured
+} = require('../service/faqServices');
 
 //Create FAQ
 const handleCreateFAQ = async (req,res) => {

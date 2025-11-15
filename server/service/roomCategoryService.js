@@ -11,8 +11,13 @@ SELECT
     rc.room_catagory_name,
     rc.room_catagory_description,
     rc.room_catagory_images,
-    rc.price_per_night
+    rc.price_per_night,
+    rc.offer_id,
+    p.offer_name,
+    p.offered_discount
 FROM room_catagory rc
+LEFT JOIN promos_and_offers p ON rc.offer_id = p.offer_id
+ORDER BY rc.room_catagory_id
 `
 
 const sqlRoomCatByID =
@@ -163,16 +168,22 @@ const getCatByExclusiveDeals = async () => {
 //Update Room Catagory
 const updateRoomCategory = async(id,data,file) => {
 
-    const { room_catagory_name,room_catagory_description,price_per_night } = data
+    const { room_catagory_name,room_catagory_description,price_per_night,offer_id } = data
     const roomCategory = await RoomCatagory.findByPk(id)
     if(!roomCategory) 
         throw new Error('Room Catagory not found')
     const room_catagory_images = file? file.filename : roomCategory.room_catagory_images
+
+    let offerIdValue = null
+    if(offer_id && offer_id !== 'null' && offer_id !== ''){
+        offerIdValue = parseInt(offer_id);
+    }
     await roomCategory.update({
         room_catagory_name,
         room_catagory_description,
         room_catagory_images,
         price_per_night,
+        offer_id:offerIdValue
     })
 
     const roomCatWithURL = {

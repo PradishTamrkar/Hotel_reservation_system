@@ -16,6 +16,8 @@ import OffersPage from '@features/admin/offers/OffersPage';
 import FAQPage from '@features/admin/faq/FAQPage';
 import TestimonialsPage from '@features/admin/testimonials/TestimonialsPage';
 import HotelAmenitiesPage from '@features/admin/hotelAmenities/HotelAmenitiesPage';
+import ContactMsgPage from '@features/admin/contactMsg/ContactMsgPage';
+import BookingsPage from '@features/admin/bookings/BookingsPage';
 function App() {
   return (
     <Routes>
@@ -45,6 +47,8 @@ function App() {
         <Route path='faq' element={<FAQPage />} />
         <Route path='testimonials' element={<TestimonialsPage />} />
         <Route path='hotel-amenities' element={<HotelAmenitiesPage />} />
+        <Route path='contact-messages' element={<ContactMsgPage />} />
+        <Route path='bookings' element={<BookingsPage />} />
       </Route>
     </Routes>
   );

@@ -25,14 +25,17 @@ export default function CategoryForm({ category, offers, onSuccess, onCancel }) 
     try {
       setLoading(true);
       
-      // ✅ Create FormData for file upload
       const formDataToSend = new FormData();
       formDataToSend.append('room_catagory_name', formData.room_catagory_name);
       formDataToSend.append('room_catagory_description', formData.room_catagory_description);
       formDataToSend.append('price_per_night', parseFloat(formData.price_per_night));
-      formDataToSend.append('offer_id', formData.offer_id || '');
       
-      // ✅ Only append image if a new file was selected
+      if(formData.offer_id && formData.offer_id !== ''){
+        formDataToSend.append('offer_id',formData.offer_id);
+      }else{
+        formDataToSend.append('offer_id','null');
+      }
+      
       if (imageFile) {
         formDataToSend.append('room_catagory_images', imageFile);
       }

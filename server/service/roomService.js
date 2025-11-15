@@ -77,7 +77,12 @@ const getAllRooms = async (pageNumber =1 ,limit = 10) => {
     const room = await sequelize.query(
         `
         ${sqlRoom}
-        ORDER BY r.room_id
+        ORDER BY 
+             CASE 
+                WHEN r.room_no ~ '^[0-9]+$' THEN CAST(r.room_no AS INTEGER)
+                ELSE 999999
+             END,
+            r.room_no
         LIMIT :limit OFFSET :offset
         `,
         {
