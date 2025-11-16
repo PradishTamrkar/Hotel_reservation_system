@@ -54,24 +54,19 @@ export default function RoomCard({
         {/* Details Section */}
         <div className="md:w-3/5 p-6 flex flex-col justify-between">
           <div>
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  Room {room.room_no}
-                </h3>
-                {room.room_description && (
-                  <p className="text-gray-600 mb-3">
-                    {room.room_description}
-                  </p>
-                )}
-              </div>
-            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              Room {room.room_no}
+            </h3>
+            
+            {/* Room Description - Always show */}
+            <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+              {room.room_description || 'Comfortable room with modern amenities and excellent service.'}
+            </p>
 
-            <div className="mb-4">
-              <div className="flex items-center gap-2 text-gray-700 mb-2">
-                <Users className="w-5 h-5" />
-                <span>Capacity: {room.capacity} guests</span>
-              </div>
+            {/* Capacity */}
+            <div className="flex items-center gap-2 text-gray-700 mb-4">
+              <Users className="w-5 h-5" />
+              <span>Capacity: {room.capacity} guests</span>
             </div>
 
             {/* Status Badge */}
@@ -90,7 +85,7 @@ export default function RoomCard({
             </div>
           </div>
 
-          {/* Price Section with Discount */}
+          {/* Price Section with Discount - UPDATED */}
           <div className="flex justify-between items-center pt-4 border-t">
             <div>
               <p className="text-sm text-gray-500">Rates from</p>
@@ -105,15 +100,15 @@ export default function RoomCard({
                     </p>
                   </div>
                   <p className="text-sm text-gray-500">per night</p>
-                  <p className="text-xs text-green-600 font-semibold mt-1">
-                    Save {validationUtils.formatCurrency(savingsPerNight)}
-                  </p>
+                  {/* REMOVED: Save Rs line */}
                 </div>
               ) : (
-                <p className="text-3xl font-bold text-gray-900">
-                  {validationUtils.formatCurrency(originalPrice)}
-                  <span className="text-sm font-normal text-gray-500 ml-2">per night</span>
-                </p>
+                <div>
+                  <p className="text-3xl font-bold text-gray-900">
+                    {validationUtils.formatCurrency(originalPrice)}
+                  </p>
+                  <p className="text-sm text-gray-500">per night</p>
+                </div>
               )}
             </div>
             {isAvailable && (

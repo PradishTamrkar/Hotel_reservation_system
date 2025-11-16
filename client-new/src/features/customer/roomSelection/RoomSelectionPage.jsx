@@ -127,7 +127,8 @@ export default function RoomSelectionPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <p className='text-lg text-gray-600'>Loading Rooms...</p>
       </div>
     );
   }

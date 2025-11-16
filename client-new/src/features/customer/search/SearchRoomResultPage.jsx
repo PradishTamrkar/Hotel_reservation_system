@@ -47,7 +47,8 @@ export default function SearchRoomResultPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 animate-spin text-primary-main" />
+        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <p className='text-lg text-gray-600'>Searching Rooms...</p>
       </div>
     );
   }

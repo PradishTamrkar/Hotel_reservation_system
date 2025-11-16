@@ -45,6 +45,7 @@ SELECT
     r.room_status,
     r.room_images,
     r.capacity,
+    r.room_description,
     r.room_catagory_id
 FROM room r
 `

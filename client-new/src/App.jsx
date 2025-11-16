@@ -5,6 +5,7 @@ import RoomCategoryDetailPage from '@features/customer/roomCategoryDetail/RoomCa
 import RoomSelectionPage from '@features/customer/roomSelection/RoomSelectionPage';
 import BookingPage from '@features/customer/booking/BookingPage';
 import BookingConfirmationPage from '@features/customer/confirmation/BookingConfirmationPage';
+import BookingHistoryPage from '@features/customer/bookingHistory/BookingHistoryPage';
 import SearchRoomsPage from '@features/customer/search/SearchRoomResultPage';
 import AdminLogin from '@features/admin/AdminLogin';
 import AdminLayout from '@features/admin/components/AdminLayout';
@@ -18,6 +19,9 @@ import TestimonialsPage from '@features/admin/testimonials/TestimonialsPage';
 import HotelAmenitiesPage from '@features/admin/hotelAmenities/HotelAmenitiesPage';
 import ContactMsgPage from '@features/admin/contactMsg/ContactMsgPage';
 import BookingsPage from '@features/admin/bookings/BookingsPage';
+import RoomAmenitiesPage from '@features/admin/roomAmenities/RoomAmenitiesPage';
+import AmenityBridgePage from '@features/admin/amenityBridge/AmenityBridgePage';
+
 function App() {
   return (
     <Routes>
@@ -32,6 +36,7 @@ function App() {
       {/* Booking Routes */}
       <Route path="/booking" element={<BookingPage />} />
       <Route path="/booking/confirmation" element={<BookingConfirmationPage />} />
+      <Route path="/booking/history" element={<BookingHistoryPage />} />
 
       {/*Admin Routes*/}
       <Route path='/admin/login' element={<AdminLogin />} />
@@ -49,6 +54,8 @@ function App() {
         <Route path='hotel-amenities' element={<HotelAmenitiesPage />} />
         <Route path='contact-messages' element={<ContactMsgPage />} />
         <Route path='bookings' element={<BookingsPage />} />
+        <Route path='room-amenities' element={<RoomAmenitiesPage />} />
+        <Route path='amenity-bridge' element={<AmenityBridgePage />} />
       </Route>
     </Routes>
   );

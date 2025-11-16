@@ -32,7 +32,7 @@ export default function AdminDashboard() {
 
         setStats({
           categories: categories?.roomCategory?.length || 0,
-          rooms: rooms?.length || 0,
+          rooms: rooms?.room?.length || 0,
           offers: offers?.length || 0,
           bookings: bookings?.length || 0,
           messages: messages?.length || 0,

@@ -12,6 +12,7 @@ SELECT
     b.booking_date, 
     b.check_in_date, 
     b.check_out_date, 
+    b.total_amount,
     c.first_name || COALESCE(' ' || c.middle_name, '') || ' ' || c.last_name AS customer_name,
     c.email
 FROM booking b 
@@ -275,12 +276,17 @@ const deleteBooking = async (booking_id,user) => {
         throw new Error('Booking not found')
         
     //only admin or customer that booked can perform deletion
-    if(user.role !== "admin" && user.id !== booking.customer_id)
-        throw new Error("Unauthorized:Access Denied")
+    if(user.role === 'admin'){
 
-    //preventing cancellation after check-in
-    if(new Date(booking.check_in_date)<= new Date() || user.role!=="admin")
-        throw new Error("Cannot delete past bookings")
+    }else if (user.role === 'customer'){
+        if(user.id !== booking.customer_id)
+            throw new Error('Unauthorized: Access Denied');
+        
+        if(new Date(booking.check_in_date) <= new Date())
+            throw new Error('Cannot delete past bookings');
+    } else {
+        throw new Error('Unauthorized: Access Denied');
+    }
         
     await BookingDetails.destroy({ where: { booking_id:booking_id } });
         

@@ -72,8 +72,7 @@ const createRoom = async(data, file) => {
 }
 
 //Get All rooms
-const getAllRooms = async (pageNumber =1 ,limit = 10) => {
-    const offset = (pageNumber -1 ) * limit 
+const getAllRooms = async () => {
     const room = await sequelize.query(
         `
         ${sqlRoom}
@@ -83,21 +82,17 @@ const getAllRooms = async (pageNumber =1 ,limit = 10) => {
                 ELSE 999999
              END,
             r.room_no
-        LIMIT :limit OFFSET :offset
         `,
         {
-            replacements:{limit,offset},
             type:QueryTypes.SELECT
         }
     )
 
     const updatedRooms = room.map(room => ({
         ...room,
-        room_images: getFileURL(room.room_images)  // ✅ Already correct
+        room_images: getFileURL(room.room_images)
     }))
     return{
-        pageNumber,
-        limit,
         totalRoom: updatedRooms.length,
         room: updatedRooms
     }

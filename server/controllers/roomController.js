@@ -3,7 +3,6 @@ const { createRoom, getAllRooms, getRoomByID, updateRoom, deleteRoom, getAvailab
 //Room creation
 const handleCreateRoom = async(req, res) => {
     try {
-        console.log('=== ROOM CREATION REQUEST ===');
         console.log('Body:', req.body);
         console.log('File:', req.file);
         console.log('Body types:', {
@@ -15,35 +14,7 @@ const handleCreateRoom = async(req, res) => {
         
         const room = await createRoom(req.body, req.file);
         res.status(201).json({message: "Room created successfully", room});
-    } catch(err) {
-        console.error('=== ROOM CREATION ERROR ===');
-        console.error('Error message:', err.message);
-        console.error('Error name:', err.name);
-        console.error('Full error:', err);
-        
-        // Sequelize validation errors
-        if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
-            console.error('Validation errors:', err.errors);
-            return res.status(400).json({
-                error: err.message,
-                details: err.errors.map(e => ({
-                    field: e.path,
-                    message: e.message,
-                    type: e.type,
-                    value: e.value
-                }))
-            });
-        }
-        
-        // Foreign key constraint errors
-        if (err.name === 'SequelizeForeignKeyConstraintError') {
-            console.error('Foreign key error:', err);
-            return res.status(400).json({
-                error: 'Foreign key constraint failed',
-                details: err.message
-            });
-        }
-        
+    } catch(err) {;
         res.status(500).json({error: err.message});
     }
 }
@@ -51,7 +22,7 @@ const handleCreateRoom = async(req, res) => {
 //Get ALL Rooms
 const handleGetAllRooms = async (req,res) => {
     try{
-        const result = await getAllRooms(req.query.pageNumber, req.query.limit)
+        const result = await getAllRooms()
         res.json(result)
     }catch(err){
         res.status(500).json({error: err.message});
