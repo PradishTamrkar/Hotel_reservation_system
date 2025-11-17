@@ -6,7 +6,7 @@ const generateToken = (payload) => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
-// Verify JWT token (raw version for internal usage)
+// Verify JWT token
 const verifyRawToken = (token) => {
   return jwt.verify(token, JWT_SECRET);
 };

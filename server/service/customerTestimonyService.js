@@ -57,7 +57,7 @@ const getAllTestimonies = async () => {
 //get featured testimonyes
 const getFeaturedTestimonies = async () => {
     const testimonies = await sequelize.query(
-        `${sqlTestimony} WHERE t.is_featured = true ORDER BY t.testimony_id DESC LIMIT 5`,
+        `${sqlTestimony} WHERE t.is_featured = true ORDER BY t.testimony_id DESC LIMIT 3`,
         { type: QueryTypes.SELECT }
     );
     return testimonies;
@@ -70,8 +70,8 @@ const toggleFeatured = async (id) => {
     
     if (!testimony.is_featured) {
         const featuredCount = await CustomerTestimony.count({ where: { is_featured: true } });
-        if (featuredCount >= 5) {
-            throw new Error('Maximum 5 testimonies can be featured');
+        if (featuredCount >= 3) {
+            throw new Error('Maximum 3 testimonies can be featured');
         }
     }
     

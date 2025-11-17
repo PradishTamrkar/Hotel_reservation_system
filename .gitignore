@@ -1,1 +1,3 @@
+# Environment files
 server/.env
+client-new/.env

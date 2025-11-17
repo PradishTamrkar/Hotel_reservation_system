@@ -25,7 +25,7 @@ app.use(express.json())
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://8xjcam5g-3002.asse.devtunnels.ms',
+    'https://8xj6mh5g-3002.asse.devtunnels.ms/',
   ],
   credentials: true
 }))      
