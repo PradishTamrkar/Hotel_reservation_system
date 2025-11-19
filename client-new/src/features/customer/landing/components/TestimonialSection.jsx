@@ -25,7 +25,7 @@ export const TestimonialsSection = () => {
   if (!testimonials || testimonials.length === 0) return null;
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-blue-50">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="section-title">What Our Guests Say</h2>
         <p className="section-subtitle">Real experiences from real guests</p>

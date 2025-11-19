@@ -8,6 +8,7 @@ const router = express.Router()
 router.post('/',verifyToken,adminOnly,upload.single('room_images'),optimizeImage,roomController.handleCreateRoom)
 router.get('/',roomController.handleGetAllRooms)
 router.get('/available', roomController.handleGetAvailableRoomsByDate);
+router.get('/search', roomController.handleSearchRooms);
 router.get('/:id',roomController.handleGetRoomByID)
 router.put('/:id',verifyToken,adminOnly,upload.single('room_images'),optimizeImage,roomController.handleUpdateRoom)
 router.delete('/:id',verifyToken,adminOnly,roomController.handleDeleteRoom)

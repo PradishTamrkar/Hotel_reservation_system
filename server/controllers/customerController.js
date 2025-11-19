@@ -5,6 +5,7 @@ const {
   getCustomerByID,
   updateCustomer,
   deleteCustomer,
+  searchCustomers,
 } = require("../service/customerService");
 
 // REGISTER CUSTOMER
@@ -52,6 +53,16 @@ const handleGetCustomerByID = async (req, res) => {
   }
 };
 
+//Search customers
+const handleSearchCustomers = async (req,res) => {
+  try{
+    const { search } = req.query;
+    const customer = await searchCustomers(search);
+    res,json(customer)
+  }catch(err){
+    res.status(500).json({error: err.message})
+  }
+}
 // UPDATE CUSTOMER
 const handleUpdateCustomer = async (req, res) => {
   try {
@@ -79,4 +90,5 @@ module.exports = {
   handleGetCustomerByID,
   handleUpdateCustomer,
   handleDeleteCustomer,
+  handleSearchCustomers,
 };

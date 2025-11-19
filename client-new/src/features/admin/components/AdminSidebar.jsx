@@ -20,6 +20,7 @@ export default function AdminSidebar() {
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
         { icon: Hotel, label: 'Room Categories', path: '/admin/room-categories' },
         { icon: DoorOpen, label: 'Rooms', path: '/admin/rooms' },
+        { icon: LayoutDashboard, label: 'User', path: '/admin/users' },
         { icon: Sparkles, label: 'Hotel Amenities', path: '/admin/hotel-amenities' },
         { icon: Tag, label: 'Room Amenities', path: '/admin/room-amenities' },
         { icon: Link2, label: 'Amenity Bridge', path: '/admin/amenity-bridge' },

@@ -21,6 +21,7 @@ import ContactMsgPage from '@features/admin/contactMsg/ContactMsgPage';
 import BookingsPage from '@features/admin/bookings/BookingsPage';
 import RoomAmenitiesPage from '@features/admin/roomAmenities/RoomAmenitiesPage';
 import AmenityBridgePage from '@features/admin/amenityBridge/AmenityBridgePage';
+import ViewUserPage from '@features/admin/viewUsers/ViewUsersPage';
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
         <Route path='bookings' element={<BookingsPage />} />
         <Route path='room-amenities' element={<RoomAmenitiesPage />} />
         <Route path='amenity-bridge' element={<AmenityBridgePage />} />
+        <Route path='users' element={<ViewUserPage />} />
       </Route>
     </Routes>
   );

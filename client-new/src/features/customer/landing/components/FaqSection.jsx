@@ -30,7 +30,7 @@ export const FAQSection = () => {
   if (!faqs || faqs.length === 0) return null;
 
   return (
-    <section id="faq" className="py-20 bg-white">
+    <section id="faq" className="py-20 bg-blue-50">
       <div className="max-w-4xl mx-auto px-4">
         {/* Centered Header */}
         <div className="text-center mb-12">

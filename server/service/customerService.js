@@ -138,6 +138,30 @@ const getCustomerByID = async (id) => {
   return customer[0];
 };
 
+//search customer
+const searchCustomers = async (search) => {
+  if(!search)
+    return getAllCustomers()
+
+  const customers = await sequelize.query(
+    `${sqlCustomer}
+    WHERE c.first_name ILIKE :search
+    OR C.middle_name ILIKE :search
+    OR c.last_name ILIKE :search
+    OR c.email ILIKE :search
+    OR c.phone_no ILIKE :search
+    OR c.customer_username ILIKE :search
+    ORDER BY c.customer_id
+    `,{
+      replacements: {
+        search: `%${search}%`
+      },
+      type: QueryTypes.SELECT
+    }
+  )
+  return customers
+}
+
 // update customer
 const updateCustomer = async (id, data) => {
   const customer = await Customer.findByPk(id);
@@ -161,4 +185,5 @@ module.exports = {
   getCustomerByID,
   updateCustomer,
   deleteCustomer,
+  searchCustomers
 };

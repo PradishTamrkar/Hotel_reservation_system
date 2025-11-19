@@ -220,7 +220,7 @@ const getBookingByID = async(id) => {
 }
 
 //bookingHistory
-const getBookingByCustomerId = async (customer_id) => {
+const getBookingByCustomerId = async (customerId) => {
     const myBookings = await sequelize.query(
         `
         SELECT 
@@ -237,15 +237,15 @@ const getBookingByCustomerId = async (customer_id) => {
                 )
             ) AS room_details
         FROM booking b
-        JOIN booking_details bd ON b.booking_id = bd.booking_id
-        JOIN room r ON bd.room_id = r.room_id
-        JOIN room_catagory rc ON r.room_catagory_id = rc.room_catagory_id
+        LEFT JOIN booking_details bd ON b.booking_id = bd.booking_id
+        LEFT JOIN room r ON bd.room_id = r.room_id
+        LEFT JOIN room_catagory rc ON r.room_catagory_id = rc.room_catagory_id
         WHERE b.customer_id = :customer_id
         GROUP BY b.booking_id, b.booking_date, b.check_in_date, b.check_out_date, b.total_amount
         ORDER BY b.check_in_date DESC
         `,
         {
-            replacements: {customer_id},
+            replacements: {customerId},
             type: QueryTypes.SELECT
         }
     )

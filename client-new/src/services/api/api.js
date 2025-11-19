@@ -93,6 +93,9 @@ export const customerService = {
     
     return response;
   },
+  getAll: async() => {
+    return apiCall('/customers')
+  },
 
   getById: async (id) => {
     return apiCall(`/customers/${id}`);
@@ -109,6 +112,10 @@ export const customerService = {
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
   },
+
+  search: async (query) => {
+    return apiCall(`/customers/search?search=${encodeURIComponent(query)}`);
+  }
 };
 
 // Admin Service
@@ -198,6 +205,14 @@ export const bookingService = {
       method: 'DELETE',
     });
   },
+
+  searchByCDetail: async (query) => {
+    return apiCall(`/booking/search?search=${encodeURIComponent(query)}`);
+  },
+
+  getByCustomerId: async (customerId) => {
+    return apiCall(`/booking/customer/${customerId}`);
+  }
 };
 
 // Hotel Amenity Service
@@ -345,6 +360,10 @@ export const roomService = {
     return apiCall(`/rooms/${id}`, {
       method: 'DELETE',
     });
+  },
+
+  search: async (searchTerm) => {
+    return apiCall(`/rooms/search?search=${encodeURIComponent(searchTerm)}`);
   },
 };
 

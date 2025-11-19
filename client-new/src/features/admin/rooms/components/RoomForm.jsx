@@ -102,7 +102,24 @@ export default function RoomForm({ room, categories, onSuccess, onCancel }) {
           placeholder="Describe the room..."
         />
       </div>
-
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Room Status *
+        </label>
+        <select
+          value={formData.room_status}
+          onChange={(e) => setFormData({ ...formData, room_status: e.target.value })}
+          className="input-field"
+          required
+        >
+          <option value="Available">Available</option>
+          <option value="Not-Available">Not-Available</option>
+        </select>
+        <p className="text-xs text-gray-500 mt-1">
+          Set to "Not-Available" for maintenance or manual blocking
+        </p>
+      </div>
+      
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Room Image
@@ -114,6 +131,8 @@ export default function RoomForm({ room, categories, onSuccess, onCancel }) {
           className="input-field"
         />
       </div>
+
+
 
       <div className="flex gap-3 pt-4">
         <Button type="submit" loading={loading} className="flex-1">

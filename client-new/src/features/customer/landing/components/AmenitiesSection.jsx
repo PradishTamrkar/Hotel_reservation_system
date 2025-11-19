@@ -25,7 +25,7 @@ export const AmenitiesSection = () => {
   if (loading) return null;
 
   return (
-    <section id="amenities" className="py-20 bg-gray-50">
+    <section id="amenities" className="py-20 bg-gradient-to-br from-orange-50 to-gray-50">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="section-title">Hotel Amenities</h2>
         <p className="section-subtitle">Experience world-class facilities</p>

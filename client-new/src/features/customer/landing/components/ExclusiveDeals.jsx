@@ -1,31 +1,31 @@
-// client-new/src/components/features/deals/ExclusiveDealsSection.jsx
-
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Loader2, Tag, Sparkles } from 'lucide-react';
-import { roomCategoryService, getImageUrl } from '@services/api/api';
+import { offerService, getImageUrl } from '@services/api/api';
 
 export const ExclusiveDealsSection = () => {
-  const [deals, setDeals] = useState([]);
+  const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchExclusiveDeals = async () => {
+    const fetchOffers = async () => {
       try {
         setLoading(true);
-        const data = await roomCategoryService.getExclusiveDeals();
-        console.log('Exclusive Deals API Response:', data);
-        setDeals(data?.roomCategory || []);
+        const data = await offerService.getAll();
+        console.log('Offers API Response:', data);
+        // Filter only offers with discount > 0
+        const validOffers = (data || []).filter(offer => 
+          offer.offered_discount && parseFloat(offer.offered_discount) > 0
+        );
+        setOffers(validOffers);
       } catch (err) {
-        console.error('Error fetching exclusive deals:', err);
+        console.error('Error fetching offers:', err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchExclusiveDeals();
+    fetchOffers();
   }, []);
 
   if (loading) {
@@ -38,12 +38,12 @@ export const ExclusiveDealsSection = () => {
     );
   }
 
-  if (error || deals.length === 0) {
+  if (error || offers.length === 0) {
     return null;
   }
 
   return (
-    <section id= "exclusivedeals" className="py-20 bg-gradient-to-br from-orange-50 to-red-50">
+    <section id="exclusivedeals" className="py-20 bg-blue-50">
       <div className="max-w-7xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -59,75 +59,73 @@ export const ExclusiveDealsSection = () => {
           </p>
         </div>
 
-        {/* Deals Horizontal Scroll */}
+        {/* Offers Horizontal Scroll */}
         <div className="overflow-x-auto overflow-y-hidden pb-4 -mx-4 px-4">
           <div className="flex gap-6 w-max">
-            {deals.map((deal) => (
+            {offers.map((offer) => (
               <div
-                key={deal.room_catagory_id}
-                onClick={() => navigate(`/roomCatagory/${deal.room_catagory_id}`)}
-                className="relative flex-shrink-0 w-[350px] h-80 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer"
+                key={offer.offer_id}
+                className="relative flex-shrink-0 w-[350px] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group cursor-pointer bg-white"
               >
                 {/* Discount Badge - Always Visible */}
-                <div className="absolute top-4 right-4 z-10 bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg flex items-center gap-2">
+                <div className="absolute top-4 right-4 z-10 bg-red-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg flex items-center gap-2 animate-pulse">
                   <Tag className="w-4 h-4" />
-                  {deal.offered_discount}% OFF
+                  {offer.offered_discount}% OFF
                 </div>
 
-                {/* Background Image */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-all duration-700 group-hover:scale-110 group-hover:brightness-75"
-                  style={{
-                    backgroundImage: `url(${getImageUrl(deal.room_catagory_images)})`,
-                  }}
-                />
+                {/* Offer Image */}
+                <div className="relative h-64 overflow-hidden">
+                  {offer.offer_image ? (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-all duration-700 group-hover:scale-110 group-hover:brightness-75"
+                      style={{
+                        backgroundImage: `url(${getImageUrl(offer.offer_image)})`,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-all duration-700 group-hover:scale-110 group-hover:brightness-75"
+                      style={{
+                        backgroundImage: `url(https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800)`,
+                      }}
+                    />
+                  )}
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                </div>
 
-                {/* Gradient Overlay - becomes darker on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent group-hover:from-black/90 group-hover:via-black/60 transition-all duration-300" />
+                {/* Content - Fixed Height Container */}
+                <div className="p-6 flex flex-col h-[220px]">
+                  {/* Top Section */}
+                  <div className="flex-1">
+                    {/* Offer Name Badge */}
+                    <div className="h-10 mb-3 flex items-center">
+                      <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-l font-bold">
+                        <Sparkles className="w-5 h-5" />
+                        {offer.offer_name}
+                      </div>
+                    </div>
 
-                {/* Content - appears on hover */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-end">
-                  {/* Offer Name Badge */}
-                  <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs font-semibold mb-3 w-fit opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                    <Sparkles className="w-3 h-3" />
-                    {deal.offer_name}
+                    {/* Description - Fixed Height */}
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-3 h-[60px]">
+                      {offer.offer_description || 'Special limited-time offer! Book now to enjoy amazing discounts on your stay.'}
+                    </p>
                   </div>
 
-                  {/* Category Name */}
-                  <h3 className="text-2xl font-bold text-white mb-3 line-clamp-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                    {deal.room_catagory_name}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-gray-200 mb-3 line-clamp-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                    {deal.room_catagory_description}
-                  </p>
-
-                  {/* Offer Description */}
-                  {deal.offer_description && (
-                    <p className="text-orange-300 text-xs italic mb-3 line-clamp-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-75">
-                      "{deal.offer_description}"
-                    </p>
-                  )}
-
-                  {/* Price Section */}
-                  <div className="flex items-center justify-between opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 delay-100">
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-gray-300 line-through text-sm">
-                          Rs {parseFloat(deal.price_per_night).toLocaleString('en-NP')}
-                        </span>
-                        <span className="text-2xl font-bold text-white drop-shadow-lg">
-                          Rs {(parseFloat(deal.price_per_night) * (1 - deal.offered_discount / 100)).toLocaleString('en-NP', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </span>
+                  {/* Discount Info - Fixed at Bottom */}
+                  <div className="pt-1 border-t border-gray-200">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Save up to</p>
+                        <p className="text-3xl font-bold text-green-600">
+                          {offer.offered_discount}%
+                        </p>
                       </div>
-                      <p className="text-green-400 text-xs font-semibold">
-                        Save Rs {(parseFloat(deal.price_per_night) * (deal.offered_discount / 100)).toLocaleString('en-NP', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </p>
+                      <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-lg font-semibold text-sm shadow-lg" >
+                        Limited Time
+                      </div>
                     </div>
-                    <button className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:from-orange-600 hover:to-red-600 transition-all duration-300 shadow-lg text-sm whitespace-nowrap">
-                      View Details
-                    </button>
                   </div>
                 </div>
               </div>

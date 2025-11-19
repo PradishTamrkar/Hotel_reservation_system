@@ -7,11 +7,8 @@ import toast from "react-hot-toast";
 import validationUtils from "@services/utils/validation.js";
 
 import CategoryHero from "@features/customer/roomCategoryDetail/components/CategoryHero";
-import { OfferBanner }from "@common/OfferBanner";
-import CategoryPricing from "@features/customer/roomCategoryDetail/components/CategoryPricing";
-import CategoryDescription from "@features/customer/roomCategoryDetail/components/CategoryDescription";
-import CategoryAmenities from "@features/customer/roomCategoryDetail/components/CategoryAmenities";
-import CategoryBookNow from "@features/customer/roomCategoryDetail/components/CategoryBookNow";
+import CategoryInfo from "@features/customer/roomCategoryDetail/components/CategoryInfo";
+import BookingCard from "@features/customer/roomCategoryDetail/components/BookingCard";
 
 export default function RoomCategoryDetailPage() {
   const { id } = useParams();
@@ -41,7 +38,7 @@ export default function RoomCategoryDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-12 h-12 animate-spin text-primary" />
-        <p className='text-lg text-gray-600'>Loading Category...</p>
+        <p className="text-lg text-gray-600 ml-3">Loading Category...</p>
       </div>
     );
   }
@@ -64,30 +61,55 @@ export default function RoomCategoryDetailPage() {
   const discountedPrice = hasOffer
     ? originalPrice * (1 - category.offered_discount / 100)
     : originalPrice;
-  const savings = hasOffer ? originalPrice - discountedPrice : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 space-y-8">
-        <CategoryHero category={category} hasOffer={hasOffer} />
-        <div className="max-w-4xl mx-auto space-y-6">
-          {hasOffer && (
-            <OfferBanner
-              offerName={category.offer_name}
-              offerDescription={category.offer_description}
+    <div className="min-h-screen bg-gray-50">
+      {/* Back Button */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            icon={ArrowLeft}
+            size="sm"
+          >
+            Back to Home
+          </Button>
+        </div>
+      </div>
+
+      {/* Hero Image */}
+      
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Info */}
+          <div className="lg:col-span-2 space-y-6">
+            <CategoryHero category={category} hasOffer={hasOffer} />
+            <CategoryInfo
+              category={category}
+              amenities={amenities}
+              hasOffer={hasOffer}
+              originalPrice={originalPrice}
+              discountedPrice={discountedPrice}
+              validationUtils={validationUtils}
             />
-          )}
-          <CategoryPricing
-            category={category}
-            hasOffer={hasOffer}
-            originalPrice={originalPrice}
-            discountedPrice={discountedPrice}
-            savings={savings}
-            validationUtils={validationUtils}
-          />
-          <CategoryDescription description={category.room_catagory_description} />
-          <CategoryAmenities amenities={amenities} />
-          <CategoryBookNow id={id} navigate={navigate} />
+          </div>
+
+          {/* Right Column - Booking Card (Sticky) */}
+          <div className="lg:col-span-1">
+            
+            <BookingCard
+              id={id}
+              category={category}
+              hasOffer={hasOffer}
+              originalPrice={originalPrice}
+              discountedPrice={discountedPrice}
+              navigate={navigate}
+              validationUtils={validationUtils}
+            />
+          </div>
         </div>
       </div>
     </div>

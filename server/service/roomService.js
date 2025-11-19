@@ -171,9 +171,37 @@ const getAvailableRoomsByDate = async (check_in_date, check_out_date) => {
     };
 };
 
+const searchRooms = async (searchTerm) => {
+    const rooms = await sequelize.query(
+        `
+        ${sqlRoom}
+        wHERE r.room_no ILIKE :search
+        ORDER BY 
+            CASE
+                WHEN r.room_no ~ '^[0-9]+$' THEN CAST(r.room_no AS INTEGER)
+                ELSE 999999
+            END,
+            r.room_no
+        `,{
+            replacements: {search: `%${searchTerm}%`},
+            type: QueryTypes.SELECT
+        }
+    )
+
+    const updatedRooms = rooms.map(room => ({
+        ...room,
+        room_images:getFileURL(room.room_images)
+    }))
+
+    return{
+        totalRoom: updatedRooms.length,
+        room: updatedRooms
+    }
+}
+
 //update room
 const updateRoom = async(id,data,file) => {
-    const { room_catagory_id,room_no,room_description,capacity  } = data
+    const { room_catagory_id,room_no,room_description,capacity,room_status  } = data
     const room = await Room.findByPk(id)
     if(!room)
         throw new Error('Room not found')
@@ -183,11 +211,12 @@ const updateRoom = async(id,data,file) => {
         room_no,
         room_description,
         capacity,
+        room_status: room_status || room.room_status,
         room_images                
     })
     return {
         ...room.toJSON(),
-        room_images: getFileURL(room.room_images)  // ✅ Changed to getFileURL
+        room_images: getFileURL(room.room_images)
     };
 }
 
@@ -225,4 +254,5 @@ module.exports = {
     deleteRoom,
     isRoomAvailable,
     getAvailableRoomsByDate,
+    searchRooms
 }

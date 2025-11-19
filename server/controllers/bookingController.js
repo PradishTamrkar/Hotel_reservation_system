@@ -33,7 +33,7 @@ const handleGetBookingByID = async(req,res) => {
 //get booking history for customer
 const handleGetMyBookings = async (req,res) => {
     try{
-        const history = await getBookingByCustomerId(req.user.id)
+        const history = await getBookingByCustomerId(req.paramscustomerId)
         res.json(history)
     }catch(err){
         res.status(500).json({error: err.message})

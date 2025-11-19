@@ -1,4 +1,4 @@
-const { createRoom, getAllRooms, getRoomByID, updateRoom, deleteRoom, getAvailableRoomsByDate} = require('../service/roomService')
+const { createRoom, getAllRooms, getRoomByID, updateRoom, deleteRoom, getAvailableRoomsByDate, searchRooms} = require('../service/roomService')
     
 //Room creation
 const handleCreateRoom = async(req, res) => {
@@ -82,6 +82,22 @@ const handleGetAvailableRoomsByDate = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+const handleSearchRooms = async (req,res) => {
+    try{
+        const {search} = req.query
+
+        if(!search)
+            return res.status(400).json({error: 'Search query is required'})
+
+        const result = await searchRooms(search);
+        res.json(result)
+    }catch(err){
+        console.error('Error searching rooms:',err)
+        res.status(500).json({error: err.message})
+    }
+}
+
 //update Room
 const handleUpdateRoom = async (req,res) => {
     try{
@@ -109,5 +125,6 @@ module.exports = {
     handleGetRoomByID,
     handleUpdateRoom,
     handleDeleteRoom,
-    handleGetAvailableRoomsByDate
+    handleGetAvailableRoomsByDate,
+    handleSearchRooms
 }
