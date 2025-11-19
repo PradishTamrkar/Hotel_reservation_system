@@ -58,7 +58,7 @@ const handleSearchCustomers = async (req,res) => {
   try{
     const { search } = req.query;
     const customer = await searchCustomers(search);
-    res,json(customer)
+    res.json(customer)
   }catch(err){
     res.status(500).json({error: err.message})
   }

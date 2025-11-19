@@ -31,9 +31,14 @@ const handleGetBookingByID = async(req,res) => {
 }
 
 //get booking history for customer
-const handleGetMyBookings = async (req,res) => {
+const handleGetBookingsByCustomerId = async (req,res) => {
     try{
-        const history = await getBookingByCustomerId(req.paramscustomerId)
+        const customerId = req.params.customerId
+
+        if (req.user.role !== 'admin' && req.user.id !== parseInt(customerId)) {
+            return res.status(403).json({ error: 'Unauthorized: Access Denied' });
+        }
+        const history = await getBookingByCustomerId(customerId)
         res.json(history)
     }catch(err){
         res.status(500).json({error: err.message})
@@ -73,7 +78,7 @@ module.exports = {
     handleCreateBooking,
     handleGetAllBooking,
     handleGetBookingByID,
-    handleGetMyBookings,
+    handleGetBookingsByCustomerId,
     hanldeUpdateBooking,
     handleDeleteBooking,
     handleSearchBookingByCDetail

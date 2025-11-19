@@ -7,7 +7,7 @@ const router = express.Router()
 router.post('/',verifyToken, allowCustomerOrGuest,bookingController.handleCreateBooking)
 router.get('/',verifyToken,adminOnly,bookingController.handleGetAllBooking)
 router.get("/search",verifyToken,adminOnly,bookingController.handleSearchBookingByCDetail)
-router.get('/history',verifyToken,customerOnly,bookingController.handleGetMyBookings)
+router.get('/customer/:customerId', verifyToken, bookingController.handleGetBookingsByCustomerId);
 router.get('/:id',verifyToken,bookingController.handleGetBookingByID)
 router.put('/:id',verifyToken,bookingController.hanldeUpdateBooking)
 router.delete('/:id',verifyToken,bookingController.handleDeleteBooking)

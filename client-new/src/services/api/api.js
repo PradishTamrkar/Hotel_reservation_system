@@ -212,7 +212,7 @@ export const bookingService = {
 
   getByCustomerId: async (customerId) => {
     return apiCall(`/booking/customer/${customerId}`);
-  }
+  },
 };
 
 // Hotel Amenity Service
