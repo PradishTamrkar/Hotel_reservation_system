@@ -2,7 +2,6 @@ const {DataTypes} = require('sequelize')
 const bcrypt = require('bcrypt')
 const sequelize = require('../config/db')
 const booking = require('./booking')
-// const CustomerTestimony = require('./customerTestimony')
 
 const customer = sequelize.define(
     'customer', 
@@ -17,7 +16,8 @@ const customer = sequelize.define(
             allowNull: false,
         },
         middle_name :{
-            type:DataTypes.STRING
+            type:DataTypes.STRING,
+            allowNull: true
         },
         last_name:{
             type: DataTypes.STRING,
@@ -49,10 +49,12 @@ const customer = sequelize.define(
             allowNull:false
         },
         phone_no: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false
         },
         address: {
-            type: DataTypes.TEXT
+            type: DataTypes.TEXT,
+            allowNull: false
         },
         nationality:{
             type: DataTypes.STRING,

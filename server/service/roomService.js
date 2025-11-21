@@ -54,14 +54,13 @@ const createRoom = async(data, file) => {
     if (!room_catagory_id || !room_no || !room_description || !capacity)
         throw new Error("All fields are required");
 
-    // ✅ Ensure capacity is a string (or convert to number if model is INTEGER)
     const room_images = file ? file.filename : null
     
     const newRoom = await Room.create({
-        room_catagory_id: parseInt(room_catagory_id), // ✅ Ensure it's a number
-        room_no: String(room_no), // ✅ Ensure it's a string
+        room_catagory_id: parseInt(room_catagory_id),
+        room_no: String(room_no), 
         room_description,
-        capacity: String(capacity), // ✅ Keep as string if model uses STRING
+        capacity: String(capacity),
         room_images
     })
     
@@ -115,7 +114,7 @@ const getRoomByID = async (id) => {
     const room = rooms[0]
     return {
         ...room,
-        room_images: getFileURL(room.room_images)  // ✅ Changed to getFileURL
+        room_images: getFileURL(room.room_images)
     };
 }
 

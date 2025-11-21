@@ -25,7 +25,16 @@ export default function BookingHistoryPage() {
     const fetchBookings = async () => {
       try {
         setLoading(true);
-        const data = await bookingService.getMyBookings();
+
+        const currentUser = authUtils.getCurrentUser();
+
+        if(!currentUser || !currentUser.id){
+          toast.error('Unable to identify user');
+          navigate('/', { replace: true });
+          return;
+        }
+
+        const data = await bookingService.getByCustomerId(currentUser.id);
         setBookings(data || []);
       } catch (err) {
         console.error('Error fetching bookings:', err);

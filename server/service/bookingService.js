@@ -95,6 +95,8 @@ const createBooking = async (data,user = null) => {
                 address,
                 nationality,
                 citizenship_id,
+                customer_username: null,
+                customer_password: null,
                 guest_check_out: true 
             })
         }
@@ -245,7 +247,7 @@ const getBookingByCustomerId = async (customerId) => {
         ORDER BY b.check_in_date DESC
         `,
         {
-            replacements: {customerId},
+            replacements: {customer_id: customerId},
             type: QueryTypes.SELECT
         }
     )

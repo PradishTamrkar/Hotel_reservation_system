@@ -192,10 +192,6 @@ export const bookingService = {
     return apiCall('/booking');
   },
   
-  getMyBookings: async () => {
-    return apiCall('/booking/history');
-  },
-
   getById: async (id) => {
     return apiCall(`/booking/${id}`);
   },
@@ -303,6 +299,13 @@ export const amenityBridgeService = {
 
 // Testimonial Service
 export const testimonialService = {
+  create: async (data) => {
+    return apiCall('/testimony',{
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+  },
+  
   getAll: async () => {
     return apiCall('/testimony');
   },
