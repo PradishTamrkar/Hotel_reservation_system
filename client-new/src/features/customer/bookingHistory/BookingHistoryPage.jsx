@@ -62,7 +62,7 @@ export default function BookingHistoryPage() {
       await bookingService.delete(bookingId);
       toast.success('Booking cancelled successfully');
       // Refresh bookings list
-      const data = await bookingService.getMyBookings();
+      const data = await bookingService.getByCustomerId();
       setBookings(data || []);
     } catch (err) {
       toast.error(err.message || 'Failed to cancel booking');

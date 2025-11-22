@@ -5,6 +5,7 @@ const BookingDetails = require("../models/bookingDetails")
 const Room = require("../models/room")
 const Customer = require("../models/customer")
 const {isRoomAvailable} = require("./roomService")
+const {sendBookingConfirmation} = require('./emailService');
 
 const sqlAllBooking =`
 SELECT 
@@ -185,6 +186,19 @@ const createBooking = async (data,user = null) => {
             {where: {room_id: detail.room_id}}
         )
     }
+
+    const customerData = await Customer.findByPk(customerIdToUse);
+  
+  if (customerData && customerData.email) {
+    // Send booking confirmation email
+    const emailResult = await sendBookingConfirmation(booking, customerData, roomDetails);
+    
+    if (!emailResult.success) {
+      console.warn('Booking created but email failed to send:', emailResult.error);
+      // Don't throw error becasue booking is already created
+    }
+  }
+
     return booking
 };
 
