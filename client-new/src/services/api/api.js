@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://8xj6mh5g-3002.asse.devtunnels.ms/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 
 // Helper to get auth token
 const getAuthToken = () => localStorage.getItem('token');
