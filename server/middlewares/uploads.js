@@ -2,21 +2,33 @@ const multer = require("multer");
 const path = require("path");
 const sharp = require("sharp");
 const fs = require("fs").promises;
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary")
 
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-  cb(null, path.join(__dirname, "../uploads"));
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // unique file name
-  },
-});
+//Cloudinary configs:
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'hotel-himalayas',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [{ 
+      width: 1200, 
+      height: 800, 
+      crop: 'limit',
+      quality: 'auto:good'
+    }]
+  }
+})
 
 function fileFilter(req, file, cb) {
   const allowedTypes = /jpeg|jpg|png|webp/;
-  const ext = path.extname(file.originalname).toLowerCase();
-  if (allowedTypes.test(ext)) {
+  const ext = file.originalname.toLowerCase().match(/\.(jpeg|jpg|png|webp)$/);
+  if (ext) {
     cb(null, true);
   } else {
     cb(new Error("Only image files are allowed"));
@@ -31,42 +43,41 @@ const upload = multer({
 
 
 const optimizeImage = async (req, res, next) => {
-  if (!req.file) {
-    return next();
-  }
+  return next();
+}
 
-  try {
-    const tempPath = req.file.path;
-    const filename = req.file.filename;
-    const optimizedFilename = `optimized-${filename.replace(path.extname(filename), '.webp')}`;
-    const optimizedPath = path.join(__dirname, "../uploads", optimizedFilename);
+//   try {
+//     const tempPath = req.file.path;
+//     const filename = req.file.filename;
+//     const optimizedFilename = `optimized-${filename.replace(path.extname(filename), '.webp')}`;
+//     const optimizedPath = path.join(__dirname, "../uploads", optimizedFilename);
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(__dirname, "../uploads");
-    await fs.mkdir(uploadsDir, { recursive: true });
+//     // Create uploads directory if it doesn't exist
+//     const uploadsDir = path.join(__dirname, "../uploads");
+//     await fs.mkdir(uploadsDir, { recursive: true });
 
-    // Optimize and convert to WebP
-    await sharp(tempPath)
-      .resize(1200, 800, {
-        fit: 'inside',
-        withoutEnlargement: true,
-      })
-      .webp({ quality: 85 })
-      .toFile(optimizedPath);
+//     // Optimize and convert to WebP
+//     await sharp(tempPath)
+//       .resize(1200, 800, {
+//         fit: 'inside',
+//         withoutEnlargement: true,
+//       })
+//       .webp({ quality: 85 })
+//       .toFile(optimizedPath);
 
-    // Delete temporary file
-    await fs.unlink(tempPath);
+//     // Delete temporary file
+//     await fs.unlink(tempPath);
 
-    // Update req.file with optimized file info
-    req.file.filename = optimizedFilename;
-    req.file.path = optimizedPath;
+//     // Update req.file with optimized file info
+//     req.file.filename = optimizedFilename;
+//     req.file.path = optimizedPath;
 
-    next();
-  } catch (error) {
-    console.error("Image optimization error:", error);
-    next();
-  }
-};
+//     next();
+//   } catch (error) {
+//     console.error("Image optimization error:", error);
+//     next();
+//   }
+// };
 
 module.exports = { 
   upload, 
