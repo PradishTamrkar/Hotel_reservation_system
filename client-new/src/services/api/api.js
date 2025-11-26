@@ -1,7 +1,11 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
 
 // Helper to get auth token
-const getAuthToken = () => localStorage.getItem('token');
+const getAuthToken = () => {
+  const token = localStorage.getItem('token');
+  console.log('Token from localStorage:', token); // Debug log
+  return token;
+};
 
 // Main API call function for JSON data
 const apiCall = async (endpoint, options = {}) => {
@@ -42,7 +46,7 @@ const apiCallFormData = async (endpoint, options = {}) => {
     },
     ...options,
   };
-
+  console.log('🔍 FormData API Call:', endpoint, 'Auth:', token ? 'Present' : 'Missing');
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
     const data = await response.json();

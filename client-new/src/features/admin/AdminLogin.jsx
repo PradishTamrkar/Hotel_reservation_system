@@ -34,6 +34,9 @@ export default function AdminLogin() {
             setLoading(true);
             await adminService.login(formData);
 
+            console.log('📦 Login Response:', response);
+            console.log('🔑 Token stored:', localStorage.getItem('token'));
+            console.log('👤 Role stored:', localStorage.getItem('userRole'));
             window.dispatchEvent(new Event('adminAuthChange'));
             toast.success('Admin login successful!');
             navigate('/admin/dashboard');
