@@ -9,7 +9,11 @@ const createTransporter = () => {
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
-            }
+            },
+            pool: true,
+            maxConnections: 1,
+            rateDelta: 20000,
+            rateLimit: 5
         })
     }else{
         return nodemailer.createTransport({
@@ -19,7 +23,9 @@ const createTransporter = () => {
             auth:{
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
-            }
+            },
+            connectionTimeout: 10000,
+            greetingTimeout: 10000
         })
 
     }
