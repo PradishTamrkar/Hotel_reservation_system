@@ -5,15 +5,16 @@ const fs = require('fs').promises;
 const createTransporter = () => {
     if(process.env.NODE_ENV === 'production'){
         return nodemailer.createTransport({
-            service: process.env.EMAIL_SERVICE,
+            host: 'smtp.gmail.com',
+            port:465,
+            secure:true,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
             },
-            pool: true,
-            maxConnections: 1,
-            rateDelta: 20000,
-            rateLimit: 5
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
+            socketTimeout: 10000
         })
     }else{
         return nodemailer.createTransport({
@@ -23,9 +24,7 @@ const createTransporter = () => {
             auth:{
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD,
-            },
-            connectionTimeout: 10000,
-            greetingTimeout: 10000
+            }
         })
 
     }
