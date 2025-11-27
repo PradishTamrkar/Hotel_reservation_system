@@ -1,5 +1,4 @@
 const HotelAmenity = require("../models/hotelAmenities")
-const getFileUrl = require("./getFileURL");
 
 //Create Hotel Amenity
 const createHotelAmenity = async (data,file) => {
@@ -8,7 +7,7 @@ const createHotelAmenity = async (data,file) => {
     if (!hotel_amenity_name || !hotel_amenity_description )
         throw new Error("All fields are required" );
 
-    const hotel_amenity_image = file ? file.filename : null
+    const hotel_amenity_image = file ? file.path : null
 
     const newHotelAmenity = await HotelAmenity.create({
         hotel_amenity_name,
@@ -16,20 +15,13 @@ const createHotelAmenity = async (data,file) => {
         hotel_amenity_image
     })
 
-    return{
-        ...newHotelAmenity.toJSON(),
-        hotel_amenity_image: getFileUrl(newHotelAmenity.hotel_amenity_image)
-    }     
+    return newHotelAmenity    
 }
 
 //GET ALL Hotel Amenity
 const getAllHotelAmenity= async () => {
     const hotelAmenity = await HotelAmenity.findAll();
-    const hAmenityWithUrl = hotelAmenity.map(h =>({
-        ...h.toJSON(),
-        hotel_amenity_image: getFileUrl(h.hotel_amenity_image)
-    }))
-    return(hAmenityWithUrl)
+    return hotelAmenity
 }
 
 //get hotel Amenity By ID
@@ -37,11 +29,7 @@ const getHotelAmenityByID = async(id) => {
     const hotelAmenity = await HotelAmenity.findByPk(id)
     if(!hotelAmenity) 
         throw new Error('Hotel Amenity not found')
-    const hAmenityWithUrl = {
-        ...hotelAmenity.toJSON(),
-        hotel_amenity_image: getFileUrl(hotelAmenity.hotel_amenity_image)
-    }
-    return(hAmenityWithUrl)
+    return hotelAmenity
 }
 
 //updaate hotel amenities:
@@ -53,7 +41,7 @@ const updateHotelAmenity= async(id,data,file) => {
     if(!hotelAmenity)
         throw new Error('Hotel Amenity not found')
 
-    const hotel_amenity_image = file ? file.filename : hotelAmenity.hotel_amenity_image
+    const hotel_amenity_image = file ? file.path : hotelAmenity.hotel_amenity_image
 
     await hotelAmenity.update({
         hotel_amenity_name,
@@ -61,11 +49,7 @@ const updateHotelAmenity= async(id,data,file) => {
         hotel_amenity_image
     })
 
-    const hAmenityWithUrl = {
-        ...hotelAmenity.toJSON(),
-        hotel_amenity_image: getFileUrl(hotelAmenity.hotel_amenity_image)
-    }
-    return{message: "Hotel Amenity updated successfully",hotelAmenity: hAmenityWithUrl}
+    return{message: "Hotel Amenity updated successfully",hotelAmenity}
 }
 
 //delete hotel amenities

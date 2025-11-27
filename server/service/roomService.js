@@ -1,7 +1,6 @@
 const { DataTypes, QueryTypes } = require('sequelize')
-const { db: sequelize } = require("../config/config");
+const { db: sequelize } = require("../config/config")
 const Room = require('../models/room')
-const getFileURL = require('./getFileURL')  // ✅ Correct import
 
 //Room JOINS
 const sqlRoom = `
@@ -54,7 +53,7 @@ const createRoom = async(data, file) => {
     if (!room_catagory_id || !room_no || !room_description || !capacity)
         throw new Error("All fields are required");
 
-    const room_images = file ? file.filename : null
+    const room_images = file ? file.path : null
     
     const newRoom = await Room.create({
         room_catagory_id: parseInt(room_catagory_id),
@@ -64,10 +63,7 @@ const createRoom = async(data, file) => {
         room_images
     })
     
-    return {
-        ...newRoom.toJSON(),
-        room_images: getFileURL(newRoom.room_images)
-    }
+    return newRoom
 }
 
 //Get All rooms
@@ -86,14 +82,9 @@ const getAllRooms = async () => {
             type:QueryTypes.SELECT
         }
     )
-
-    const updatedRooms = room.map(room => ({
-        ...room,
-        room_images: getFileURL(room.room_images)
-    }))
     return{
-        totalRoom: updatedRooms.length,
-        room: updatedRooms
+        totalRoom: room.length,
+        room
     }
 }
 
@@ -111,11 +102,8 @@ const getRoomByID = async (id) => {
     )
     if(!rooms || rooms.length === 0) 
         throw new Error('Room not found')
-    const room = rooms[0]
-    return {
-        ...room,
-        room_images: getFileURL(room.room_images)
-    };
+
+    return rooms[0];
 }
 
 const getAvailableRoomsByDate = async (check_in_date, check_out_date) => {
@@ -187,14 +175,9 @@ const searchRooms = async (searchTerm) => {
         }
     )
 
-    const updatedRooms = rooms.map(room => ({
-        ...room,
-        room_images:getFileURL(room.room_images)
-    }))
-
     return{
-        totalRoom: updatedRooms.length,
-        room: updatedRooms
+        totalRoom: rooms.length,
+        room: rooms
     }
 }
 
@@ -213,10 +196,7 @@ const updateRoom = async(id,data,file) => {
         room_status: room_status || room.room_status,
         room_images                
     })
-    return {
-        ...room.toJSON(),
-        room_images: getFileURL(room.room_images)
-    };
+    return room
 }
 
 //delete room

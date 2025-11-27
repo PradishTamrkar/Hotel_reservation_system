@@ -1,5 +1,4 @@
 const PromosAndOffer = require("../models/promosAndOffers");
-const getFileURL = require("../service/getFileURL");
 
 //offer Creation
 const createOffer = async (data,file) => {
@@ -9,7 +8,7 @@ const createOffer = async (data,file) => {
         throw new Error("All fields are required");
     }
 
-    const offer_image = file ? file.filename : null
+    const offer_image = file ? file.path : null
 
     const newOffer =  await PromosAndOffer.create({
         offer_name,
@@ -18,22 +17,14 @@ const createOffer = async (data,file) => {
         offer_image
     })
 
-    const offerWithUrl = {
-        ...newOffer.toJSON(),
-        offer_image: getFileURL(newOffer.offer_image)
-    }
-    return ({message:'Offer created successfully',offer: offerWithUrl})
+    return ({message:'Offer created successfully',offer: newOffer})
 }
 
 //GET ALL offers
 const getAllOffers = async () => {
         
     const offer = await PromosAndOffer.findAll();
-    const offerWithUrl = offer.map(o => ({
-        ...o.toJSON(),
-        offer_image: getFileURL(o.offer_image)
-    }))
-    return (offerWithUrl)
+    return offer;
 }
 
 //GET single Offer
@@ -42,12 +33,7 @@ const getOfferByID = async(id) => {
     const offer = await PromosAndOffer.findByPk(id)
     if(!offer) 
         throw new Error('Offer not found')
-
-    const offerWithUrl = {
-        ...offer.toJSON(),
-        offer_image: getFileURL(offer.offer_image)
-    }
-    return (offerWithUrl)
+    return offer;
 }  
 
 //Update offer Info
@@ -59,7 +45,7 @@ const updateOffer = async(id,data,file) => {
     if(!offer)
         throw new Error('Offer not found')
 
-    const offer_image = file? file.filename : offer.offer_image
+    const offer_image = file? file.path : offer.offer_image
         
     await offer.update({
         offer_name,
@@ -67,12 +53,7 @@ const updateOffer = async(id,data,file) => {
         offered_discount,
         offer_image
     })
-
-    const offerWithUrl = {
-        ...offer.toJSON(),
-        offer_image: getFileURL(offer.offer_image)
-    }
-    return ({ message: "Offer updated successfully", offer: offerWithUrl })
+    return ({ message: "Offer updated successfully", offer })
 }
 
 //Delete Offer

@@ -62,19 +62,6 @@ const apiCallFormData = async (endpoint, options = {}) => {
   }
 };
 
-// Get image URL
-export const getImageUrl = (imagePath) => {
-  if (!imagePath) {
-    return 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800';
-  }
-  
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath;
-  }
-  
-  return `https://8xj6mh5g-3002.asse.devtunnels.ms/uploads/${imagePath}`;
-};
-
 // Customer Service
 export const customerService = {
   register: async (data) => {
