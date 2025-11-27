@@ -28,7 +28,9 @@ app.use(cors({
     'https://hotel-himalayas-dyodvkw6z-pradish-tamrakars-projects.vercel.app',
     'https://*.vercel.app',
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET','Post','PUT','DELETE','PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }))      
 app.use(cookieParser())
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

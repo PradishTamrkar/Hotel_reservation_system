@@ -74,7 +74,8 @@ const createRoomCategory = async(data,file) => {
     if (!room_catagory_name || !room_catagory_description || !price_per_night )
         throw new Error("All fields are required");
 
-    const room_catagory_images = file ? file.filename : null
+    const room_catagory_images = file ? file.path : null
+
     const newRoomCategory = await RoomCatagory.create({
         room_catagory_name,
         room_catagory_description,
@@ -83,10 +84,7 @@ const createRoomCategory = async(data,file) => {
         offer_id: offer_id || null
     })
 
-    return{
-        ...newRoomCategory.toJSON(),
-        room_catagory_images: getFileUrl(newRoomCategory.room_catagory_images)
-    }    
+    return newRoomCategory;    
 }
 
 //Get ALL Rooms Catagories
@@ -98,11 +96,11 @@ const getAllRoomCategory = async () => {
         {
             type:QueryTypes.SELECT
         })
-        const updated = roomCategory.map(cat => ({
-            ...cat,
-            room_catagory_images: getFileUrl(cat.room_catagory_images)
-        }));
-    return{roomCategory: updated}
+        // const updated = roomCategory.map(cat => ({
+        //     ...cat,
+        //     room_catagory_images: getFileUrl(cat.room_catagory_images)
+        // }));
+    return roomCategory
 }
 
 //Get Single Room Category
@@ -118,11 +116,11 @@ const getRoomCategoryByID = async (id) => {
     if(!roomCategory || roomCategory.length === 0) 
         throw new Error('Room Category not found')
 
-    const roomCategoryWithUrl = roomCategory.map(cat => ({
-        ...cat,
-        room_catagory_images: getFileUrl(cat.room_catagory_images)
-    }));
-    return(roomCategoryWithUrl);
+    // const roomCategoryWithUrl = roomCategory.map(cat => ({
+    //     ...cat,
+    //     room_catagory_images: getFileUrl(cat.room_catagory_images)
+    // }));
+    return roomCategory;
 }
 
 //Get Room By Category
@@ -139,12 +137,12 @@ const getRoomByCategory = async ( catId ) => {
             replacements: {catId},
             type: QueryTypes.SELECT
         })
-    const updatedRooms = rooms.map((room) => ({
-        ...room,
-        room_images: getFileUrl(room.room_images)
-    })
-    )
-    return{ room_catagory_id: catId, count: updatedRooms.length, rooms: updatedRooms}
+    // const updatedRooms = rooms.map((room) => ({
+    //     ...room,
+    //     room_images: getFileUrl(room.room_images)
+    // })
+    // )
+    return{ room_catagory_id: catId, count: rooms.length, rooms: rooms}
 }
 
 //Get Room By Exclusive Deals
@@ -158,12 +156,12 @@ const getCatByExclusiveDeals = async () => {
         `,{
             type: QueryTypes.SELECT
         })
-    const updated = categryWithOffer.map(item => ({
-        ...item,
-        room_catagory_images: getFileUrl(item.room_catagory_images),
-        offer_image: getFileUrl(item.offer_image)
-        }));
-    return{ count: updated.length, roomCategory: updated };
+    // const updated = categryWithOffer.map(item => ({
+    //     ...item,
+    //     room_catagory_images: getFileUrl(item.room_catagory_images),
+    //     offer_image: getFileUrl(item.offer_image)
+    //     }));
+    return{ count: categryWithOffer.length, roomCategory: categryWithOffer };
 }
 
 //Update Room Catagory
@@ -173,7 +171,7 @@ const updateRoomCategory = async(id,data,file) => {
     const roomCategory = await RoomCatagory.findByPk(id)
     if(!roomCategory) 
         throw new Error('Room Catagory not found')
-    const room_catagory_images = file? file.filename : roomCategory.room_catagory_images
+    const room_catagory_images = file? file.path : roomCategory.room_catagory_images
 
     let offerIdValue = null
     if(offer_id && offer_id !== 'null' && offer_id !== ''){
@@ -187,11 +185,11 @@ const updateRoomCategory = async(id,data,file) => {
         offer_id:offerIdValue
     })
 
-    const roomCatWithURL = {
-        ...roomCategory.toJSON(),
-        room_catagory_images: getFileUrl(roomCategory.room_catagory_images)
-    }
-    return{message:"Catagory updated successfully", roomCategory: roomCatWithURL}
+    // const roomCatWithURL = {
+    //     ...roomCategory.toJSON(),
+    //     room_catagory_images: getFileUrl(roomCategory.room_catagory_images)
+    // }
+    return{message:"Catagory updated successfully", roomCategory}
 }
 
 //Delete Room Catagory

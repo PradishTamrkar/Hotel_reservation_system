@@ -5,7 +5,7 @@ const getFileURL = (filename) => {
     return filename;
   }
   
-  const baseURL = process.env.BASE_URL || 'http://localhost:3002';
+  const baseURL = process.env.BASE_URL || 'https://hotel-reservation-api-u047.onrender.com';
   return `${baseURL}/uploads/${filename}`;
 };
 
