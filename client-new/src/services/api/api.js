@@ -62,6 +62,21 @@ const apiCallFormData = async (endpoint, options = {}) => {
   }
 };
 
+//get image url
+export const getImageUrl = (imagePath) => {
+  if (!imagePath) {
+    return 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800';
+  }
+  
+  // If it's already a full URL (Cloudinary), return as-is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // Fallback for old local uploads
+  return `${API_BASE_URL.replace('/api', '')}/uploads/${imagePath}`;
+};
+
 // Customer Service
 export const customerService = {
   register: async (data) => {
