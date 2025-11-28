@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002/api'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://hotel-reservation-api-u047.onrender.com/api'
 
 // Helper to get auth token
 const getAuthToken = () => {
