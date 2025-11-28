@@ -32,11 +32,11 @@ export default function AdminLogin() {
 
         try{
             setLoading(true);
-            await adminService.login(formData);
+            const response = await adminService.login(formData);
 
-            console.log('📦 Login Response:', response);
-            console.log('🔑 Token stored:', localStorage.getItem('token'));
-            console.log('👤 Role stored:', localStorage.getItem('userRole'));
+            console.log(' Login Response:', response);
+            console.log(' Token stored:', localStorage.getItem('token'));
+            console.log(' Role stored:', localStorage.getItem('userRole'));
             window.dispatchEvent(new Event('adminAuthChange'));
             toast.success('Admin login successful!');
             navigate('/admin/dashboard');
