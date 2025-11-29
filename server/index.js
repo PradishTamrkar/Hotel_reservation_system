@@ -25,7 +25,7 @@ app.use(express.json())
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://hotel-himalayas-git-prod-pradish-tamrakars-projects.vercel.app',
+    'https://hotel-himalayas.vercel.app/',
     'https://*.vercel.app',
   ],
   credentials: true,
