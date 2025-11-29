@@ -74,7 +74,7 @@ export const getImageUrl = (imagePath) => {
   }
   
   // Fallback for old local uploads
-  return `${API_BASE_URL.replace('/api', '')}/uploads/${imagePath}`;
+  return `https://hotel-reservation-api-u047.onrender.com/uploads/${imagePath}`;
 };
 
 // Customer Service

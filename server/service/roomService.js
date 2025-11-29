@@ -187,7 +187,7 @@ const updateRoom = async(id,data,file) => {
     const room = await Room.findByPk(id)
     if(!room)
         throw new Error('Room not found')
-    const room_images = file? file.filename : room.room_images
+    const room_images = file? file.path: room.room_images
     await room.update({
         room_catagory_id,
         room_no,
