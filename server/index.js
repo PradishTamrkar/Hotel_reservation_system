@@ -40,8 +40,7 @@ app.use(cors({
   methods: ['GET','Post','PUT','DELETE','PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
-app.options('*', cors());
-      
+
 app.use(cookieParser())
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/customers', customerRoutes) 
