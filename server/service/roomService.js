@@ -141,7 +141,7 @@ const getAvailableRoomsByDate = async (check_in_date, check_out_date) => {
             room_id: room.room_id,
             room_no: room.room_no,
             room_status: room.room_status,
-            room_images: getFileURL(room.room_images),
+            room_images:room.room_images,
             room_description: room.room_description,
             capacity: room.capacity
         });
