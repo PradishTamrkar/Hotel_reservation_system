@@ -32,10 +32,7 @@ export default function CategoryForm({ category, offers, onSuccess, onCancel }) 
       
       if(formData.offer_id && formData.offer_id !== ''){
         formDataToSend.append('offer_id',formData.offer_id);
-      }else{
-        formDataToSend.append('offer_id','null');
       }
-      
       if (imageFile) {
         formDataToSend.append('room_catagory_images', imageFile);
       }

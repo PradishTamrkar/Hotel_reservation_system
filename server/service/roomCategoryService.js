@@ -67,22 +67,66 @@ JOIN promos_and_offers p ON rc.offer_id = p.offer_id
 `
 //create Room Category
 const createRoomCategory = async(data,file) => {
-    
-    const { room_catagory_name,room_catagory_description,price_per_night,offer_id } = data
-    
-    if (!room_catagory_name || !room_catagory_description || !price_per_night )
-        throw new Error("All fields are required");
+    try {
+        console.log('=== CREATE ROOM CATEGORY SERVICE ===');
+        console.log('Received data:', JSON.stringify(data, null, 2));
+        console.log('Received file:', file ? {
+            fieldname: file.fieldname,
+            originalname: file.originalname,
+            path: file.path,
+            size: file.size
+        } : 'No file');
+        console.log('====================================');
 
-    const room_catagory_images = file ? file.path : null
-    const newRoomCategory = await RoomCatagory.create({
-        room_catagory_name,
-        room_catagory_description,
-        room_catagory_images,
-        price_per_night,
-        offer_id: offer_id || null
-    })
+        const { room_catagory_name, room_catagory_description, price_per_night, offer_id } = data;
+        
+        // Validate required fields
+        if (!room_catagory_name || !room_catagory_description || !price_per_night) {
+            throw new Error("Room name, description, and price are required");
+        }
 
-    return newRoomCategory  
+        // Validate price is a valid number
+        const priceValue = parseFloat(price_per_night);
+        if (isNaN(priceValue) || priceValue <= 0) {
+            throw new Error("Price must be a valid positive number");
+        }
+
+        // Get image path from Cloudinary
+        const room_catagory_images = file ? file.path : null;
+
+        // Handle offer_id properly - convert string "null" to actual null
+        let offerIdValue = null;
+        if (offer_id && offer_id !== 'null' && offer_id !== '' && offer_id !== 'undefined') {
+            offerIdValue = parseInt(offer_id, 10);
+            if (isNaN(offerIdValue)) {
+                throw new Error("Invalid offer ID");
+            }
+        }
+
+        console.log('Creating room category with:', {
+            room_catagory_name,
+            room_catagory_description,
+            room_catagory_images,
+            price_per_night: priceValue,
+            offer_id: offerIdValue
+        });
+
+        const newRoomCategory = await RoomCatagory.create({
+            room_catagory_name,
+            room_catagory_description,
+            room_catagory_images,
+            price_per_night: priceValue,
+            offer_id: offerIdValue
+        });
+
+        console.log('✅ Room category created successfully:', newRoomCategory.room_catagory_id);
+        return newRoomCategory;
+
+    } catch (error) {
+        console.error('❌ CREATE ROOM CATEGORY ERROR:', error);
+        console.error('Error stack:', error.stack);
+        throw error;
+    }
 }
 
 //Get ALL Rooms Catagories
